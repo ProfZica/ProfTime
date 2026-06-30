@@ -770,6 +770,7 @@ function setSyncStatus(status) {
 }
 
 function salva() {
+  if (!annoAttivo) return;
   try { localStorage.setItem(keyAnno(annoAttivo), JSON.stringify(imp)); } catch (e) {}
   if (currentUser && window.fb) {
     setSyncStatus('wait');
@@ -979,6 +980,7 @@ function aggiorna() {
 function renderMensile() {
   const el = document.getElementById('mese-grid');
   if (!el) return;
+  if (!annoAttivo) { el.innerHTML = '<div class="vuota"><span class="vi">&#128197;</span>Crea un anno scolastico per iniziare.</div>'; return; }
   const mesi = [
     ['Set', 9], ['Ott', 10], ['Nov', 11], ['Dic', 12],
     ['Gen', 1], ['Feb', 2], ['Mar', 3], ['Apr', 4], ['Mag', 5], ['Giu', 6]
@@ -1345,8 +1347,16 @@ function toggleFormAnno() {
   form.style.display = vis ? 'none' : 'block';
   btn.style.display = vis ? 'block' : 'none';
   if (!vis) {
-    const p = annoAttivo.split('/');
-    const y1 = parseInt(p[0]) + 1, y2 = parseInt(p[1]) + 1;
+    let y1, y2;
+    if (annoAttivo) {
+      const p = annoAttivo.split('/');
+      y1 = parseInt(p[0]) + 1; y2 = parseInt(p[1]) + 1;
+    } else {
+      const oggi = new Date();
+      const meseCorrente = oggi.getMonth() + 1;
+      y1 = meseCorrente >= 9 ? oggi.getFullYear() : oggi.getFullYear() - 1;
+      y2 = y1 + 1;
+    }
     for (const o of document.getElementById('inp-anno-y1').options) if (parseInt(o.value) === y1) { o.selected = true; break; }
     for (const o of document.getElementById('inp-anno-y2').options) if (parseInt(o.value) === y2) { o.selected = true; break; }
   }
@@ -1431,23 +1441,36 @@ async function eliminaAnnoConfermato() {
   const eraAttivo = (a === annoAttivo);
   chiudiModalEliminaAnno();
 
+  const rimasti = tuttiAnni();
+
   if (eraAttivo) {
-    // Se ho eliminato l'anno attivo, passo a un altro anno rimasto o creo quello base
-    const rimasti = tuttiAnni();
     if (rimasti.length > 0) {
       annoAttivo = rimasti[0];
       carica();
+      aggiorna();
+      aggiornaTopSub();
     } else {
-      annoAttivo = '2025/2026';
+      // Nessun anno rimasto: stato pulito, nessun anno fantasma
       imp = [];
-      salva();
+      annoAttivo = '';
+      document.getElementById('top-sub').textContent = 'Nessun anno attivo';
+      const lblAttivo = document.getElementById('anno-attivo-lbl');
+      if (lblAttivo) lblAttivo.textContent = '--';
+      aggiorna();
     }
-    aggiorna();
-    aggiornaTopSub();
   }
 
   renderAnni();
   toast('Anno ' + a + ' eliminato');
+
+  if (eraAttivo && rimasti.length === 0) {
+    // Apri direttamente il form per crearne uno nuovo
+    setTimeout(() => {
+      const form = document.getElementById('form-nuovo-anno');
+      const btn = document.getElementById('btn-nuovo-anno');
+      if (form && form.style.display !== 'block') toggleFormAnno();
+    }, 400);
+  }
 }
 
 // ── AUTENTICAZIONE ───────────────────────────────────────────────────
