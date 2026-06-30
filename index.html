@@ -735,7 +735,10 @@ function toast(msg, ms = 2200) {
 }
 
 // ── STORAGE MULTI-ANNO ───────────────────────────────────────────────
-function keyAnno(a) { return 'rid_' + a.replace('/', '_'); }
+function keyAnno(a) {
+  const uid = currentUser ? currentUser.uid : 'guest';
+  return 'rid_' + uid + '_' + a.replace('/', '_');
+}
 
 let currentUser = null;
 let syncTimeout = null;
@@ -749,17 +752,17 @@ function setSyncStatus(status) {
 }
 
 function salva() {
-  // Salva sempre in locale come backup immediato
   try { localStorage.setItem(keyAnno(annoAttivo), JSON.stringify(imp)); } catch (e) {}
-  // Sincronizza con Firestore se autenticato (con debounce)
   if (currentUser && window.fb) {
     setSyncStatus('wait');
     clearTimeout(syncTimeout);
-    syncTimeout = setTimeout(() => {
-      const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', keyAnno(annoAttivo));
+    const annoSalva = annoAttivo;
+    const uidSalva = currentUser.uid;
+    syncTimeout = setTimeout(function() {
+      const ref = window.fb.doc(window.fb.db, 'utenti', uidSalva, 'anni', 'rid_' + annoSalva.replace('/', '_'));
       window.fb.setDoc(ref, { dati: imp, aggiornato: Date.now() })
-        .then(() => setSyncStatus('ok'))
-        .catch(() => setSyncStatus('off'));
+        .then(function() { setSyncStatus('ok'); })
+        .catch(function() { setSyncStatus('off'); });
     }, 700);
   }
 }
@@ -771,10 +774,12 @@ function carica() {
   } catch (e) { imp = []; }
 }
 
+function fsKeyAnno(anno) { return 'rid_' + anno.replace('/', '_'); }
+
 async function caricaDaCloud(anno) {
   if (!currentUser || !window.fb) return null;
   try {
-    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', keyAnno(anno));
+    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', fsKeyAnno(anno));
     const snap = await window.fb.getDoc(ref);
     if (snap.exists()) return snap.data().dati || [];
   } catch (e) { console.error('Errore caricamento cloud', e); }
@@ -783,10 +788,11 @@ async function caricaDaCloud(anno) {
 
 function tuttiAnni() {
   const anni = [];
+  const prefix = currentUser ? ('rid_' + currentUser.uid + '_') : 'rid_guest_';
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith('rid_')) {
-      anni.push(k.replace('rid_', '').replace('_', '/'));
+    if (k && k.indexOf(prefix) === 0) {
+      anni.push(k.replace(prefix, '').replace('_', '/'));
     }
   }
   return anni.sort().reverse();
@@ -798,8 +804,7 @@ async function attivaAnno(a) {
   if (currentUser) {
     const cloudData = await caricaDaCloud(a);
     if (cloudData && cloudData.length > 0) {
-      cloudData.forEach(c => { if (!imp.some(i => i.id === c.id)) imp.push(c); });
-      imp.sort((x, y) => x.data.localeCompare(y.data));
+      imp = cloudData.slice();
       salva();
     }
   }
@@ -1426,29 +1431,38 @@ async function onUserLoggedIn(user) {
   const email = user.email || '';
   document.getElementById('acc-email').textContent = email;
   document.getElementById('acc-avatar').textContent = email.charAt(0).toUpperCase();
-  setSyncStatus('ok');
+  setSyncStatus('wait');
 
-  // Carica dati dal cloud per l'anno attivo e fai merge con quelli locali
+  // Reset completo: azzera qualsiasi dato presente in memoria prima del login
+  imp = [];
+  annoAttivo = '2025/2026';
+
+  // Cerca prima se questo utente ha gia dati locali per questo browser/anno
+  carica();
+
+  // Carica dal cloud (fonte di verita) e sostituisce i dati locali
   const cloudData = await caricaDaCloud(annoAttivo);
   if (cloudData && cloudData.length > 0) {
-    // Merge: aggiunge dal cloud quello che manca in locale (per id)
-    cloudData.forEach(c => {
-      if (!imp.some(i => i.id === c.id)) imp.push(c);
-    });
-    imp.sort((a, b) => a.data.localeCompare(b.data));
+    imp = cloudData.slice();
     salva();
-    aggiorna();
-    renderRegistro();
   } else if (imp.length > 0) {
-    // Non c'e nulla nel cloud ma ci sono dati locali: caricali su Firestore
+    // Nessun dato cloud ma c'e qualcosa di locale per questo utente: carica su Firestore
     salva();
   }
+  setSyncStatus('ok');
+  aggiorna();
+  renderRegistro();
+  aggiornaTopSub();
+  renderAnni();
 }
 
 function onUserLoggedOut() {
   currentUser = null;
+  imp = [];
   document.getElementById('login-screen').classList.remove('hide');
   document.getElementById('login-loading').style.display = 'none';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value = '';
 }
 
 function avviaFirebaseAuth() {
