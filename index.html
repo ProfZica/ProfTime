@@ -15,7 +15,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   try {
   const firebaseConfig = {
@@ -38,7 +38,7 @@
     signIn: signInWithEmailAndPassword,
     signOut: signOut,
     onAuthChange: onAuthStateChanged,
-    doc, setDoc, getDoc, onSnapshot
+    doc, setDoc, getDoc
   };
   window.fbReady = true;
   window.fbError = null;
@@ -163,7 +163,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .cal-leg{display:flex;gap:12px;padding:8px 15px;border-top:1px solid var(--bd);flex-wrap:wrap;}
 .leg-i{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--tx2);}
 .leg-d{width:4px;height:14px;border-radius:2px;}
-.lg-c{background:var(--blu-m);}.lg-a{background:var(--verde-m);}
+.lg-c{background:var(--blu-m);}.lg-a{background:var(--verde-m);}.lg-e{background:var(--extra);}
 /* RIEPILOGO MENSILE */
 .mese-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
 @media(max-width:400px){.mese-grid{grid-template-columns:1fr;}}
@@ -478,6 +478,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       <div class="cal-leg">
         <div class="leg-i"><div class="leg-d lg-c"></div><span>Att. Collegiale</span></div>
         <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attivita</span></div>
+        <div class="leg-i"><div class="leg-d lg-e"></div><span>Extra</span></div>
       </div>
     </div>
   </div>
@@ -628,54 +629,80 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Preparazione individuale delle lezioni</strong><span>Inclusa nell'orario complessivo ma non nelle ore funzionali.</span></div></div>
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Formazione volontaria</strong><span>Corsi e webinar scelti autonomamente.</span></div></div>
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Assemblee sindacali</strong><span>Hanno disciplina separata, non rientrano nelle 80h.</span></div></div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Attivita extracurricolari su base volontaria</strong><span>Gite, visite guidate, teatro, sport scolastico, progetti facoltativi: compensati a parte o su base volontaria.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr" style="background:var(--extra)">Categoria Extra in ProfTime</div>
+    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>A cosa serve</strong><span>Tutte le attivita elencate sopra, che non rientrano nelle 80 ore contrattuali, vanno registrate con la categoria Extra.</span></div></div>
+    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>Perche tenerle comunque</strong><span>Utile per avere una panoramica completa del tuo impegno reale, anche se non si conteggia nel monte 40+40.</span></div></div>
   </div>
   <div class="nota"><strong>Nota normativa</strong>Il Contratto Integrativo di Istituto (CII) puo integrare queste indicazioni. Rif.: art. 29 CCNL Istruzione e Ricerca 2016-2018.</div>
 </div>
 
 <!-- GUIDA -->
 <div class="pag" id="pag-guida">
-  <div class="doc-hero dh-verde"><h2>Guida all'uso</h2><p>Come usare il Registro Impegni Docente</p></div>
+  <div class="doc-hero dh-verde"><h2>Guida all'uso</h2><p>Come usare ProfTime, passo per passo</p></div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Account e accesso</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Registrati con email e password</strong><span>La prima volta crea un account. I tuoi dati sono privati e visibili solo a te, su qualsiasi dispositivo.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Accedi da più dispositivi</strong><span>Usa le stesse credenziali su telefono, tablet e computer: i dati si sincronizzano automaticamente.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Stato sincronizzazione</strong><span>Nella pagina Storico vedi un pallino verde quando i dati sono sincronizzati, giallo durante il salvataggio.</span></div></div>
+  </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-b">Home</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Vedrai sempre le ore accumulate per le due categorie e quanto ti rimane al limite delle 40h.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Riepilogo mensile</strong><span>Sotto le barre trovi le ore di ogni mese dell'anno scolastico, con collegiali e altre separate.</span></div></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Ore accumulate per Attività Collegiali e Altre Attività, con quanto rimane al limite delle 40h ciascuna.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Attività Extra</strong><span>Il riquadro arancione mostra le ore di attività extra, che non rientrano nel conteggio 40+40.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Riepilogo mensile</strong><span>Una card per ogni mese dell'anno scolastico, con le ore di ciascuna categoria e una barra proporzionale.</span></div></div>
   </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-b">Evento - Inserimento</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Compila i campi</strong><span>Nome, categoria, data, ora inizio e ora fine sono obbligatori. Le note sono facoltative.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Usa gli orari effettivi</strong><span>Come da verbale o dalla durata reale, non necessariamente quelli della convocazione.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Scegli la categoria giusta</strong><span>Attività Collegiale, Altre Attività, oppure Extra se non rientra nel conteggio 40+40. La pagina CCNL aiuta a decidere.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Usa gli orari effettivi</strong><span>Come da verbale o dalla durata reale della riunione, non necessariamente quelli della convocazione.</span></div></div>
   </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-b">Registro</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Vista Lista</strong><span>Impegni in ordine per mese. Filtra per categoria. Premi la matita per modificare, la X per eliminare.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Calendario</strong><span>Toggle in alto a destra. I puntini colorati mostrano gli eventi giorno per giorno.</span></div></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Ricerca</strong><span>Cerca un evento per nome o nelle note con il campo di ricerca in alto.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Lista - Tutti</strong><span>Mostra tre gruppi separati: Attività Collegiali, Altre Attività ed Extra, ciascuno con il proprio totale ore.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Filtri singoli</strong><span>I pulsanti Coll. / Altre / Extra mostrano solo quella categoria, raggruppata per mese.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Modifica ed elimina</strong><span>Premi la matita per modificare un impegno, la X per eliminarlo.</span></div></div>
+    <div class="step"><div class="sn">5</div><div class="st"><strong>Vista Calendario</strong><span>Toggle in alto a destra. Tocca un giorno con impegni per vedere tutti i dettagli in un riquadro leggibile.</span></div></div>
   </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-b">Timer</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Avvia durante la riunione</strong><span>Scrivi evento e categoria, premi Avvia. Il timer conta anche con lo schermo spento.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Ferma a fine riunione</strong><span>Aggiunge automaticamente l'impegno con ora e durata reali.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Ferma a fine riunione</strong><span>Aggiunge automaticamente l'impegno con ora e durata reali, e torna alla Home.</span></div></div>
   </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-b">PDF ed Excel</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>PDF</strong><span>Genera un registro stampabile da allegare alla documentazione o inviare alla segreteria.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Excel export</strong><span>Scarica un file .xlsx con tutti i dati e il riepilogo ore.</span></div></div>
-    <div class="step"><div class="sn">3</div><div class="st"><strong>Excel import</strong><span>Importa un file .xlsx per ripristinare i dati su un altro dispositivo.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Excel import</strong><span>Importa un file .xlsx per ripristinare i dati, ad esempio dopo aver cambiato dispositivo.</span></div></div>
   </div>
+
   <div class="doc-box">
     <div class="doc-hdr dh-v">Storico anni</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Nuovo anno a settembre</strong><span>Vai in Storico, premi Nuovo anno scolastico, scegli l'anno dai menu e conferma.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Anni precedenti</strong><span>Premi Apri su un anno vecchio per consultarlo. I dati di ogni anno sono separati.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Anni precedenti</strong><span>Premi Apri su un anno passato per consultarlo. I dati di ogni anno restano separati.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Eliminare un anno</strong><span>Premi l'icona cestino accanto all'anno. Viene chiesta conferma perché l'azione è irreversibile.</span></div></div>
   </div>
+
   <div class="doc-box">
-    <div class="doc-hdr dh-v">Salvataggio</div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Automatico nel browser</strong><span>I dati rimangono anche dopo aver chiuso l'app, finche non svuoti la cache.</span></div></div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Solo su questo dispositivo</strong><span>Per trasferire i dati usa export Excel e reimportali sull'altro dispositivo.</span></div></div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Evita la modalita in incognito</strong><span>In navigazione privata i dati non vengono salvati.</span></div></div>
+    <div class="doc-hdr dh-v">Salvataggio e sincronizzazione</div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Cloud privato per account</strong><span>I dati sono salvati sia sul dispositivo che nel cloud, legati alla tua email. Account diversi vedono dati diversi.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Multi-dispositivo</strong><span>Accedi con lo stesso account da telefono e computer per ritrovare sempre gli stessi impegni.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Backup manuale</strong><span>L'esportazione Excel è utile anche come backup personale, oltre che per condividere i dati.</span></div></div>
   </div>
 </div>
 
 <!-- MODAL ELIMINA ANNO -->
-<div class="modal-bg" id="modal-elimina-anno">
+<div class="modal-bg" id="modal-elimina-anno" onclick="if(event.target===this)chiudiModalEliminaAnno()">
   <div class="modal" style="max-width:340px;">
     <div class="modal-conferma-icon">&#9888;&#65039;</div>
     <div class="modal-conferma-testo" id="elimina-anno-testo"></div>
@@ -689,7 +716,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </div>
 
 <!-- MODAL GIORNO -->
-<div class="modal-bg" id="modal-giorno">
+<div class="modal-bg" id="modal-giorno" onclick="if(event.target===this)chiudiModalGiorno()">
   <div class="modal">
     <div class="modal-h">
       <h2 id="modal-giorno-titolo">Impegni del giorno</h2>
@@ -700,7 +727,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </div>
 
 <!-- MODAL MODIFICA -->
-<div class="modal-bg" id="modal-modifica">
+<div class="modal-bg" id="modal-modifica" onclick="if(event.target===this)chiudiModal()">
   <div class="modal">
     <div class="modal-h">
       <h2>Modifica impegno</h2>
@@ -751,6 +778,7 @@ const fHM = m => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
 const fHMS = s => `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 const fD = s => { if (!s) return ''; const [y, mo, d] = s.split('-'); return `${d}/${mo}/${y}`; };
 const dM = (i, f) => { if (!i || !f) return 0; let d = tM(f) - tM(i); if (d < 0) d += 1440; return d; };
+const escHtml = s => (s || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 function toast(msg, ms = 2200) {
   const e = document.getElementById('toast');
@@ -794,6 +822,7 @@ function salva() {
 }
 
 function carica() {
+  if (!annoAttivo) { imp = []; return; }
   try {
     const d = localStorage.getItem(keyAnno(annoAttivo));
     imp = d ? JSON.parse(d) : [];
@@ -842,13 +871,14 @@ async function attivaAnno(a) {
 }
 
 function aggiornaTopSub() {
-  document.getElementById('top-sub').textContent = 'A.S. ' + annoAttivo;
+  document.getElementById('top-sub').textContent = annoAttivo ? ('A.S. ' + annoAttivo) : 'Nessun anno attivo';
+  const valore = annoAttivo || '--';
   const el = document.getElementById('anno-attivo-lbl');
-  if (el) el.textContent = annoAttivo;
+  if (el) el.textContent = valore;
   const el2 = document.getElementById('anno-home-lbl');
-  if (el2) el2.textContent = annoAttivo;
+  if (el2) el2.textContent = valore;
   const el3 = document.getElementById('pdf-anno');
-  if (el3) el3.textContent = annoAttivo;
+  if (el3) el3.textContent = valore;
 }
 
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
@@ -871,6 +901,7 @@ function catStile(el, sc, sa) {
 
 // ── AGGIUNGI ─────────────────────────────────────────────────────────
 function aggiungi() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
   const nome = document.getElementById('ev-nome').value.trim();
   const cat = document.getElementById('ev-cat').value;
   const data = document.getElementById('ev-data').value;
@@ -1056,8 +1087,8 @@ function renderImpegno(i) {
   return '<div class="imp">' +
     '<div class="imp-badge ' + (i.cat === 'coll' ? 'ib-c' : i.cat === 'altre' ? 'ib-a' : 'ib-e') + '" style="font-size:1.1rem">' + (i.cat === 'coll' ? '\u{1f3db}' : i.cat === 'altre' ? '\u{1f4cc}' : '\u2728') + '</div>' +
     '<div class="imp-info">' +
-      '<div class="imp-nome">' + i.nome + '</div>' +
-      '<div class="imp-meta">' + fD(i.data) + ' \u00b7 ' + i.ini + '\u2013' + i.fine + (i.note ? ' \u00b7 ' + i.note : '') + '</div>' +
+      '<div class="imp-nome">' + escHtml(i.nome) + '</div>' +
+      '<div class="imp-meta">' + fD(i.data) + ' \u00b7 ' + i.ini + '\u2013' + i.fine + (i.note ? ' \u00b7 ' + escHtml(i.note) : '') + '</div>' +
     '</div>' +
     '<div class="imp-ore ' + (i.cat === 'coll' ? 'ioc' : i.cat === 'altre' ? 'ioa' : 'ioe') + '">' + fHM(i.dur) + 'h</div>' +
     '<button class="btn-mod" onclick="modifica(' + i.id + ')" title="Modifica">\u270e</button>' +
@@ -1174,7 +1205,7 @@ function renderCal() {
       const orario = i.ini ? `${i.ini}` : '';
       const durata = i.dur > 0 ? ` (${fHM(i.dur)})` : '';
       return `<div class="cal-ev ${i.cat === 'coll' ? 'ce-c' : i.cat === 'altre' ? 'ce-a' : 'ce-e'}">
-        <div class="ce-nome">${i.nome}</div>
+        <div class="ce-nome">${escHtml(i.nome)}</div>
         ${orario ? `<div class="ce-info">${orario}${durata}</div>` : ''}
       </div>`;
     }).join('');
@@ -1189,6 +1220,7 @@ function renderCal() {
 
 // ── TIMER ─────────────────────────────────────────────────────────────
 function tVia() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
   const ev = document.getElementById('t-ev').value.trim();
   const cat = document.getElementById('t-cat').value;
   if (!ev) { toast('\u26a0\ufe0f Inserisci il nome'); return; }
@@ -1206,16 +1238,25 @@ function tStop() {
   const sec = Math.floor((Date.now() - tStart) / 1000), durM = Math.ceil(sec / 60);
   const nome = document.getElementById('t-ev').value.trim();
   const cat = document.getElementById('t-cat').value;
+
+  document.getElementById('t-disp').textContent = '00:00:00';
+  document.getElementById('t-lbl').textContent = 'Premi Avvia per iniziare';
+  document.getElementById('btn-via').style.display = '';
+  document.getElementById('btn-stop').style.display = 'none';
+
+  if (sec < 30) {
+    document.getElementById('t-ev').value = '';
+    document.getElementById('t-cat').value = '';
+    toast('\u26a0\ufe0f Timer troppo breve, impegno non salvato');
+    return;
+  }
+
   const now = new Date(), data = now.toISOString().slice(0, 10);
   const fine = now.toTimeString().slice(0, 5);
   const iniD = new Date(tStart), ini = iniD.toTimeString().slice(0, 5);
   imp.push({ id: Date.now() + Math.random(), nome, cat, data, ini, fine, dur: durM, note: 'Da timer' });
   imp.sort((a, b) => a.data.localeCompare(b.data));
   salva(); aggiorna();
-  document.getElementById('t-disp').textContent = '00:00:00';
-  document.getElementById('t-lbl').textContent = 'Premi Avvia per iniziare';
-  document.getElementById('btn-via').style.display = '';
-  document.getElementById('btn-stop').style.display = 'none';
   document.getElementById('t-ev').value = '';
   document.getElementById('t-cat').value = '';
   toast(`\u2705 Aggiunto: ${nome} (${fHM(durM)}h)`);
@@ -1230,7 +1271,7 @@ function aggPDF() {
   document.getElementById('pdf-a').textContent = fHM(totA) + 'h';
   document.getElementById('pdf-t').textContent = fHM(totC + totA) + 'h';
   document.getElementById('pdf-n').textContent = imp.length;
-  document.getElementById('pdf-anno').textContent = annoAttivo;
+  document.getElementById('pdf-anno').textContent = annoAttivo || '--';
 }
 
 function stampaPDF() {
@@ -1238,31 +1279,39 @@ function stampaPDF() {
   const sc = document.getElementById('pdf-sc').value.trim() || '--';
   const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
   const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
+  const catLabel = c => c === 'coll' ? 'Att. Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
+  const catColor = c => c === 'coll' ? '#1F4E79' : c === 'altre' ? '#1E5631' : '#C55A11';
   const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map(i =>
-    `<tr><td>${fD(i.data)}</td><td>${i.nome}</td><td>${i.cat === 'coll' ? 'Att. Collegiale' : 'Altre Attivita'}</td><td>${i.ini}&ndash;${i.fine}</td><td style="font-weight:700;color:${i.cat === 'coll' ? '#1F4E79' : '#1E5631'}">${fHM(i.dur)}h</td><td>${i.note || ''}</td></tr>`
+    `<tr><td>${fD(i.data)}</td><td>${i.nome}</td><td>${catLabel(i.cat)}</td><td>${i.ini}&ndash;${i.fine}</td><td style="font-weight:700;color:${catColor(i.cat)}">${fHM(i.dur)}h</td><td>${i.note || ''}</td></tr>`
   ).join('');
+  const extraBox = totE > 0 ? `<div class="box"><div class="bl">Extra</div><div class="bv" style="color:#C55A11">${fHM(totE)}h</div></div>` : '';
   const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div><div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div>${extraBox}<div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">ProfTime - Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
   w.document.close();
   setTimeout(() => w.print(), 400);
 }
 
 function copiaCSV() {
+  const catLabelCsv = c => c === 'coll' ? 'Attivita Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
   const h = 'Data,Evento,Categoria,Inizio,Fine,Durata(min),Note\n';
   const r = [...imp].sort((a, b) => a.data.localeCompare(b.data))
-    .map(i => `${fD(i.data)},"${i.nome}",${i.cat === 'coll' ? 'Attivita Collegiale' : 'Altre Attivita'},${i.ini},${i.fine},${i.dur},"${i.note || ''}"`).join('\n');
+    .map(i => `${fD(i.data)},"${i.nome}",${catLabelCsv(i.cat)},${i.ini},${i.fine},${i.dur},"${i.note || ''}"`).join('\n');
   navigator.clipboard.writeText(h + r).then(() => toast('\u2705 CSV copiato')).catch(() => toast('\u26a0\ufe0f Copia non riuscita'));
 }
 
 // ── EXCEL EXPORT ──────────────────────────────────────────────────────
 function esportaExcel() {
   if (typeof XLSX === 'undefined') { toast('\u26a0\ufe0f Libreria non disponibile'); return; }
+  if (!annoAttivo) { toast('\u26a0\ufe0f Nessun anno attivo da esportare'); return; }
   const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
   const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
+  const catLabelXls = c => c === 'coll' ? 'Attivita Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
   const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map((i, idx) => ({
     'N': idx + 1,
     'Nome': i.nome,
-    'Categoria': i.cat === 'coll' ? 'Attivita Collegiale' : 'Altre Attivita',
+    'Categoria': catLabelXls(i.cat),
     'Data': fD(i.data),
     'Ora Inizio': i.ini,
     'Ora Fine': i.fine,
@@ -1272,7 +1321,10 @@ function esportaExcel() {
   righe.push({});
   righe.push({ 'N': '', 'Nome': 'TOTALE COLLEGIALI', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC), 'Note': 'su 40h max' });
   righe.push({ 'N': '', 'Nome': 'TOTALE ALTRE ATTIVITA', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totA), 'Note': 'su 40h max' });
-  righe.push({ 'N': '', 'Nome': 'TOTALE GENERALE', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC + totA), 'Note': 'su 80h max' });
+  if (totE > 0) {
+    righe.push({ 'N': '', 'Nome': 'TOTALE EXTRA', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totE), 'Note': 'non conteggiate' });
+  }
+  righe.push({ 'N': '', 'Nome': 'TOTALE GENERALE (40+40)', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC + totA), 'Note': 'su 80h max' });
   const ws = XLSX.utils.json_to_sheet(righe);
   ws['!cols'] = [{ wch: 4 }, { wch: 36 }, { wch: 22 }, { wch: 13 }, { wch: 11 }, { wch: 11 }, { wch: 10 }, { wch: 20 }];
   const wb = XLSX.utils.book_new();
@@ -1284,6 +1336,7 @@ function esportaExcel() {
 // ── EXCEL IMPORT ──────────────────────────────────────────────────────
 function importaExcel(input) {
   if (typeof XLSX === 'undefined') { toast('\u26a0\ufe0f Libreria non disponibile'); return; }
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
   const file = input.files[0];
   if (!file) return;
   const msg = document.getElementById('import-msg');
@@ -1304,8 +1357,10 @@ function importaExcel(input) {
         const note = (r['Note'] || r['note'] || '').toString().trim();
         if (!nome || nome.includes('TOTALE') || nome === 'N') return;
         let cat = '';
-        if (catRaw.toLowerCase().includes('collegial')) cat = 'coll';
-        else if (catRaw.toLowerCase().includes('altre') || catRaw.toLowerCase().includes('altra')) cat = 'altre';
+        const catLower = catRaw.toLowerCase();
+        if (catLower.includes('collegial')) cat = 'coll';
+        else if (catLower.includes('extra')) cat = 'extra';
+        else if (catLower.includes('altre') || catLower.includes('altra')) cat = 'altre';
         else { errori++; return; }
         let dataISO = '';
         if (dataRaw.includes('/')) {
@@ -1369,12 +1424,16 @@ function toggleFormAnno() {
   }
 }
 
-function confermaNuovoAnno() {
+async function confermaNuovoAnno() {
   const y1 = document.getElementById('inp-anno-y1').value;
   const y2 = document.getElementById('inp-anno-y2').value;
   if (parseInt(y2) !== parseInt(y1) + 1) { toast('Anno finale deve essere il successivo'); return; }
   const nuovo = y1 + '/' + y2;
-  if (tuttiAnni().includes(nuovo)) { attivaAnno(nuovo); toggleFormAnno(); return; }
+  if (tuttiAnni().includes(nuovo)) {
+    toggleFormAnno();
+    await attivaAnno(nuovo);
+    return;
+  }
   annoAttivo = nuovo;
   imp = [];
   salva(); aggiorna(); aggiornaTopSub(); renderAnni();
@@ -1433,6 +1492,10 @@ function chiudiModalEliminaAnno() {
 async function eliminaAnnoConfermato() {
   if (!annoDaEliminare) return;
   const a = annoDaEliminare;
+
+  // Cancella un eventuale salvataggio in sospeso per evitare che riscriva
+  // dati sull'anno che stiamo per eliminare
+  if (a === annoAttivo) clearTimeout(syncTimeout);
 
   // Rimuovi da localStorage
   try { localStorage.removeItem(keyAnno(a)); } catch (e) {}
@@ -1537,30 +1600,70 @@ async function onUserLoggedIn(user) {
 
   // Reset completo: azzera qualsiasi dato presente in memoria prima del login
   imp = [];
-  annoAttivo = '2025/2026';
 
-  // Cerca prima se questo utente ha gia dati locali per questo browser/anno
-  carica();
+  // Cerca se questo utente ha gia anni salvati in locale su questo browser
+  const anniEsistenti = tuttiAnni();
 
-  // Carica dal cloud (fonte di verita) e sostituisce i dati locali
-  const cloudData = await caricaDaCloud(annoAttivo);
-  if (cloudData && cloudData.length > 0) {
-    imp = cloudData.slice();
-    salva();
-  } else if (imp.length > 0) {
-    // Nessun dato cloud ma c'e qualcosa di locale per questo utente: carica su Firestore
-    salva();
+  if (anniEsistenti.length > 0) {
+    // Usa l'anno piu recente gia presente
+    annoAttivo = anniEsistenti[0];
+    carica();
+    const cloudData = await caricaDaCloud(annoAttivo);
+    if (cloudData && cloudData.length > 0) {
+      imp = cloudData.slice();
+      salva();
+    } else if (imp.length > 0) {
+      salva();
+    }
+  } else {
+    // Nessun anno locale: prova comunque a vedere se esiste qualcosa nel cloud
+    // per l'anno scolastico corrente, prima di considerare l'utente "nuovo"
+    const oggi = new Date();
+    const meseCorrente = oggi.getMonth() + 1;
+    const yA = meseCorrente >= 9 ? oggi.getFullYear() : oggi.getFullYear() - 1;
+    const annoSuggerito = yA + '/' + (yA + 1);
+    const cloudData = await caricaDaCloud(annoSuggerito);
+    if (cloudData && cloudData.length > 0) {
+      annoAttivo = annoSuggerito;
+      imp = cloudData.slice();
+      salva();
+    } else {
+      // Davvero nessun dato: utente nuovo, nessun anno fantasma
+      annoAttivo = '';
+    }
   }
+
   setSyncStatus('ok');
   aggiorna();
   renderRegistro();
   aggiornaTopSub();
   renderAnni();
+
+  if (!annoAttivo) {
+    vai('storico');
+    setTimeout(() => {
+      const form = document.getElementById('form-nuovo-anno');
+      if (form && form.style.display !== 'block') toggleFormAnno();
+    }, 300);
+  }
 }
 
 function onUserLoggedOut() {
   currentUser = null;
   imp = [];
+  // Ferma un eventuale timer attivo per evitare impegni salvati nell'account sbagliato
+  if (tOn) {
+    clearInterval(tInt);
+    tOn = false;
+    const tDisp = document.getElementById('t-disp');
+    const tLbl = document.getElementById('t-lbl');
+    const btnVia = document.getElementById('btn-via');
+    const btnStop = document.getElementById('btn-stop');
+    if (tDisp) tDisp.textContent = '00:00:00';
+    if (tLbl) tLbl.textContent = 'Premi Avvia per iniziare';
+    if (btnVia) btnVia.style.display = '';
+    if (btnStop) btnStop.style.display = 'none';
+  }
   document.getElementById('login-screen').classList.remove('hide');
   document.getElementById('login-loading').style.display = 'none';
   document.getElementById('login-email').value = '';
@@ -1614,9 +1717,9 @@ function apriGiorno(ds) {
     const durata = i.dur > 0 ? fHM(i.dur) + 'h' : '';
     return '<div class="modal-giorno-ev">' +
       '<div><span class="mge-badge ' + catCls + '">' + catLbl + '</span></div>' +
-      '<div class="mge-nome">' + i.nome + '</div>' +
+      '<div class="mge-nome">' + escHtml(i.nome) + '</div>' +
       '<div class="mge-info"><span>' + orario + '</span>' + (durata ? '<span>' + durata + '</span>' : '') + '</div>' +
-      (i.note ? '<div class="mge-note">' + i.note + '</div>' : '') +
+      (i.note ? '<div class="mge-note">' + escHtml(i.note) + '</div>' : '') +
       '</div>';
   }).join('');
   document.getElementById('modal-giorno').classList.add('on');
