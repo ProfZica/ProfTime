@@ -284,6 +284,10 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .ioe{color:#C55A11;}
 .cal-ev.ce-e{background:#FCE4D6;border-left:3px solid #C55A11;}
 .fi.ae{background:#C55A11;color:#fff;border-color:#C55A11;}
+.btn-del-anno{background:none;border:1.5px solid var(--bd);cursor:pointer;color:var(--rosso);font-size:.9rem;padding:6px 9px;border-radius:7px;transition:all .15s;flex-shrink:0;}
+.btn-del-anno:hover{background:var(--rosso-c);border-color:var(--rosso);}
+.modal-conferma-icon{font-size:2.2rem;text-align:center;padding:20px 0 6px;}
+.modal-conferma-testo{font-size:.85rem;color:var(--tx2);text-align:center;padding:0 20px 16px;line-height:1.6;}
 /* MODAL GIORNO */
 .modal-giorno-ev{padding:14px 16px;border-bottom:1px solid var(--bd);}
 .modal-giorno-ev:last-child{border-bottom:none;}
@@ -660,6 +664,20 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="step"><div class="sn">!</div><div class="st"><strong>Automatico nel browser</strong><span>I dati rimangono anche dopo aver chiuso l'app, finche non svuoti la cache.</span></div></div>
     <div class="step"><div class="sn">!</div><div class="st"><strong>Solo su questo dispositivo</strong><span>Per trasferire i dati usa export Excel e reimportali sull'altro dispositivo.</span></div></div>
     <div class="step"><div class="sn">!</div><div class="st"><strong>Evita la modalita in incognito</strong><span>In navigazione privata i dati non vengono salvati.</span></div></div>
+  </div>
+</div>
+
+<!-- MODAL ELIMINA ANNO -->
+<div class="modal-bg" id="modal-elimina-anno">
+  <div class="modal" style="max-width:340px;">
+    <div class="modal-conferma-icon">&#9888;&#65039;</div>
+    <div class="modal-conferma-testo" id="elimina-anno-testo"></div>
+    <div class="modal-b" style="padding-top:0">
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="chiudiModalEliminaAnno()" style="flex:1">Annulla</button>
+        <button class="btn" onclick="eliminaAnnoConfermato()" style="flex:1;background:var(--rosso);color:#fff">Elimina</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1373,9 +1391,63 @@ function renderAnni() {
         </div>
         <div style="font-size:.7rem;color:var(--tx2);margin-top:2px">${dati.length} impegni &middot; Coll. ${fHM(totC)}h &middot; Altre ${fHM(totA)}h</div>
       </div>
-      ${!attivo ? `<button class="btn btn-ghost btn-sm" style="white-space:nowrap;flex-shrink:0" onclick="attivaAnno('${a}')">Apri</button>` : ''}
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        ${!attivo ? `<button class="btn btn-ghost btn-sm" style="white-space:nowrap" onclick="attivaAnno('${a}')">Apri</button>` : ''}
+        <button class="btn-del-anno" onclick="confermaEliminaAnno('${a}')" title="Elimina anno">&#x1F5D1;</button>
+      </div>
     </div>`;
   }).join('');
+}
+
+let annoDaEliminare = null;
+
+function confermaEliminaAnno(a) {
+  annoDaEliminare = a;
+  document.getElementById('elimina-anno-testo').textContent =
+    'Stai per eliminare definitivamente tutti gli impegni dell\'anno scolastico ' + a + '. Questa azione non puo essere annullata.';
+  document.getElementById('modal-elimina-anno').classList.add('on');
+}
+
+function chiudiModalEliminaAnno() {
+  annoDaEliminare = null;
+  document.getElementById('modal-elimina-anno').classList.remove('on');
+}
+
+async function eliminaAnnoConfermato() {
+  if (!annoDaEliminare) return;
+  const a = annoDaEliminare;
+
+  // Rimuovi da localStorage
+  try { localStorage.removeItem(keyAnno(a)); } catch (e) {}
+
+  // Rimuovi da Firestore se autenticato
+  if (currentUser && window.fb) {
+    try {
+      const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', fsKeyAnno(a));
+      await window.fb.setDoc(ref, { dati: [], aggiornato: Date.now(), eliminato: true });
+    } catch (e) { console.error('Errore eliminazione cloud', e); }
+  }
+
+  const eraAttivo = (a === annoAttivo);
+  chiudiModalEliminaAnno();
+
+  if (eraAttivo) {
+    // Se ho eliminato l'anno attivo, passo a un altro anno rimasto o creo quello base
+    const rimasti = tuttiAnni();
+    if (rimasti.length > 0) {
+      annoAttivo = rimasti[0];
+      carica();
+    } else {
+      annoAttivo = '2025/2026';
+      imp = [];
+      salva();
+    }
+    aggiorna();
+    aggiornaTopSub();
+  }
+
+  renderAnni();
+  toast('Anno ' + a + ' eliminato');
 }
 
 // ── AUTENTICAZIONE ───────────────────────────────────────────────────
@@ -1526,7 +1598,8 @@ function chiudiModalGiorno() {
 const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica,
   filtra, setVista, calMese, tVia, tStop, stampaPDF, copiaCSV,
   esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
-  apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout];
+  apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout,
+  confermaEliminaAnno, chiudiModalEliminaAnno, eliminaAnnoConfermato];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
