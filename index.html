@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>ProfTime - Registro Impegni Docente</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  try {
+  const firebaseConfig = {
+    apiKey: "AIzaSyC4sgad70UNjL19t9CL_AAUS3OkORdTVtE",
+    authDomain: "proftime-84193.firebaseapp.com",
+    projectId: "proftime-84193",
+    storageBucket: "proftime-84193.firebasestorage.app",
+    messagingSenderId: "975684880291",
+    appId: "1:975684880291:web:33056d9e9a2b1c11eabc16"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const fbAuth = getAuth(fbApp);
+  const fbDb = getFirestore(fbApp);
+
+  // Espone su window per l'uso nello script principale (non-module)
+  window.fb = {
+    auth: fbAuth, db: fbDb,
+    createUser: createUserWithEmailAndPassword,
+    signIn: signInWithEmailAndPassword,
+    signOut: signOut,
+    onAuthChange: onAuthStateChanged,
+    doc, setDoc, getDoc, onSnapshot
+  };
+  window.fbReady = true;
+  window.fbError = null;
+  window.dispatchEvent(new Event('fbReady'));
+} catch (err) {
+  console.error('Errore inizializzazione Firebase:', err);
+  window.fbReady = false;
+  window.fbError = err.message || 'Errore sconosciuto';
+}
+</script>
+<style>
+:root{
+  --blu:#1F4E79;--blu-m:#2E75B6;--blu-c:#D6E4F0;--blu-cc:#EEF4FB;
+  --verde:#1E5631;--verde-m:#70AD47;--verde-c:#E2EFDA;--verde-cc:#EEF7EE;
+  --oro:#C9A227;--oro-c:#FFF9C4;
+  --bg:#F2F5F9;--bd:#DDE3EA;--tx2:#6B7A8D;
+  --w:#FFFFFF;--rosso:#C0392B;--rosso-c:#FDECEA;--testo:#1A2332;
+  --r:12px;--sh:0 2px 14px rgba(0,0,0,.07);--f:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --extra:#C55A11;--extra-c:#FCE4D6;--extra-cc:#FEF3EC;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100vh;padding-bottom:16px;}
+.topbar{background:var(--blu);color:#fff;padding:12px 16px 10px;position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:flex-start;}
+.topbar h1{font-size:.95rem;font-weight:800;letter-spacing:-.3px;}
+.topbar p{font-size:.68rem;opacity:.65;margin-top:1px;}
+.topbar-credit{font-size:.62rem;opacity:.55;text-align:right;white-space:nowrap;padding-top:2px;}
+.bnav{position:fixed;top:52px;left:0;right:0;z-index:200;background:var(--w);border-bottom:1px solid var(--bd);display:flex;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 2px;border:none;background:none;cursor:pointer;color:var(--tx2);font-family:var(--f);-webkit-tap-highlight-color:transparent;}
+.nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.nb.on{color:var(--blu);}
+.pag{display:none;max-width:700px;margin:0 auto;padding:14px;}
+.pag.on{display:block;padding-top:108px;}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+@media(max-width:440px){.cards{grid-template-columns:1fr 1fr;}.ct{grid-column:1/-1;}}
+.card{background:var(--w);border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh);border-top:4px solid transparent;}
+.cc2{border-top-color:var(--blu-m);}.ca2{border-top-color:var(--verde-m);}.ct{border-top-color:var(--oro);}
+.c-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);margin-bottom:4px;}
+.c-val{font-size:1.75rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
+.cc2 .c-val{color:var(--blu);}.ca2 .c-val{color:var(--verde);}.ct .c-val{color:var(--oro);}
+.c-sub{font-size:.67rem;color:var(--tx2);margin-top:3px;}
+.barre{display:grid;gap:8px;margin-bottom:14px;}
+.bw{background:var(--w);border-radius:var(--r);padding:11px 14px;box-shadow:var(--sh);}
+.bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:.78rem;}
+.bh strong{font-weight:700;}.bh span{color:var(--tx2);font-size:.7rem;}
+.bt{height:7px;background:var(--bd);border-radius:99px;overflow:hidden;}
+.bf{height:100%;border-radius:99px;transition:width .45s ease;}
+.barre-c .bf{background:var(--blu-m);}.barre-a .bf{background:var(--verde-m);}.bf.over{background:var(--rosso);}
+.avv{background:#FFF3CD;border:1.5px solid #FFCA28;border-radius:var(--r);padding:10px 13px;font-size:.8rem;margin-bottom:14px;display:none;line-height:1.5;}
+.avv.on{display:block;}.avv strong{color:#7B5800;}
+.avv.red{background:var(--rosso-c);border-color:var(--rosso);}.avv.red strong{color:var(--rosso);}
+.box{background:var(--w);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden;}
+.box-h{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-bottom:1px solid var(--bd);}
+.box-h h2{font-size:.78rem;font-weight:700;color:var(--blu);text-transform:uppercase;letter-spacing:.5px;}
+.box-b{padding:15px;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.s2{grid-column:1/-1;}
+.fl{display:block;font-size:.68rem;font-weight:700;color:var(--tx2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+input[type=text],input[type=date],input[type=time],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:.92rem;font-family:var(--f);color:var(--testo);background:var(--w);transition:border-color .15s;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blu-m);box-shadow:0 0 0 3px rgba(46,117,182,.1);}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7A8D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+select.sc{border-color:var(--blu-m);background-color:var(--blu-cc);color:var(--blu);}
+select.sa{border-color:var(--verde-m);background-color:var(--verde-cc);color:var(--verde);}
+select.se{border-color:var(--extra);background-color:var(--extra-cc);color:var(--extra);}
+textarea{resize:vertical;min-height:70px;line-height:1.5;}
+.btn{padding:11px 18px;border-radius:9px;border:none;font-family:var(--f);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;justify-content:center;}
+.btn:active{transform:scale(.97);}
+.btn-blu{background:var(--blu);color:#fff;}.btn-blu:hover{background:var(--blu-m);}
+.btn-verde{background:var(--verde);color:#fff;}.btn-verde:hover{background:var(--verde-m);}
+.btn-ghost{background:transparent;border:1.5px solid var(--bd);color:var(--tx2);}.btn-ghost:hover{border-color:var(--blu-m);color:var(--blu);}
+.btn-full{width:100%;margin-top:14px;padding:13px;}
+.btn-sm{padding:6px 12px;font-size:.78rem;}
+.toggle-v{display:flex;background:var(--bg);border-radius:8px;padding:3px;gap:3px;}
+.tv{flex:1;padding:6px 10px;border-radius:6px;border:none;background:transparent;font-family:var(--f);font-size:.75rem;font-weight:700;cursor:pointer;color:var(--tx2);transition:all .15s;}
+.tv.on{background:var(--w);color:var(--blu);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.filtri{display:flex;gap:5px;}
+.fi{padding:5px 11px;border-radius:99px;border:1.5px solid var(--bd);background:transparent;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--tx2);transition:all .15s;}
+.fi.at{background:var(--blu);color:#fff;border-color:var(--blu);}
+.fi.ac{background:var(--blu-m);color:#fff;border-color:var(--blu-m);}
+.fi.aa{background:var(--verde-m);color:#fff;border-color:var(--verde-m);}
+.vuota{padding:40px 20px;text-align:center;color:var(--tx2);font-size:.88rem;}
+.vuota .vi{font-size:2.2rem;display:block;margin-bottom:10px;}
+.mese-sep{padding:7px 15px 3px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx2);background:var(--bg);}
+.gruppo-hdr{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;font-size:.82rem;font-weight:800;color:#fff;}
+.gruppo-hdr span{font-size:.68rem;font-weight:600;opacity:.9;}
+.gh-c{background:var(--blu);}
+.gh-a{background:var(--verde);}
+.gh-e{background:var(--extra);}
+.imp{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid var(--bd);transition:background .1s;}
+.imp:last-child{border-bottom:none;}.imp:hover{background:#FAFBFC;}
+.imp-badge{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ib-c{background:var(--blu-c);}.ib-a{background:var(--verde-c);}
+.imp-info{flex:1;min-width:0;}
+.imp-nome{font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.imp-meta{font-size:.7rem;color:var(--tx2);margin-top:2px;}
+.imp-ore{font-size:.92rem;font-weight:800;font-variant-numeric:tabular-nums;flex-shrink:0;min-width:46px;text-align:right;}
+.ioc{color:var(--blu);}.ioa{color:var(--verde);}
+.btn-del{background:none;border:none;cursor:pointer;color:#CCC;font-size:.95rem;padding:5px;border-radius:5px;transition:color .12s;flex-shrink:0;}
+.btn-del:hover{color:var(--rosso);}
+.btn-mod{background:none;border:none;cursor:pointer;color:#CCC;font-size:1.1rem;padding:5px;border-radius:5px;transition:color .12s;flex-shrink:0;}
+.btn-mod:hover{color:var(--blu-m);}
+/* CALENDARIO */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-bottom:1px solid var(--bd);}
+.cal-nav h3{font-size:.9rem;font-weight:700;color:var(--blu);}
+.cn{background:none;border:1.5px solid var(--bd);border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:border-color .15s;}
+.cn:hover{border-color:var(--blu-m);}
+.cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:8px 10px 4px;}
+.cal-dl{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--tx2);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px 10px 12px;}
+.cal-cella{min-height:64px;border-radius:7px;padding:4px;background:transparent;transition:background .1s;overflow:hidden;}
+.cal-cella.oggi{background:var(--blu-cc);}
+.cal-cella.altro-m .cal-n{color:#CCC;}
+.cal-n{font-size:.78rem;font-weight:700;margin-bottom:3px;}
+.cal-cella.oggi .cal-n{color:var(--blu);font-weight:800;}
+.cal-ev{border-radius:4px;padding:3px 5px;margin-bottom:2px;overflow:hidden;}
+.cal-ev.ce-c{background:var(--blu-c);border-left:3px solid var(--blu-m);}
+.cal-ev.ce-a{background:var(--verde-c);border-left:3px solid var(--verde-m);}
+.ce-nome{font-size:.6rem;font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--testo);}
+.ce-info{font-size:.55rem;color:var(--tx2);margin-top:1px;font-variant-numeric:tabular-nums;}
+.cal-cella.ha-ev{background:#FAFBFD;}
+.cal-cella.oggi.ha-ev{background:var(--blu-cc);}
+.cal-leg{display:flex;gap:12px;padding:8px 15px;border-top:1px solid var(--bd);flex-wrap:wrap;}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--tx2);}
+.leg-d{width:4px;height:14px;border-radius:2px;}
+.lg-c{background:var(--blu-m);}.lg-a{background:var(--verde-m);}
+/* RIEPILOGO MENSILE */
+.mese-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
+@media(max-width:400px){.mese-grid{grid-template-columns:1fr;}}
+.mese-card{border-radius:10px;padding:13px 14px;background:var(--bg);border:1.5px solid transparent;}
+.mese-card.has-data{background:var(--w);border-color:var(--bd);box-shadow:0 1px 6px rgba(0,0,0,.05);}
+.mese-card.mese-attivo{border-color:var(--blu-m);background:var(--blu-cc);}
+.mc-nome{font-size:.82rem;font-weight:800;margin-bottom:9px;color:var(--testo);}
+.mc-nessuno{font-size:.72rem;color:var(--tx2);}
+.mc-row{margin-bottom:6px;}
+.mc-row:last-child{margin-bottom:0;}
+.mc-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.mc-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.mc-lbl.lc{color:var(--blu);}.mc-lbl.la{color:var(--verde);}.mc-lbl.le{color:var(--extra);}
+.mc-val{font-size:.72rem;font-weight:800;font-variant-numeric:tabular-nums;}
+.mc-val.vc{color:var(--blu);}.mc-val.va{color:var(--verde);}.mc-val.ve{color:var(--extra);}
+.mc-bar-track{height:5px;background:var(--bd);border-radius:99px;overflow:hidden;}
+.mc-bar-fill{height:100%;border-radius:99px;}
+.mc-bar-c{background:var(--blu-m);}.mc-bar-a{background:var(--verde-m);}.mc-bar-e{background:var(--extra);}
+.mc-tot{display:flex;justify-content:space-between;margin-top:8px;padding-top:7px;border-top:1px solid var(--bd);}
+.mc-tot-lbl{font-size:.65rem;color:var(--tx2);}
+.mc-tot-val{font-size:.72rem;font-weight:800;color:var(--tx2);}
+/* TIMER */
+.timer-hero{background:linear-gradient(135deg,var(--blu) 0%,var(--blu-m) 100%);border-radius:var(--r);padding:22px 18px;margin-bottom:14px;color:#fff;text-align:center;box-shadow:var(--sh);}
+.t-disp{font-size:3.2rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:3px;line-height:1;}
+.t-lbl{font-size:.72rem;opacity:.7;margin-top:5px;margin-bottom:18px;text-transform:uppercase;letter-spacing:.5px;}
+.t-btns{display:flex;gap:10px;justify-content:center;}
+.t-btns .btn{min-width:120px;}
+.btn-via{background:#fff;color:var(--blu);}.btn-via:hover{background:#EEF4FB;}
+.btn-stop{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35);}
+.t-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.t-form input,.t-form select{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff;}
+.t-form input::placeholder{color:rgba(255,255,255,.5);}
+.t-form label{color:rgba(255,255,255,.7);}
+.t-form select option{background:var(--blu);color:#fff;}
+/* PDF */
+.pdf-ante{border:1.5px solid var(--bd);border-radius:9px;padding:13px;margin-bottom:13px;background:#FAFBFC;}
+.pdf-ante h3{font-size:.72rem;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;}
+.pdf-r{display:flex;justify-content:space-between;font-size:.82rem;padding:5px 0;border-bottom:1px solid var(--bd);}
+.pdf-r:last-child{border-bottom:none;}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.modal-bg.on{display:flex;}
+.modal{background:var(--w);border-radius:var(--r);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2);}
+.modal-h{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bd);}
+.modal-h h2{font-size:.88rem;font-weight:700;color:var(--blu);text-transform:uppercase;letter-spacing:.5px;}
+.mclose{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--tx2);padding:4px 8px;border-radius:5px;}
+.mclose:hover{color:var(--rosso);}
+.modal-b{padding:15px;}
+/* DOC */
+.doc-hero{border-radius:var(--r);padding:20px;margin-bottom:14px;color:#fff;}
+.dh-blu{background:linear-gradient(135deg,var(--blu),var(--blu-m));}
+.dh-verde{background:linear-gradient(135deg,var(--verde),var(--verde-m));}
+.dh-oro{background:linear-gradient(135deg,#A07800,var(--oro));}
+.doc-hero h2{font-size:1.1rem;font-weight:800;margin-bottom:5px;}
+.doc-hero p{font-size:.82rem;opacity:.82;line-height:1.5;}
+.doc-box{background:var(--w);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:12px;overflow:hidden;}
+.doc-hdr{padding:11px 15px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;}
+.dh-b{background:var(--blu);}.dh-v{background:var(--verde);}.dh-g{background:#555;}
+.doc-item{display:flex;gap:12px;padding:11px 15px;border-bottom:1px solid var(--bd);}
+.doc-item:last-child{border-bottom:none;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.db{background:var(--blu-m);}.dv{background:var(--verde-m);}.dg{background:#999;}
+.dit{flex:1;}
+.dit strong{font-size:.86rem;font-weight:700;display:block;margin-bottom:2px;}
+.dit span{font-size:.76rem;color:var(--tx2);line-height:1.45;}
+.nota{background:var(--oro-c);border:1.5px solid var(--oro);border-radius:var(--r);padding:12px 14px;font-size:.8rem;color:#5A3E00;line-height:1.6;margin-bottom:12px;}
+.nota strong{display:block;font-size:.82rem;margin-bottom:3px;}
+.step{display:flex;gap:13px;padding:12px 15px;border-bottom:1px solid var(--bd);}
+.step:last-child{border-bottom:none;}
+.sn{width:28px;height:28px;border-radius:50%;background:var(--blu);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0;margin-top:1px;}
+.st strong{font-size:.86rem;font-weight:700;display:block;margin-bottom:3px;}
+.st span{font-size:.76rem;color:var(--tx2);line-height:1.5;}
+/* STORICO */
+.anno-card{display:flex;align-items:center;gap:12px;padding:13px 15px;border-bottom:1px solid var(--bd);}
+.anno-card:last-child{border-bottom:none;}
+.anno-badge{width:50px;height:50px;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;line-height:1.3;}
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--blu) 0%,var(--blu-m) 100%);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-screen.hide{display:none;}
+.login-box{background:var(--w);border-radius:16px;padding:32px 26px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.login-logo{text-align:center;margin-bottom:22px;}
+.login-logo h1{font-size:1.3rem;font-weight:800;color:var(--blu);}
+.login-logo p{font-size:.8rem;color:var(--tx2);margin-top:4px;}
+.login-tabs{display:flex;background:var(--bg);border-radius:8px;padding:3px;margin-bottom:18px;}
+.login-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:6px;font-family:var(--f);font-size:.82rem;font-weight:700;cursor:pointer;color:var(--tx2);}
+.login-tab.on{background:var(--w);color:var(--blu);box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.login-err{font-size:.78rem;color:var(--rosso);background:var(--rosso-c);padding:8px 12px;border-radius:7px;margin-bottom:12px;display:none;}
+.login-err.show{display:block;}
+.login-loading{position:fixed;inset:0;background:var(--blu);z-index:1001;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;}
+.account-box{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--bd);}
+.account-avatar{width:38px;height:38px;border-radius:50%;background:var(--blu-c);color:var(--blu);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0;}
+.account-info{flex:1;min-width:0;}
+.account-email{font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.account-status{font-size:.7rem;color:var(--tx2);}
+.sync-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sync-ok{background:var(--verde-m);}
+.sync-wait{background:var(--oro);}
+.sync-off{background:var(--rosso);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#222;color:#fff;padding:9px 18px;border-radius:99px;font-size:.83rem;font-weight:600;z-index:999;transition:transform .28s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+.toast.on{transform:translateX(-50%) translateY(0);}
+/* DROP ZONE */
+.drop-zone{background:var(--bg);border:2px dashed var(--bd);border-radius:9px;padding:20px;text-align:center;margin-bottom:10px;}
+.drop-zone .di{font-size:1.8rem;margin-bottom:6px;}
+.import-msg{font-size:.8rem;padding:10px 12px;border-radius:8px;margin-top:8px;display:none;}
+/* EXTRA */
+.extra-pill{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,var(--extra-cc) 0%,#FFF8F3 100%);
+  border:1.5px solid var(--extra-c);border-radius:var(--r);
+  padding:12px 16px;margin-bottom:14px;box-shadow:var(--sh);
+}
+.extra-pill-icon{
+  width:36px;height:36px;border-radius:9px;background:var(--extra-c);
+  color:var(--extra);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.extra-pill-info{flex:1;min-width:0;}
+.extra-pill-lbl{font-size:.8rem;font-weight:700;color:var(--extra);}
+.extra-pill-sub{font-size:.68rem;color:var(--tx2);margin-top:1px;}
+.extra-pill-val{font-size:1.3rem;font-weight:800;color:var(--extra);font-variant-numeric:tabular-nums;flex-shrink:0;}
+.barre-e .bf{background:#C55A11;}
+.ib-e{background:#FCE4D6;}
+.ioe{color:#C55A11;}
+.cal-ev.ce-e{background:#FCE4D6;border-left:3px solid #C55A11;}
+.fi.ae{background:#C55A11;color:#fff;border-color:#C55A11;}
+/* MODAL GIORNO */
+.modal-giorno-ev{padding:14px 16px;border-bottom:1px solid var(--bd);}
+.modal-giorno-ev:last-child{border-bottom:none;}
+.mge-badge{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:5px;}
+.mge-c{background:var(--blu-c);color:var(--blu);}
+.mge-a{background:var(--verde-c);color:var(--verde);}
+.mge-e{background:#FCE4D6;color:#C55A11;}
+.mge-nome{font-size:.95rem;font-weight:800;margin-bottom:4px;}
+.mge-info{font-size:.8rem;color:var(--tx2);display:flex;gap:12px;flex-wrap:wrap;}
+.mge-note{font-size:.78rem;color:var(--tx2);margin-top:4px;font-style:italic;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="login-loading" id="login-loading">Caricamento...</div>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen hide" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>ProfTime</h1>
+      <p>Accedi per sincronizzare i tuoi dati su tutti i dispositivi</p>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab on" id="lt-login" onclick="loginTab('login')">Accedi</button>
+      <button class="login-tab" id="lt-reg" onclick="loginTab('reg')">Registrati</button>
+    </div>
+    <div class="login-err" id="login-err"></div>
+    <div class="fg" style="gap:11px">
+      <div class="s2"><label class="fl">Email</label><input type="text" id="login-email" placeholder="nome@esempio.it"></div>
+      <div class="s2"><label class="fl">Password</label><input type="password" id="login-pass" placeholder="Almeno 6 caratteri"></div>
+    </div>
+    <button class="btn btn-blu btn-full" id="login-btn" onclick="doLogin()">Accedi</button>
+    <p style="font-size:.72rem;color:var(--tx2);text-align:center;margin-top:14px;">I tuoi dati restano privati e visibili solo a te, su tutti i dispositivi dove accedi.</p>
+  </div>
+</div>
+
+<div class="topbar">
+  <div>
+    <h1>ProfTime</h1>
+    <p id="top-sub">A.S. 2025/2026</p>
+  </div>
+  <div class="topbar-credit">&copy; Pasquale Zicarelli</div>
+</div>
+
+<nav class="bnav">
+  <button class="nb on" id="nt-home" onclick="vai('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="nb" id="nt-evento" onclick="vai('evento')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    <span>Evento</span>
+  </button>
+  <button class="nb" id="nt-registro" onclick="vai('registro')">
+    <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+    <span>Registro</span>
+  </button>
+  <button class="nb" id="nt-timer" onclick="vai('timer')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><line x1="9" y1="3" x2="15" y2="3"/></svg>
+    <span>Timer</span>
+  </button>
+  <button class="nb" id="nt-pdf" onclick="vai('pdf')">
+    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="14 3 14 9 20 9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+    <span>PDF</span>
+  </button>
+  <button class="nb" id="nt-storico" onclick="vai('storico')">
+    <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 0 .5-3"/><polyline points="3 4 3 11 10 11"/></svg>
+    <span>Storico</span>
+  </button>
+  <button class="nb" id="nt-ccnl" onclick="vai('ccnl')">
+    <svg viewBox="0 0 24 24"><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7l-8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+    <span>CCNL</span>
+  </button>
+  <button class="nb" id="nt-guida" onclick="vai('guida')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"/></svg>
+    <span>Guida</span>
+  </button>
+</nav>
+
+<!-- HOME -->
+<div class="pag on" id="pag-home">
+  <div class="cards">
+    <div class="card cc2"><div class="c-lbl">Collegiali</div><div class="c-val" id="ore-c">0:00</div><div class="c-sub">su 40:00 max</div></div>
+    <div class="card ca2"><div class="c-lbl">Altre att.</div><div class="c-val" id="ore-a">0:00</div><div class="c-sub">su 40:00 max</div></div>
+    <div class="card ct"><div class="c-lbl">Totale</div><div class="c-val" id="ore-t">0:00</div><div class="c-sub">su 80:00 max</div></div>
+  </div>
+  <div class="barre">
+    <div class="bw barre-c"><div class="bh"><strong>Attivita Collegiali</strong><span id="pct-c">0%</span></div><div class="bt"><div class="bf" id="fill-c" style="width:0%"></div></div></div>
+    <div class="bw barre-a"><div class="bh"><strong>Altre Attivita</strong><span id="pct-a">0%</span></div><div class="bt"><div class="bf" id="fill-a" style="width:0%"></div></div></div>
+  </div>
+  <div class="extra-pill" id="extra-pill">
+    <div class="extra-pill-icon">&#10022;</div>
+    <div class="extra-pill-info">
+      <div class="extra-pill-lbl">Attivita Extra</div>
+      <div class="extra-pill-sub">Non conteggiate nelle 40+40</div>
+    </div>
+    <div class="extra-pill-val" id="ore-e">0:00</div>
+  </div>
+  <div class="avv" id="avv"></div>
+  <!-- Riepilogo mensile -->
+  <div class="box">
+    <div class="box-h">
+      <h2>Riepilogo mensile</h2>
+      <span id="anno-home-lbl" style="font-size:.75rem;color:var(--tx2);font-weight:600;"></span>
+    </div>
+    <div style="padding:8px 14px 0;font-size:.75rem;color:var(--tx2);" id="mese-tot-lbl"></div>
+    <div class="mese-grid" id="mese-grid"></div>
+  </div>
+</div>
+
+<!-- EVENTO -->
+<div class="pag" id="pag-evento">
+  <div class="box">
+    <div class="box-h"><h2>Nuovo impegno</h2></div>
+    <div class="box-b">
+      <div class="fg">
+        <div class="s2"><label class="fl">Evento / Attivita</label><input type="text" id="ev-nome" placeholder="es. Collegio Docenti"></div>
+        <div class="s2"><label class="fl">Categoria</label>
+          <select id="ev-cat" onchange="catStile(this,'sc','sa')">
+            <option value="">seleziona</option>
+            <option value="coll">Attivita Collegiale</option>
+            <option value="altre">Altre Attivita</option>
+            <option value="extra">Attivita Extra (non conteggiata)</option>
+          </select>
+        </div>
+        <div><label class="fl">Data</label><input type="date" id="ev-data"></div>
+        <div></div>
+        <div><label class="fl">Ora inizio</label><input type="time" id="ev-ini"></div>
+        <div><label class="fl">Ora fine</label><input type="time" id="ev-fine"></div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><textarea id="ev-note" placeholder="es. Verbale n. 3"></textarea></div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="aggiungi()">Aggiungi al registro</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Come si compila</h2></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Nome e categoria</strong><span>Collegiale per riunioni istituzionali, Altre per tutto il resto. Vai in CCNL se hai dubbi.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Orari effettivi</strong><span>Come da verbale o dalla durata reale della riunione.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Le note sono libere</strong><span>Puoi usarle per il numero del verbale, i presenti, riferimenti alla convocazione.</span></div></div>
+  </div>
+</div>
+
+<!-- REGISTRO -->
+<div class="pag" id="pag-registro">
+  <div class="box">
+    <div class="box-h">
+      <h2>Registro (<span id="n-imp">0</span>)</h2>
+      <div class="toggle-v">
+        <button class="tv on" id="tv-lista" onclick="setVista('lista')">Lista</button>
+        <button class="tv" id="tv-cal" onclick="setVista('cal')">Calendario</button>
+      </div>
+    </div>
+    <div id="vista-lista">
+      <div style="padding:10px 15px;border-bottom:1px solid var(--bd);">
+        <input type="text" id="cerca-ev" placeholder="Cerca evento..." oninput="renderLista()" style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="filtri">
+            <button class="fi at" onclick="filtra('t',this)">Tutti</button>
+            <button class="fi" onclick="filtra('c',this)">Coll.</button>
+            <button class="fi" onclick="filtra('a',this)">Altre</button>
+            <button class="fi" onclick="filtra('e',this)">Extra</button>
+          </div>
+          <span style="font-size:.7rem;color:var(--tx2)" id="ore-filtro"></span>
+        </div>
+      </div>
+      <div id="lista"></div>
+    </div>
+    <div id="vista-cal" style="display:none;">
+      <div class="cal-nav">
+        <button class="cn" onclick="calMese(-1)">&#8249;</button>
+        <h3 id="cal-titolo"></h3>
+        <button class="cn" onclick="calMese(+1)">&#8250;</button>
+      </div>
+      <div class="cal-hdr">
+        <div class="cal-dl">Lun</div><div class="cal-dl">Mar</div><div class="cal-dl">Mer</div>
+        <div class="cal-dl">Gio</div><div class="cal-dl">Ven</div><div class="cal-dl">Sab</div><div class="cal-dl">Dom</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-leg">
+        <div class="leg-i"><div class="leg-d lg-c"></div><span>Att. Collegiale</span></div>
+        <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attivita</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="pag" id="pag-timer">
+  <div class="timer-hero">
+    <div class="t-disp" id="t-disp">00:00:00</div>
+    <div class="t-lbl" id="t-lbl">Premi Avvia per iniziare</div>
+    <div class="t-btns">
+      <button class="btn btn-via" id="btn-via" onclick="tVia()">Avvia</button>
+      <button class="btn btn-stop" id="btn-stop" onclick="tStop()" style="display:none">Ferma e salva</button>
+    </div>
+    <div class="t-form">
+      <div><label class="fl">Evento</label><input type="text" id="t-ev" placeholder="Nome riunione"></div>
+      <div><label class="fl">Categoria</label>
+        <select id="t-cat">
+          <option value="">seleziona</option>
+          <option value="coll">Att. Collegiale</option>
+          <option value="altre">Altre Attivita</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Come funziona</h2></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Compila evento e categoria</strong><span>Prima che inizi la riunione.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Premi Avvia</strong><span>Il timer continua anche con lo schermo spento.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Premi Ferma a fine riunione</strong><span>L'impegno viene aggiunto con ora inizio, ora fine e durata reali.</span></div></div>
+  </div>
+</div>
+
+<!-- PDF -->
+<div class="pag" id="pag-pdf">
+  <div class="box">
+    <div class="box-h"><h2>Esporta PDF</h2></div>
+    <div class="box-b">
+      <div class="pdf-ante">
+        <h3>Riepilogo attuale</h3>
+        <div class="pdf-r"><span>Ore collegiali</span><strong id="pdf-c">--</strong></div>
+        <div class="pdf-r"><span>Ore altre attivita</span><strong id="pdf-a">--</strong></div>
+        <div class="pdf-r"><span>Totale ore</span><strong id="pdf-t">--</strong></div>
+        <div class="pdf-r"><span>Impegni registrati</span><strong id="pdf-n">--</strong></div>
+        <div class="pdf-r"><span>Anno scolastico</span><strong id="pdf-anno">--</strong></div>
+      </div>
+      <div class="fg" style="margin-bottom:4px;">
+        <div><label class="fl">Nome docente</label><input type="text" id="pdf-nome" placeholder="Mario Rossi"></div>
+        <div><label class="fl">Istituto</label><input type="text" id="pdf-sc" placeholder="IC ..."></div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="stampaPDF()">Stampa / Salva PDF</button>
+      <button class="btn btn-ghost btn-full" onclick="copiaCSV()" style="margin-top:8px">Copia dati CSV</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Excel</h2></div>
+    <div class="box-b">
+      <p style="font-size:.83rem;color:var(--tx2);margin-bottom:14px;line-height:1.6;">Esporta il registro come file .xlsx o importa un file Excel per ripristinare i dati.</p>
+      <button class="btn btn-verde btn-full" onclick="esportaExcel()" style="margin-top:0">Scarica file Excel (.xlsx)</button>
+      <div style="margin-top:16px;">
+        <label class="fl" style="margin-bottom:8px;">Importa da Excel</label>
+        <div class="drop-zone">
+          <div class="di">&#128194;</div>
+          <div style="font-size:.83rem;color:var(--tx2);margin-bottom:10px;">Seleziona un file .xlsx esportato da questa app</div>
+          <label class="btn btn-ghost" style="cursor:pointer;display:inline-flex;">
+            Scegli file
+            <input type="file" id="inp-excel" accept=".xlsx,.xls" onchange="importaExcel(this)" style="display:none">
+          </label>
+        </div>
+        <div class="import-msg" id="import-msg"></div>
+        <p style="font-size:.75rem;color:var(--tx2);line-height:1.6;margin-top:8px;">Il file deve avere le colonne: <strong>Nome, Categoria, Data, Ora Inizio, Ora Fine, Note</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STORICO -->
+<div class="pag" id="pag-storico">
+  <div class="box">
+    <div class="box-h"><h2>Account</h2></div>
+    <div class="account-box">
+      <div class="account-avatar" id="acc-avatar">?</div>
+      <div class="account-info">
+        <div class="account-email" id="acc-email">--</div>
+        <div class="account-status" id="acc-status"><span class="sync-dot sync-wait"></span>Connessione...</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Esci</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Anno attivo</h2><span id="anno-attivo-lbl" style="font-size:.82rem;font-weight:700;color:var(--blu)"></span></div>
+    <div class="box-b">
+      <p style="font-size:.83rem;color:var(--tx2);margin-bottom:14px;line-height:1.6;">Ogni anno scolastico ha il suo registro separato. Crea un nuovo anno a settembre senza perdere i dati precedenti.</p>
+      <div id="form-nuovo-anno" style="display:none;background:var(--bg);border-radius:9px;padding:14px;margin-bottom:12px;">
+        <label class="fl" style="margin-bottom:8px;">Anno scolastico</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select id="inp-anno-y1" style="flex:1">
+            <option value="2024">2024</option><option value="2025">2025</option>
+            <option value="2026" selected>2026</option><option value="2027">2027</option>
+            <option value="2028">2028</option><option value="2029">2029</option>
+          </select>
+          <span style="font-weight:700;color:var(--tx2)">/</span>
+          <select id="inp-anno-y2" style="flex:1">
+            <option value="2025">2025</option><option value="2026">2026</option>
+            <option value="2027" selected>2027</option><option value="2028">2028</option>
+            <option value="2029">2029</option><option value="2030">2030</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button class="btn btn-ghost" onclick="toggleFormAnno()" style="flex:1">Annulla</button>
+          <button class="btn btn-blu" onclick="confermaNuovoAnno()" style="flex:2">Crea anno</button>
+        </div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="toggleFormAnno()" id="btn-nuovo-anno" style="margin-top:0">+ Nuovo anno scolastico</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Tutti gli anni</h2></div>
+    <div id="lista-anni"></div>
+  </div>
+</div>
+
+<!-- CCNL -->
+<div class="pag" id="pag-ccnl">
+  <div class="doc-hero dh-blu"><h2>Art. 29 CCNL Scuola</h2><p>Ore funzionali all'insegnamento - Comparto Istruzione e Ricerca 2016-2018</p></div>
+  <div class="nota"><strong>Limite contrattuale annuale</strong>Massimo 40 ore di attivita collegiali + 40 ore di altre attivita funzionali = 80 ore totali annue.</div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">40 ore - Attivita Collegiali</div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Collegio dei Docenti</strong><span>Riunioni plenarie convocate dal DS. Sempre obbligatorie.</span></div></div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Consigli di Classe / Interclasse</strong><span>Tutte le sedute convocate dal DS o dal coordinatore, incluse le straordinarie.</span></div></div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Dipartimenti disciplinari e verticali</strong><span>Riunioni di area convocate formalmente dal DS.</span></div></div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Scrutini</strong><span>Sedute di scrutinio. Verifica il tuo contratto integrativo: in alcuni istituti rientrano nelle altre 40h.</span></div></div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Comitato per la Valutazione dei Docenti</strong><span>Obbligatorio per i docenti designati dal DS.</span></div></div>
+    <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Organi Collegiali (se membro eletto)</strong><span>Es. Consiglio di Istituto per i docenti eletti.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">40 ore - Altre Attivita Funzionali</div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Ricevimento genitori</strong><span>Colloqui individuali, ricevimenti generali e assemblee di classe con le famiglie.</span></div></div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Open day e orientamento</strong><span>Presentazione dell'offerta formativa a famiglie e futuri studenti.</span></div></div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>GLO / GLHO</strong><span>Riunioni per PEI alunni con disabilita (L. 104/92). Obbligatorie per il docente di sostegno e i contitolari.</span></div></div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Formazione obbligatoria</strong><span>Corsi deliberati dal Collegio o dal DS/MIM. La formazione volontaria non e compresa.</span></div></div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Commissioni deliberate dal Collegio</strong><span>PTOF, RAV, NIV e commissioni del piano annuale.</span></div></div>
+    <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Incontri con ASL / enti per alunni BES</strong><span>Accordi di programma, riunioni di rete, servizi sociali e sanitari.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-g">Non rientrano nelle 80 ore</div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Ore di insegnamento curricolari</strong><span>Le lezioni sono un obbligo orario separato (18h/settimana per la secondaria).</span></div></div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Preparazione individuale delle lezioni</strong><span>Inclusa nell'orario complessivo ma non nelle ore funzionali.</span></div></div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Formazione volontaria</strong><span>Corsi e webinar scelti autonomamente.</span></div></div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Assemblee sindacali</strong><span>Hanno disciplina separata, non rientrano nelle 80h.</span></div></div>
+  </div>
+  <div class="nota"><strong>Nota normativa</strong>Il Contratto Integrativo di Istituto (CII) puo integrare queste indicazioni. Rif.: art. 29 CCNL Istruzione e Ricerca 2016-2018.</div>
+</div>
+
+<!-- GUIDA -->
+<div class="pag" id="pag-guida">
+  <div class="doc-hero dh-verde"><h2>Guida all'uso</h2><p>Come usare il Registro Impegni Docente</p></div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Home</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Vedrai sempre le ore accumulate per le due categorie e quanto ti rimane al limite delle 40h.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Riepilogo mensile</strong><span>Sotto le barre trovi le ore di ogni mese dell'anno scolastico, con collegiali e altre separate.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Evento - Inserimento</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Compila i campi</strong><span>Nome, categoria, data, ora inizio e ora fine sono obbligatori. Le note sono facoltative.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Usa gli orari effettivi</strong><span>Come da verbale o dalla durata reale, non necessariamente quelli della convocazione.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Registro</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Vista Lista</strong><span>Impegni in ordine per mese. Filtra per categoria. Premi la matita per modificare, la X per eliminare.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Calendario</strong><span>Toggle in alto a destra. I puntini colorati mostrano gli eventi giorno per giorno.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Timer</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Avvia durante la riunione</strong><span>Scrivi evento e categoria, premi Avvia. Il timer conta anche con lo schermo spento.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Ferma a fine riunione</strong><span>Aggiunge automaticamente l'impegno con ora e durata reali.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">PDF ed Excel</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>PDF</strong><span>Genera un registro stampabile da allegare alla documentazione o inviare alla segreteria.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Excel export</strong><span>Scarica un file .xlsx con tutti i dati e il riepilogo ore.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Excel import</strong><span>Importa un file .xlsx per ripristinare i dati su un altro dispositivo.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">Storico anni</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Nuovo anno a settembre</strong><span>Vai in Storico, premi Nuovo anno scolastico, scegli l'anno dai menu e conferma.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Anni precedenti</strong><span>Premi Apri su un anno vecchio per consultarlo. I dati di ogni anno sono separati.</span></div></div>
+  </div>
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">Salvataggio</div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Automatico nel browser</strong><span>I dati rimangono anche dopo aver chiuso l'app, finche non svuoti la cache.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Solo su questo dispositivo</strong><span>Per trasferire i dati usa export Excel e reimportali sull'altro dispositivo.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Evita la modalita in incognito</strong><span>In navigazione privata i dati non vengono salvati.</span></div></div>
+  </div>
+</div>
+
+<!-- MODAL GIORNO -->
+<div class="modal-bg" id="modal-giorno">
+  <div class="modal">
+    <div class="modal-h">
+      <h2 id="modal-giorno-titolo">Impegni del giorno</h2>
+      <button class="mclose" onclick="chiudiModalGiorno()">&#x2715;</button>
+    </div>
+    <div id="modal-giorno-body"></div>
+  </div>
+</div>
+
+<!-- MODAL MODIFICA -->
+<div class="modal-bg" id="modal-modifica">
+  <div class="modal">
+    <div class="modal-h">
+      <h2>Modifica impegno</h2>
+      <button class="mclose" onclick="chiudiModal()">&#x2715;</button>
+    </div>
+    <div class="modal-b">
+      <input type="hidden" id="mod-id">
+      <div class="fg" style="gap:11px">
+        <div class="s2"><label class="fl">Evento / Attivita</label><input type="text" id="mod-nome"></div>
+        <div class="s2"><label class="fl">Categoria</label>
+          <select id="mod-cat" onchange="catStile(this,'sc','sa')">
+            <option value="">seleziona</option>
+            <option value="coll">Attivita Collegiale</option>
+            <option value="altre">Altre Attivita</option>
+            <option value="extra">Attivita Extra (non conteggiata)</option>
+          </select>
+        </div>
+        <div><label class="fl">Data</label><input type="date" id="mod-data"></div>
+        <div></div>
+        <div><label class="fl">Ora inizio</label><input type="time" id="mod-ini"></div>
+        <div><label class="fl">Ora fine</label><input type="time" id="mod-fine"></div>
+        <div class="s2"><label class="fl">Note</label><input type="text" id="mod-note" placeholder="opzionale"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-ghost" onclick="chiudiModal()" style="flex:1">Annulla</button>
+        <button class="btn btn-blu" onclick="salvaModifica()" style="flex:2">Salva modifiche</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+let fbTentativi = 0;
+avviaFirebaseAuth();
+
+// ── STATO ────────────────────────────────────────────────────────────
+let imp = [], filtro = 't', vista = 'lista';
+let annoAttivo = '2025/2026';
+let calAnno = new Date().getFullYear(), calMeseN = new Date().getMonth();
+let tInt = null, tStart = null, tOn = false;
+
+// ── UTILITÀ ──────────────────────────────────────────────────────────
+const tM = t => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const fHM = m => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
+const fHMS = s => `${String(Math.floor(s / 3600)).padStart(2, '0')}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+const fD = s => { if (!s) return ''; const [y, mo, d] = s.split('-'); return `${d}/${mo}/${y}`; };
+const dM = (i, f) => { if (!i || !f) return 0; let d = tM(f) - tM(i); if (d < 0) d += 1440; return d; };
+
+function toast(msg, ms = 2200) {
+  const e = document.getElementById('toast');
+  e.textContent = msg;
+  e.classList.add('on');
+  setTimeout(() => e.classList.remove('on'), ms);
+}
+
+// ── STORAGE MULTI-ANNO ───────────────────────────────────────────────
+function keyAnno(a) { return 'rid_' + a.replace('/', '_'); }
+
+let currentUser = null;
+let syncTimeout = null;
+
+function setSyncStatus(status) {
+  const el = document.getElementById('acc-status');
+  if (!el) return;
+  if (status === 'ok') el.innerHTML = '<span class="sync-dot sync-ok"></span>Sincronizzato';
+  else if (status === 'wait') el.innerHTML = '<span class="sync-dot sync-wait"></span>Salvataggio...';
+  else el.innerHTML = '<span class="sync-dot sync-off"></span>Solo locale';
+}
+
+function salva() {
+  // Salva sempre in locale come backup immediato
+  try { localStorage.setItem(keyAnno(annoAttivo), JSON.stringify(imp)); } catch (e) {}
+  // Sincronizza con Firestore se autenticato (con debounce)
+  if (currentUser && window.fb) {
+    setSyncStatus('wait');
+    clearTimeout(syncTimeout);
+    syncTimeout = setTimeout(() => {
+      const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', keyAnno(annoAttivo));
+      window.fb.setDoc(ref, { dati: imp, aggiornato: Date.now() })
+        .then(() => setSyncStatus('ok'))
+        .catch(() => setSyncStatus('off'));
+    }, 700);
+  }
+}
+
+function carica() {
+  try {
+    const d = localStorage.getItem(keyAnno(annoAttivo));
+    imp = d ? JSON.parse(d) : [];
+  } catch (e) { imp = []; }
+}
+
+async function caricaDaCloud(anno) {
+  if (!currentUser || !window.fb) return null;
+  try {
+    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', keyAnno(anno));
+    const snap = await window.fb.getDoc(ref);
+    if (snap.exists()) return snap.data().dati || [];
+  } catch (e) { console.error('Errore caricamento cloud', e); }
+  return null;
+}
+
+function tuttiAnni() {
+  const anni = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('rid_')) {
+      anni.push(k.replace('rid_', '').replace('_', '/'));
+    }
+  }
+  return anni.sort().reverse();
+}
+
+async function attivaAnno(a) {
+  annoAttivo = a;
+  carica();
+  if (currentUser) {
+    const cloudData = await caricaDaCloud(a);
+    if (cloudData && cloudData.length > 0) {
+      cloudData.forEach(c => { if (!imp.some(i => i.id === c.id)) imp.push(c); });
+      imp.sort((x, y) => x.data.localeCompare(y.data));
+      salva();
+    }
+  }
+  aggiorna();
+  aggiornaTopSub();
+  renderAnni();
+  vai('home');
+  toast('Anno ' + a + ' attivato');
+}
+
+function aggiornaTopSub() {
+  document.getElementById('top-sub').textContent = 'A.S. ' + annoAttivo;
+  const el = document.getElementById('anno-attivo-lbl');
+  if (el) el.textContent = annoAttivo;
+  const el2 = document.getElementById('anno-home-lbl');
+  if (el2) el2.textContent = annoAttivo;
+  const el3 = document.getElementById('pdf-anno');
+  if (el3) el3.textContent = annoAttivo;
+}
+
+// ── NAVIGAZIONE ──────────────────────────────────────────────────────
+function vai(id) {
+  document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+  document.getElementById('pag-' + id).classList.add('on');
+  const nb = document.getElementById('nt-' + id);
+  if (nb) nb.classList.add('on');
+  if (id === 'pdf') aggPDF();
+  if (id === 'registro') renderRegistro();
+  if (id === 'storico') { aggiornaTopSub(); renderAnni(); }
+  window.scrollTo(0, 0);
+}
+
+// ── STILE SELECT CATEGORIA ───────────────────────────────────────────
+function catStile(el, sc, sa) {
+  el.className = el.value === 'coll' ? sc : el.value === 'altre' ? sa : el.value === 'extra' ? 'se' : '';
+}
+
+// ── AGGIUNGI ─────────────────────────────────────────────────────────
+function aggiungi() {
+  const nome = document.getElementById('ev-nome').value.trim();
+  const cat = document.getElementById('ev-cat').value;
+  const data = document.getElementById('ev-data').value;
+  const ini = document.getElementById('ev-ini').value;
+  const fine = document.getElementById('ev-fine').value;
+  const note = document.getElementById('ev-note').value.trim();
+  if (!nome) { toast('\u26a0\ufe0f Inserisci il nome'); return; }
+  if (!cat) { toast('\u26a0\ufe0f Seleziona la categoria'); return; }
+  if (!data) { toast('\u26a0\ufe0f Inserisci la data'); return; }
+  if (!ini || !fine) { toast('\u26a0\ufe0f Inserisci ora inizio e ora fine'); return; }
+  const dur = dM(ini, fine);
+  if (dur <= 0) { toast('\u26a0\ufe0f Ora fine deve essere dopo ora inizio'); return; }
+  imp.push({ id: Date.now() + Math.random(), nome, cat, data, ini, fine, dur, note });
+  imp.sort((a, b) => a.data.localeCompare(b.data));
+  salva();
+  document.getElementById('ev-nome').value = '';
+  document.getElementById('ev-cat').value = '';
+  document.getElementById('ev-cat').className = '';
+  document.getElementById('ev-ini').value = '';
+  document.getElementById('ev-fine').value = '';
+  document.getElementById('ev-note').value = '';
+  aggiorna();
+  toast('\u2705 Impegno aggiunto');
+  setTimeout(() => vai('registro'), 700);
+}
+
+function elimina(id) {
+  imp = imp.filter(i => i.id !== id);
+  salva();
+  aggiorna();
+  renderRegistro();
+  toast('\u{1f5d1} Eliminato');
+}
+
+// ── MODIFICA ─────────────────────────────────────────────────────────
+function modifica(id) {
+  const item = imp.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('mod-id').value = id;
+  document.getElementById('mod-nome').value = item.nome;
+  document.getElementById('mod-cat').value = item.cat;
+  catStile(document.getElementById('mod-cat'), 'sc', 'sa');
+  document.getElementById('mod-data').value = item.data;
+  document.getElementById('mod-ini').value = item.ini;
+  document.getElementById('mod-fine').value = item.fine;
+  document.getElementById('mod-note').value = item.note || '';
+  document.getElementById('modal-modifica').classList.add('on');
+}
+
+function chiudiModal() {
+  document.getElementById('modal-modifica').classList.remove('on');
+}
+
+function salvaModifica() {
+  const id = parseFloat(document.getElementById('mod-id').value);
+  const nome = document.getElementById('mod-nome').value.trim();
+  const cat = document.getElementById('mod-cat').value;
+  const data = document.getElementById('mod-data').value;
+  const ini = document.getElementById('mod-ini').value;
+  const fine = document.getElementById('mod-fine').value;
+  const note = document.getElementById('mod-note').value.trim();
+  if (!nome) { toast('\u26a0\ufe0f Inserisci il nome'); return; }
+  if (!cat) { toast('\u26a0\ufe0f Seleziona la categoria'); return; }
+  if (!data) { toast('\u26a0\ufe0f Inserisci la data'); return; }
+  if (!ini || !fine) { toast('\u26a0\ufe0f Inserisci gli orari'); return; }
+  const dur = dM(ini, fine);
+  if (dur <= 0) { toast('\u26a0\ufe0f Ora fine deve essere dopo ora inizio'); return; }
+  const idx = imp.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  imp[idx] = { id, nome, cat, data, ini, fine, dur, note };
+  imp.sort((a, b) => a.data.localeCompare(b.data));
+  salva();
+  aggiorna();
+  renderRegistro();
+  chiudiModal();
+  toast('\u2705 Modificato');
+}
+
+// ── AGGIORNA TOTALI E UI ─────────────────────────────────────────────
+function aggiorna() {
+  const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
+  const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
+  const tot = totC + totA, MAX = 40 * 60;
+  document.getElementById('ore-c').textContent = fHM(totC);
+  document.getElementById('ore-a').textContent = fHM(totA);
+  document.getElementById('ore-t').textContent = fHM(tot);
+  const elE = document.getElementById('ore-e'); if (elE) elE.textContent = fHM(totE);
+  document.getElementById('n-imp').textContent = imp.length;
+  const pC = Math.min(100, Math.round(totC / MAX * 100));
+  const pA = Math.min(100, Math.round(totA / MAX * 100));
+  document.getElementById('fill-c').style.width = pC + '%';
+  document.getElementById('fill-a').style.width = pA + '%';
+  document.getElementById('fill-c').classList.toggle('over', totC > MAX);
+  document.getElementById('fill-a').classList.toggle('over', totA > MAX);
+  document.getElementById('pct-c').textContent = `${pC}% \u00b7 rimangono ${fHM(Math.max(0, MAX - totC))}h`;
+  document.getElementById('pct-a').textContent = `${pA}% \u00b7 rimangono ${fHM(Math.max(0, MAX - totA))}h`;
+  const av = document.getElementById('avv');
+  let msgs = [], sup = false;
+  if (totC > MAX) { msgs.push(`Superato limite collegiali di ${fHM(totC - MAX)}h.`); sup = true; }
+  if (totA > MAX) { msgs.push(`Superato limite altre attivita di ${fHM(totA - MAX)}h.`); sup = true; }
+  if (!sup && totC >= MAX * 0.85) msgs.push(`Sei all${pC}% delle ore collegiali, rimangono ${fHM(MAX - totC)}h.`);
+  if (!sup && totA >= MAX * 0.85) msgs.push(`Sei all${pA}% delle altre attivita, rimangono ${fHM(MAX - totA)}h.`);
+  if (msgs.length) {
+    av.innerHTML = '<strong>' + (sup ? '\u26d4 Limite superato' : '\u26a0\ufe0f Attenzione') + '</strong> ' + msgs.join(' ');
+    av.className = 'avv on' + (sup ? ' red' : '');
+  } else {
+    av.className = 'avv';
+  }
+  renderMensile();
+}
+
+// ── RIEPILOGO MENSILE (HOME) ─────────────────────────────────────────
+function renderMensile() {
+  const el = document.getElementById('mese-grid');
+  if (!el) return;
+  const mesi = [
+    ['Set', 9], ['Ott', 10], ['Nov', 11], ['Dic', 12],
+    ['Gen', 1], ['Feb', 2], ['Mar', 3], ['Apr', 4], ['Mag', 5], ['Giu', 6]
+  ];
+  const annoP = annoAttivo.split('/');
+  const oggi = new Date();
+  let maxMese = 0;
+  mesi.forEach(function(mAr) {
+    const mm = mAr[1];
+    const yyyy = mm >= 9 ? parseInt(annoP[0]) : parseInt(annoP[1]);
+    const meseImp = imp.filter(function(i) { const d = new Date(i.data); return d.getMonth() + 1 === mm && d.getFullYear() === yyyy; });
+    const tot = meseImp.reduce(function(s, i) { return s + i.dur; }, 0);
+    if (tot > maxMese) maxMese = tot;
+  });
+  if (maxMese === 0) maxMese = 40 * 60;
+
+  let html = '';
+  let totAnnoC = 0, totAnnoA = 0, totAnnoE = 0;
+  mesi.forEach(function(mAr) {
+    const nome = mAr[0], mm = mAr[1];
+    const yyyy = mm >= 9 ? parseInt(annoP[0]) : parseInt(annoP[1]);
+    const meseImp = imp.filter(function(i) { const d = new Date(i.data); return d.getMonth() + 1 === mm && d.getFullYear() === yyyy; });
+    const totC = meseImp.filter(function(i) { return i.cat === 'coll'; }).reduce(function(s, i) { return s + i.dur; }, 0);
+    const totA = meseImp.filter(function(i) { return i.cat === 'altre'; }).reduce(function(s, i) { return s + i.dur; }, 0);
+    const totE = meseImp.filter(function(i) { return i.cat === 'extra'; }).reduce(function(s, i) { return s + i.dur; }, 0);
+    totAnnoC += totC; totAnnoA += totA; totAnnoE += totE;
+    const hasData = meseImp.length > 0;
+    const isCurrent = oggi.getMonth() + 1 === mm && oggi.getFullYear() === yyyy;
+    const pC = Math.round(totC / maxMese * 100);
+    const pA = Math.round(totA / maxMese * 100);
+    const pE = Math.round(totE / maxMese * 100);
+
+    let corpo = '';
+    if (hasData) {
+      corpo += '<div class="mc-row"><div class="mc-row-header"><span class="mc-lbl lc">Collegiali</span><span class="mc-val vc">' + fHM(totC) + '</span></div><div class="mc-bar-track"><div class="mc-bar-fill mc-bar-c" style="width:' + pC + '%"></div></div></div>';
+      corpo += '<div class="mc-row"><div class="mc-row-header"><span class="mc-lbl la">Altre</span><span class="mc-val va">' + fHM(totA) + '</span></div><div class="mc-bar-track"><div class="mc-bar-fill mc-bar-a" style="width:' + pA + '%"></div></div></div>';
+      if (totE > 0) {
+        corpo += '<div class="mc-row"><div class="mc-row-header"><span class="mc-lbl le">Extra</span><span class="mc-val ve">' + fHM(totE) + '</span></div><div class="mc-bar-track"><div class="mc-bar-fill mc-bar-e" style="width:' + pE + '%"></div></div></div>';
+      }
+      corpo += '<div class="mc-tot"><span class="mc-tot-lbl">' + meseImp.length + ' impegni</span><span class="mc-tot-val">' + fHM(totC + totA) + (totE > 0 ? ' <span style="color:var(--extra)">+' + fHM(totE) + '</span>' : '') + '</span></div>';
+    } else {
+      corpo = '<div class="mc-nessuno">Nessun impegno</div>';
+    }
+
+    html += '<div class="mese-card' + (hasData ? ' has-data' : '') + (isCurrent ? ' mese-attivo' : '') + '"><div class="mc-nome">' + nome + ' ' + yyyy + '</div>' + corpo + '</div>';
+  });
+  el.innerHTML = html;
+  const lbl = document.getElementById('mese-tot-lbl');
+  if (lbl) lbl.textContent = imp.length + ' impegni nell\'anno \u00b7 Coll. ' + fHM(totAnnoC) + ' \u00b7 Altre ' + fHM(totAnnoA) + (totAnnoE > 0 ? ' \u00b7 Extra ' + fHM(totAnnoE) : '');
+}
+
+// ── REGISTRO LISTA ───────────────────────────────────────────────────
+function filtra(t, btn) {
+  filtro = t;
+  document.querySelectorAll('.fi').forEach(b => b.className = 'fi');
+  btn.className = 'fi ' + (t === 't' ? 'at' : t === 'c' ? 'ac' : t === 'a' ? 'aa' : 'ae');
+  renderLista();
+}
+
+function renderRegistro() {
+  if (vista === 'lista') renderLista();
+  else renderCal();
+}
+
+function renderImpegno(i) {
+  return '<div class="imp">' +
+    '<div class="imp-badge ' + (i.cat === 'coll' ? 'ib-c' : i.cat === 'altre' ? 'ib-a' : 'ib-e') + '" style="font-size:1.1rem">' + (i.cat === 'coll' ? '\u{1f3db}' : i.cat === 'altre' ? '\u{1f4cc}' : '\u2728') + '</div>' +
+    '<div class="imp-info">' +
+      '<div class="imp-nome">' + i.nome + '</div>' +
+      '<div class="imp-meta">' + fD(i.data) + ' \u00b7 ' + i.ini + '\u2013' + i.fine + (i.note ? ' \u00b7 ' + i.note : '') + '</div>' +
+    '</div>' +
+    '<div class="imp-ore ' + (i.cat === 'coll' ? 'ioc' : i.cat === 'altre' ? 'ioa' : 'ioe') + '">' + fHM(i.dur) + 'h</div>' +
+    '<button class="btn-mod" onclick="modifica(' + i.id + ')" title="Modifica">\u270e</button>' +
+    '<button class="btn-del" onclick="elimina(' + i.id + ')" title="Elimina">\u2715</button>' +
+  '</div>';
+}
+
+function renderGruppoMensile(lista) {
+  const mesi = {};
+  lista.forEach(function(i) { const k = i.data.substring(0, 7); if (!mesi[k]) mesi[k] = []; mesi[k].push(i); });
+  const nm = ['', 'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  let html = '';
+  Object.keys(mesi).sort().reverse().forEach(function(k) {
+    const parti = k.split('-');
+    const y = parti[0], m = parti[1];
+    const totM = mesi[k].reduce(function(s, i) { return s + i.dur; }, 0);
+    html += '<div class="mese-sep">' + nm[parseInt(m)] + ' ' + y + ' \u00b7 ' + fHM(totM) + 'h</div>';
+    mesi[k].forEach(function(i) { html += renderImpegno(i); });
+  });
+  return html;
+}
+
+function renderLista() {
+  const el = document.getElementById('lista');
+  const cercaInput = document.getElementById('cerca-ev');
+  const cerca = cercaInput ? cercaInput.value.toLowerCase().trim() : '';
+  const matchCerca = function(i) {
+    return !cerca || i.nome.toLowerCase().includes(cerca) || (i.note && i.note.toLowerCase().includes(cerca));
+  };
+
+  if (filtro === 't') {
+    const vis = imp.filter(matchCerca);
+    const of = document.getElementById('ore-filtro');
+    const totVis = vis.reduce(function(s, i) { return s + i.dur; }, 0);
+    if (of) of.textContent = vis.length ? (vis.length + ' imp. \u00b7 ' + fHM(totVis) + 'h') : '';
+    if (!vis.length) {
+      const msg = cerca ? ('Nessun risultato per "' + cerca + '"') : 'Nessun impegno ancora inserito.';
+      el.innerHTML = '<div class="vuota"><span class="vi">&#128269;</span>' + msg + '</div>';
+      return;
+    }
+    const coll = vis.filter(function(i) { return i.cat === 'coll'; }).sort(function(a, b) { return b.data.localeCompare(a.data); });
+    const altre = vis.filter(function(i) { return i.cat === 'altre'; }).sort(function(a, b) { return b.data.localeCompare(a.data); });
+    const extra = vis.filter(function(i) { return i.cat === 'extra'; }).sort(function(a, b) { return b.data.localeCompare(a.data); });
+    let html = '';
+    if (coll.length) {
+      const tot = coll.reduce(function(s, i) { return s + i.dur; }, 0);
+      html += '<div class="gruppo-hdr gh-c">\u{1f3db} Attivita Collegiali <span>' + coll.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
+      html += renderGruppoMensile(coll);
+    }
+    if (altre.length) {
+      const tot = altre.reduce(function(s, i) { return s + i.dur; }, 0);
+      html += '<div class="gruppo-hdr gh-a">\u{1f4cc} Altre Attivita <span>' + altre.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
+      html += renderGruppoMensile(altre);
+    }
+    if (extra.length) {
+      const tot = extra.reduce(function(s, i) { return s + i.dur; }, 0);
+      html += '<div class="gruppo-hdr gh-e">\u2728 Attivita Extra <span>' + extra.length + ' imp. \u00b7 ' + fHM(tot) + 'h \u00b7 non conteggiate</span></div>';
+      html += renderGruppoMensile(extra);
+    }
+    el.innerHTML = html;
+    return;
+  }
+
+  const vis = imp.filter(function(i) {
+    const matchCat = (filtro === 'c' && i.cat === 'coll') || (filtro === 'a' && i.cat === 'altre') || (filtro === 'e' && i.cat === 'extra');
+    return matchCat && matchCerca(i);
+  });
+  const totVis = vis.reduce(function(s, i) { return s + i.dur; }, 0);
+  const of = document.getElementById('ore-filtro');
+  if (of) of.textContent = vis.length ? (vis.length + ' imp. \u00b7 ' + fHM(totVis) + 'h') : '';
+  if (!vis.length) {
+    const msg = cerca ? ('Nessun risultato per "' + cerca + '"') : 'Nessun impegno in questa categoria.';
+    el.innerHTML = '<div class="vuota"><span class="vi">&#128269;</span>' + msg + '</div>';
+    return;
+  }
+  el.innerHTML = renderGruppoMensile(vis);
+}
+
+// ── REGISTRO CALENDARIO ──────────────────────────────────────────────
+function setVista(v) {
+  vista = v;
+  document.getElementById('tv-lista').classList.toggle('on', v === 'lista');
+  document.getElementById('tv-cal').classList.toggle('on', v === 'cal');
+  document.getElementById('vista-lista').style.display = v === 'lista' ? '' : 'none';
+  document.getElementById('vista-cal').style.display = v === 'cal' ? '' : 'none';
+  if (v === 'cal') renderCal();
+  else renderLista();
+}
+
+function calMese(delta) {
+  calMeseN += delta;
+  if (calMeseN < 0) { calMeseN = 11; calAnno--; }
+  if (calMeseN > 11) { calMeseN = 0; calAnno++; }
+  renderCal();
+}
+
+function renderCal() {
+  const nm = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+  document.getElementById('cal-titolo').textContent = `${nm[calMeseN]} ${calAnno}`;
+  const grid = document.getElementById('cal-grid');
+  const oggi = new Date();
+  let dow = new Date(calAnno, calMeseN, 1).getDay();
+  dow = dow === 0 ? 6 : dow - 1;
+  const giorni = new Date(calAnno, calMeseN + 1, 0).getDate();
+  const byData = {};
+  imp.forEach(i => { if (!byData[i.data]) byData[i.data] = []; byData[i.data].push(i); });
+  let html = '';
+  for (let x = 0; x < dow; x++) html += '<div class="cal-cella altro-m"></div>';
+  for (let g = 1; g <= giorni; g++) {
+    const ds = `${calAnno}-${String(calMeseN + 1).padStart(2, '0')}-${String(g).padStart(2, '0')}`;
+    const isOggi = oggi.getFullYear() === calAnno && oggi.getMonth() === calMeseN && oggi.getDate() === g;
+    const ev = byData[ds] || [];
+    const eventi = ev.map(i => {
+      const orario = i.ini ? `${i.ini}` : '';
+      const durata = i.dur > 0 ? ` (${fHM(i.dur)})` : '';
+      return `<div class="cal-ev ${i.cat === 'coll' ? 'ce-c' : i.cat === 'altre' ? 'ce-a' : 'ce-e'}">
+        <div class="ce-nome">${i.nome}</div>
+        ${orario ? `<div class="ce-info">${orario}${durata}</div>` : ''}
+      </div>`;
+    }).join('');
+    const clickDs = ds;
+    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${ev.length ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
+      <div class="cal-n">${g}</div>
+      ${eventi}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────
+function tVia() {
+  const ev = document.getElementById('t-ev').value.trim();
+  const cat = document.getElementById('t-cat').value;
+  if (!ev) { toast('\u26a0\ufe0f Inserisci il nome'); return; }
+  if (!cat) { toast('\u26a0\ufe0f Seleziona la categoria'); return; }
+  tStart = Date.now(); tOn = true;
+  document.getElementById('btn-via').style.display = 'none';
+  document.getElementById('btn-stop').style.display = '';
+  document.getElementById('t-lbl').textContent = 'Riunione in corso\u2026';
+  tInt = setInterval(() => { document.getElementById('t-disp').textContent = fHMS(Math.floor((Date.now() - tStart) / 1000)); }, 1000);
+}
+
+function tStop() {
+  if (!tOn) return;
+  clearInterval(tInt); tOn = false;
+  const sec = Math.floor((Date.now() - tStart) / 1000), durM = Math.ceil(sec / 60);
+  const nome = document.getElementById('t-ev').value.trim();
+  const cat = document.getElementById('t-cat').value;
+  const now = new Date(), data = now.toISOString().slice(0, 10);
+  const fine = now.toTimeString().slice(0, 5);
+  const iniD = new Date(tStart), ini = iniD.toTimeString().slice(0, 5);
+  imp.push({ id: Date.now() + Math.random(), nome, cat, data, ini, fine, dur: durM, note: 'Da timer' });
+  imp.sort((a, b) => a.data.localeCompare(b.data));
+  salva(); aggiorna();
+  document.getElementById('t-disp').textContent = '00:00:00';
+  document.getElementById('t-lbl').textContent = 'Premi Avvia per iniziare';
+  document.getElementById('btn-via').style.display = '';
+  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('t-ev').value = '';
+  document.getElementById('t-cat').value = '';
+  toast(`\u2705 Aggiunto: ${nome} (${fHM(durM)}h)`);
+  setTimeout(() => vai('home'), 700);
+}
+
+// ── PDF ───────────────────────────────────────────────────────────────
+function aggPDF() {
+  const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
+  const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  document.getElementById('pdf-c').textContent = fHM(totC) + 'h';
+  document.getElementById('pdf-a').textContent = fHM(totA) + 'h';
+  document.getElementById('pdf-t').textContent = fHM(totC + totA) + 'h';
+  document.getElementById('pdf-n').textContent = imp.length;
+  document.getElementById('pdf-anno').textContent = annoAttivo;
+}
+
+function stampaPDF() {
+  const nome = document.getElementById('pdf-nome').value.trim() || '--';
+  const sc = document.getElementById('pdf-sc').value.trim() || '--';
+  const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
+  const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map(i =>
+    `<tr><td>${fD(i.data)}</td><td>${i.nome}</td><td>${i.cat === 'coll' ? 'Att. Collegiale' : 'Altre Attivita'}</td><td>${i.ini}&ndash;${i.fine}</td><td style="font-weight:700;color:${i.cat === 'coll' ? '#1F4E79' : '#1E5631'}">${fHM(i.dur)}h</td><td>${i.note || ''}</td></tr>`
+  ).join('');
+  const w = window.open('', '_blank');
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div><div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+}
+
+function copiaCSV() {
+  const h = 'Data,Evento,Categoria,Inizio,Fine,Durata(min),Note\n';
+  const r = [...imp].sort((a, b) => a.data.localeCompare(b.data))
+    .map(i => `${fD(i.data)},"${i.nome}",${i.cat === 'coll' ? 'Attivita Collegiale' : 'Altre Attivita'},${i.ini},${i.fine},${i.dur},"${i.note || ''}"`).join('\n');
+  navigator.clipboard.writeText(h + r).then(() => toast('\u2705 CSV copiato')).catch(() => toast('\u26a0\ufe0f Copia non riuscita'));
+}
+
+// ── EXCEL EXPORT ──────────────────────────────────────────────────────
+function esportaExcel() {
+  if (typeof XLSX === 'undefined') { toast('\u26a0\ufe0f Libreria non disponibile'); return; }
+  const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
+  const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+  const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map((i, idx) => ({
+    'N': idx + 1,
+    'Nome': i.nome,
+    'Categoria': i.cat === 'coll' ? 'Attivita Collegiale' : 'Altre Attivita',
+    'Data': fD(i.data),
+    'Ora Inizio': i.ini,
+    'Ora Fine': i.fine,
+    'Durata': fHM(i.dur),
+    'Note': i.note || ''
+  }));
+  righe.push({});
+  righe.push({ 'N': '', 'Nome': 'TOTALE COLLEGIALI', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC), 'Note': 'su 40h max' });
+  righe.push({ 'N': '', 'Nome': 'TOTALE ALTRE ATTIVITA', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totA), 'Note': 'su 40h max' });
+  righe.push({ 'N': '', 'Nome': 'TOTALE GENERALE', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC + totA), 'Note': 'su 80h max' });
+  const ws = XLSX.utils.json_to_sheet(righe);
+  ws['!cols'] = [{ wch: 4 }, { wch: 36 }, { wch: 22 }, { wch: 13 }, { wch: 11 }, { wch: 11 }, { wch: 10 }, { wch: 20 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Registro ' + annoAttivo.replace('/', '-'));
+  XLSX.writeFile(wb, 'Registro_Impegni_' + annoAttivo.replace('/', '_') + '.xlsx');
+  toast('\u2705 File Excel scaricato');
+}
+
+// ── EXCEL IMPORT ──────────────────────────────────────────────────────
+function importaExcel(input) {
+  if (typeof XLSX === 'undefined') { toast('\u26a0\ufe0f Libreria non disponibile'); return; }
+  const file = input.files[0];
+  if (!file) return;
+  const msg = document.getElementById('import-msg');
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const righe = XLSX.utils.sheet_to_json(ws, { defval: '' });
+      const nuovi = [];
+      let errori = 0;
+      righe.forEach((r, idx) => {
+        const nome = (r['Nome'] || r['Evento'] || r['nome'] || r['evento'] || '').toString().trim();
+        const catRaw = (r['Categoria'] || r['categoria'] || '').toString().trim();
+        const dataRaw = (r['Data'] || r['data'] || '').toString().trim();
+        const ini = (r['Ora Inizio'] || r['Inizio'] || r['inizio'] || '').toString().trim().slice(0, 5);
+        const fine = (r['Ora Fine'] || r['Fine'] || r['fine'] || '').toString().trim().slice(0, 5);
+        const note = (r['Note'] || r['note'] || '').toString().trim();
+        if (!nome || nome.includes('TOTALE') || nome === 'N') return;
+        let cat = '';
+        if (catRaw.toLowerCase().includes('collegial')) cat = 'coll';
+        else if (catRaw.toLowerCase().includes('altre') || catRaw.toLowerCase().includes('altra')) cat = 'altre';
+        else { errori++; return; }
+        let dataISO = '';
+        if (dataRaw.includes('/')) {
+          const p = dataRaw.split('/');
+          if (p.length === 3) dataISO = p[2].padStart(4, '0') + '-' + p[1].padStart(2, '0') + '-' + p[0].padStart(2, '0');
+        } else if (dataRaw.includes('-')) {
+          dataISO = dataRaw;
+        } else if (!isNaN(dataRaw) && dataRaw) {
+          const d = XLSX.SSF.parse_date_code(parseInt(dataRaw));
+          dataISO = d.y + '-' + String(d.m).padStart(2, '0') + '-' + String(d.d).padStart(2, '0');
+        }
+        if (!dataISO || dataISO.length < 10) { errori++; return; }
+        if (!ini.includes(':') || !fine.includes(':')) { errori++; return; }
+        const dur = dM(ini, fine);
+        if (dur <= 0) { errori++; return; }
+        nuovi.push({ id: Date.now() + Math.random() + idx, nome, cat, data: dataISO, ini, fine, dur, note });
+      });
+      if (nuovi.length === 0) {
+        msg.style.cssText = 'display:block;background:var(--rosso-c);color:var(--rosso)';
+        msg.textContent = 'Nessun dato valido trovato. Controlla il formato.';
+        return;
+      }
+      if (imp.length === 0 || confirm('Vuoi AGGIUNGERE i ' + nuovi.length + ' impegni a quelli esistenti?\nPremi Annulla per SOSTITUIRE tutto.')) {
+        imp = [...imp, ...nuovi];
+      } else {
+        imp = nuovi;
+      }
+      imp.sort((a, b) => a.data.localeCompare(b.data));
+      salva(); aggiorna();
+      msg.style.cssText = 'display:block;background:var(--verde-c);color:var(--verde)';
+      msg.textContent = 'Importati ' + nuovi.length + ' impegni' + (errori > 0 ? ' (' + errori + ' righe ignorate)' : '') + '.';
+      input.value = '';
+    } catch (err) {
+      msg.style.cssText = 'display:block;background:var(--rosso-c);color:var(--rosso)';
+      msg.textContent = 'Errore lettura file: ' + err.message;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── STORICO ───────────────────────────────────────────────────────────
+function toggleFormAnno() {
+  const form = document.getElementById('form-nuovo-anno');
+  const btn = document.getElementById('btn-nuovo-anno');
+  const vis = form.style.display === 'block';
+  form.style.display = vis ? 'none' : 'block';
+  btn.style.display = vis ? 'block' : 'none';
+  if (!vis) {
+    const p = annoAttivo.split('/');
+    const y1 = parseInt(p[0]) + 1, y2 = parseInt(p[1]) + 1;
+    for (const o of document.getElementById('inp-anno-y1').options) if (parseInt(o.value) === y1) { o.selected = true; break; }
+    for (const o of document.getElementById('inp-anno-y2').options) if (parseInt(o.value) === y2) { o.selected = true; break; }
+  }
+}
+
+function confermaNuovoAnno() {
+  const y1 = document.getElementById('inp-anno-y1').value;
+  const y2 = document.getElementById('inp-anno-y2').value;
+  if (parseInt(y2) !== parseInt(y1) + 1) { toast('Anno finale deve essere il successivo'); return; }
+  const nuovo = y1 + '/' + y2;
+  if (tuttiAnni().includes(nuovo)) { attivaAnno(nuovo); toggleFormAnno(); return; }
+  annoAttivo = nuovo;
+  imp = [];
+  salva(); aggiorna(); aggiornaTopSub(); renderAnni();
+  toggleFormAnno();
+  vai('home');
+  toast('Anno ' + nuovo + ' creato');
+}
+
+function renderAnni() {
+  const el = document.getElementById('lista-anni');
+  if (!el) return;
+  const anni = tuttiAnni();
+  if (!anni.length) {
+    el.innerHTML = '<div class="vuota"><span class="vi" style="font-size:1.8rem">&#128197;</span>Nessun anno salvato.</div>';
+    return;
+  }
+  el.innerHTML = anni.map(a => {
+    const dati = JSON.parse(localStorage.getItem(keyAnno(a)) || '[]');
+    const totC = dati.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
+    const totA = dati.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
+    const attivo = a === annoAttivo;
+    return `<div class="anno-card">
+      <div class="anno-badge" style="background:${attivo ? 'var(--blu)' : 'var(--bg)'};border:1.5px solid ${attivo ? 'var(--blu)' : 'var(--bd)'}">
+        <span style="font-size:.62rem;font-weight:800;color:${attivo ? '#fff' : 'var(--tx2)'}">${a.split('/')[0]}</span>
+        <span style="font-size:.55rem;color:${attivo ? 'rgba(255,255,255,.75)' : 'var(--tx2)'}">${a.split('/')[1]}</span>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          A.S. ${a}
+          ${attivo ? '<span style="font-size:.62rem;background:var(--blu);color:#fff;padding:2px 8px;border-radius:99px">attivo</span>' : ''}
+        </div>
+        <div style="font-size:.7rem;color:var(--tx2);margin-top:2px">${dati.length} impegni &middot; Coll. ${fHM(totC)}h &middot; Altre ${fHM(totA)}h</div>
+      </div>
+      ${!attivo ? `<button class="btn btn-ghost btn-sm" style="white-space:nowrap;flex-shrink:0" onclick="attivaAnno('${a}')">Apri</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── AUTENTICAZIONE ───────────────────────────────────────────────────
+let loginMode = 'login';
+
+function loginTab(mode) {
+  loginMode = mode;
+  document.getElementById('lt-login').className = 'login-tab' + (mode === 'login' ? ' on' : '');
+  document.getElementById('lt-reg').className = 'login-tab' + (mode === 'reg' ? ' on' : '');
+  document.getElementById('login-btn').textContent = mode === 'login' ? 'Accedi' : 'Crea account';
+  document.getElementById('login-err').classList.remove('show');
+}
+
+function mostraErroreLogin(msg) {
+  const el = document.getElementById('login-err');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function traduciErroreFirebase(code) {
+  const mappa = {
+    'auth/invalid-email': 'Email non valida.',
+    'auth/user-not-found': 'Nessun account trovato con questa email.',
+    'auth/wrong-password': 'Password errata.',
+    'auth/invalid-credential': 'Email o password errati.',
+    'auth/email-already-in-use': 'Esiste gia un account con questa email.',
+    'auth/weak-password': 'La password deve avere almeno 6 caratteri.',
+    'auth/too-many-requests': 'Troppi tentativi. Riprova tra qualche minuto.',
+    'auth/network-request-failed': 'Errore di connessione. Controlla internet.'
+  };
+  return mappa[code] || 'Si e verificato un errore. Riprova.';
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { mostraErroreLogin('Inserisci email e password.'); return; }
+  if (!window.fb) { mostraErroreLogin('Servizio non disponibile, riprova.'); return; }
+  document.getElementById('login-err').classList.remove('show');
+  const azione = loginMode === 'login'
+    ? window.fb.signIn(window.fb.auth, email, pass)
+    : window.fb.createUser(window.fb.auth, email, pass);
+  azione.catch(err => mostraErroreLogin(traduciErroreFirebase(err.code)));
+}
+
+function doLogout() {
+  if (window.fb) window.fb.signOut(window.fb.auth);
+}
+
+async function onUserLoggedIn(user) {
+  currentUser = user;
+  document.getElementById('login-screen').classList.add('hide');
+  const email = user.email || '';
+  document.getElementById('acc-email').textContent = email;
+  document.getElementById('acc-avatar').textContent = email.charAt(0).toUpperCase();
+  setSyncStatus('ok');
+
+  // Carica dati dal cloud per l'anno attivo e fai merge con quelli locali
+  const cloudData = await caricaDaCloud(annoAttivo);
+  if (cloudData && cloudData.length > 0) {
+    // Merge: aggiunge dal cloud quello che manca in locale (per id)
+    cloudData.forEach(c => {
+      if (!imp.some(i => i.id === c.id)) imp.push(c);
+    });
+    imp.sort((a, b) => a.data.localeCompare(b.data));
+    salva();
+    aggiorna();
+    renderRegistro();
+  } else if (imp.length > 0) {
+    // Non c'e nulla nel cloud ma ci sono dati locali: caricali su Firestore
+    salva();
+  }
+}
+
+function onUserLoggedOut() {
+  currentUser = null;
+  document.getElementById('login-screen').classList.remove('hide');
+  document.getElementById('login-loading').style.display = 'none';
+}
+
+function avviaFirebaseAuth() {
+  if (window.fbError) {
+    document.getElementById('login-loading').innerHTML =
+      '<div style="text-align:center;padding:20px;max-width:320px;">' +
+      '<div style="font-size:1.5rem;margin-bottom:10px;">\u26a0\ufe0f</div>' +
+      '<div style="font-weight:700;margin-bottom:8px;">Errore di connessione</div>' +
+      '<div style="font-size:.82rem;opacity:.85;">' + window.fbError + '</div>' +
+      '<button onclick="location.reload()" style="margin-top:16px;padding:9px 18px;border-radius:8px;border:none;background:#fff;color:#1F4E79;font-weight:700;cursor:pointer">Riprova</button>' +
+      '</div>';
+    return;
+  }
+  if (!window.fb) {
+    fbTentativi++;
+    if (fbTentativi > 50) { // 10 secondi di attesa massima
+      document.getElementById('login-loading').innerHTML =
+        '<div style="text-align:center;padding:20px;max-width:320px;">' +
+        '<div style="font-size:1.5rem;margin-bottom:10px;">\u26a0\ufe0f</div>' +
+        '<div style="font-weight:700;margin-bottom:8px;">Impossibile connettersi</div>' +
+        '<div style="font-size:.82rem;opacity:.85;">Verifica la connessione internet e riprova.</div>' +
+        '<button onclick="location.reload()" style="margin-top:16px;padding:9px 18px;border-radius:8px;border:none;background:#fff;color:#1F4E79;font-weight:700;cursor:pointer">Riprova</button>' +
+        '</div>';
+      return;
+    }
+    setTimeout(avviaFirebaseAuth, 200);
+    return;
+  }
+  window.fb.onAuthChange(window.fb.auth, (user) => {
+    document.getElementById('login-loading').style.display = 'none';
+    if (user) onUserLoggedIn(user);
+    else onUserLoggedOut();
+  });
+}
+
+// ── ESPONI SU WINDOW ─────────────────────────────────────────────────
+function apriGiorno(ds) {
+  const ev = imp.filter(i => i.data === ds);
+  if (!ev.length) return;
+  const p = ds.split('-');
+  const nm = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+  document.getElementById('modal-giorno-titolo').textContent = parseInt(p[2]) + ' ' + nm[parseInt(p[1])] + ' ' + p[0];
+  document.getElementById('modal-giorno-body').innerHTML = ev.map(i => {
+    const catLbl = i.cat === 'coll' ? 'Att. Collegiale' : i.cat === 'altre' ? 'Altre Attivita' : 'Extra';
+    const catCls = i.cat === 'coll' ? 'mge-c' : i.cat === 'altre' ? 'mge-a' : 'mge-e';
+    const orario = (i.ini && i.fine) ? i.ini + ' - ' + i.fine : 'Orario non inserito';
+    const durata = i.dur > 0 ? fHM(i.dur) + 'h' : '';
+    return '<div class="modal-giorno-ev">' +
+      '<div><span class="mge-badge ' + catCls + '">' + catLbl + '</span></div>' +
+      '<div class="mge-nome">' + i.nome + '</div>' +
+      '<div class="mge-info"><span>' + orario + '</span>' + (durata ? '<span>' + durata + '</span>' : '') + '</div>' +
+      (i.note ? '<div class="mge-note">' + i.note + '</div>' : '') +
+      '</div>';
+  }).join('');
+  document.getElementById('modal-giorno').classList.add('on');
+}
+function chiudiModalGiorno() {
+  document.getElementById('modal-giorno').classList.remove('on');
+}
+
+const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica,
+  filtra, setVista, calMese, tVia, tStop, stampaPDF, copiaCSV,
+  esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
+  apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout];
+fns.forEach(f => { window[f.name] = f; });
+
+// ── AVVIO ─────────────────────────────────────────────────────────────
+document.getElementById('ev-data').value = new Date().toISOString().slice(0, 10);
+const _anni = tuttiAnni();
+if (_anni.length > 0) annoAttivo = _anni[0];
+aggiornaTopSub();
+carica();
+
+aggiorna();
+
+}); // end DOMContentLoaded
+</script>
+
+</body>
+</html>
