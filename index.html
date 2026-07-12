@@ -70,6 +70,85 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
 .nb.on{color:var(--blu);}
+.hub{display:flex;flex-direction:column;gap:10px;}
+.hub-item{display:flex;align-items:center;gap:14px;background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:16px 15px;cursor:pointer;font-family:var(--f);text-align:left;width:100%;box-shadow:0 1px 4px rgba(0,0,0,.05);-webkit-tap-highlight-color:transparent;}
+.hub-item svg{width:26px;height:26px;stroke:var(--blu);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.hub-item .hi-tx{flex:1;}
+.hub-item .hi-t{font-size:.95rem;font-weight:800;color:var(--testo);}
+.hub-item .hi-s{font-size:.72rem;color:var(--tx2);margin-top:2px;}
+.hub-item .hi-arrow{color:var(--tx2);font-size:1.1rem;flex-shrink:0;}
+.hub-item.dis{opacity:.55;cursor:default;}
+.hub-item.dis svg{stroke:var(--tx2);}
+.badge-soon{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:var(--bg);border:1px solid var(--bd);color:var(--tx2);border-radius:20px;padding:3px 9px;flex-shrink:0;}
+.gl-chips{display:flex;gap:7px;flex-wrap:wrap;}
+.gl-chip{padding:7px 13px;border-radius:20px;border:1.5px solid var(--bd);background:var(--w);font-family:var(--f);font-size:.78rem;font-weight:700;color:var(--tx2);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.gl-chip.on{background:var(--blu);border-color:var(--blu);color:#fff;}
+.gl-nota{font-size:.68rem;color:var(--tx2);margin-top:8px;}
+.pcnt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.pcnt-c{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.pcnt-l{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);}
+.pcnt-v{font-size:1.15rem;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;color:var(--blu);}
+.pcnt-v.fin{color:#B3261E;}
+.perm-warn{display:none;background:#FFF4E5;border:1.5px solid #F0C078;color:#7A4D00;border-radius:9px;padding:10px 12px;font-size:.78rem;margin:10px 0;}
+.pv-row{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--bd);}
+.pv-row:last-child{border-bottom:none;}
+.pv-tag{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:3px 8px;border-radius:20px;background:var(--bg);border:1px solid var(--bd);color:var(--tx2);flex-shrink:0;}
+.pv-tx{flex:1;min-width:0;}
+.pv-t{font-size:.84rem;font-weight:700;}
+.pv-s{font-size:.7rem;color:var(--tx2);margin-top:1px;}
+.pv-del{border:none;background:var(--bg);color:#B3261E;border-radius:8px;padding:6px 10px;font-family:var(--f);font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+.pv-del.conf{background:#B3261E;color:#fff;}
+.lutto-ev{border:1px solid var(--bd);border-radius:10px;padding:11px 12px;margin-bottom:10px;background:var(--w);}
+.lutto-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.lutto-rel{font-size:.86rem;font-weight:800;}
+.lutto-res{font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:20px;background:var(--bg);border:1px solid var(--bd);color:var(--blu);}
+.lutto-res.fin{color:#B3261E;}
+.lutto-promem{background:#FFF4E5;border:1px solid #F0C078;color:#7A4D00;border-radius:8px;padding:8px 10px;font-size:.7rem;margin-top:8px;}
+.lutto-gg{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;}
+.lg-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:5px 10px;font-size:.72rem;font-weight:700;}
+.lg-x{border:none;background:none;color:#B3261E;font-weight:800;cursor:pointer;font-size:.8rem;padding:0 1px;font-family:var(--f);}
+.lg-x.conf{background:#B3261E;color:#fff;border-radius:50%;width:16px;height:16px;line-height:1;}
+.lutto-add{display:flex;gap:8px;margin-top:10px;align-items:center;}
+.lutto-add input[type=date]{flex:1;}
+.brev-orario{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.brev-orario input{width:80px;text-align:center;}
+.brev-tetto{font-size:.72rem;color:var(--tx2);}
+.brev-tetto strong{color:var(--blu);}
+.brev-ev{border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--w);}
+.brev-ev.saldato{opacity:.62;}
+.brev-ev.urg{border-color:#F0C078;background:#FFF9F0;}
+.brev-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.brev-data{font-size:.9rem;font-weight:800;}
+.brev-ore{font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:20px;background:var(--bg);border:1px solid var(--bd);color:var(--blu);}
+.brev-stato{font-size:.64rem;font-weight:800;padding:3px 9px;border-radius:20px;}
+.brev-stato.aperto{background:#FFF4E5;color:#7A4D00;border:1px solid #F0C078;}
+.brev-stato.ok{background:#E7F5EC;color:#1B7A3D;border:1px solid #9BD3AF;}
+.brev-scad{font-size:.7rem;color:var(--tx2);margin-top:6px;}
+.brev-scad.urg{color:#7A4D00;font-weight:700;}
+.brev-rec-tit{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);margin:9px 0 5px;}
+.brev-rec{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:5px 10px;font-size:.72rem;font-weight:700;margin:0 6px 6px 0;}
+.brev-rec-x{border:none;background:none;color:#B3261E;font-weight:800;cursor:pointer;font-size:.8rem;padding:0 1px;font-family:var(--f);}
+.brev-rec-x.conf{background:#B3261E;color:#fff;border-radius:50%;width:16px;height:16px;line-height:1;}
+.brev-rec-add{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;}
+.brev-rec-add input[type=date]{flex:1;min-width:130px;}
+.brev-rec-add select{width:90px;}
+.fer-anz{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.fer-anz-tx{flex:1;min-width:150px;}
+.fer-anz-tx .t{font-size:.85rem;font-weight:700;}
+.fer-anz-tx .s{font-size:.7rem;color:var(--tx2);margin-top:2px;}
+.fer-switch{position:relative;width:52px;height:30px;flex-shrink:0;border:none;background:var(--bd);border-radius:20px;cursor:pointer;transition:background .2s;padding:0;}
+.fer-switch.on{background:var(--blu);}
+.fer-switch::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.fer-switch.on::after{transform:translateX(22px);}
+.fer-big{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.fer-bc{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.fer-bc.fin{border-color:#E7A9A4;}
+.fer-bc.urg{border-color:#F0C078;background:#FFF9F0;}
+.fer-bc-l{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);}
+.fer-bc-v{font-size:1.15rem;font-weight:800;margin-top:2px;color:var(--blu);font-variant-numeric:tabular-nums;}
+.fer-bc-v.fin{color:#B3261E;}
+.fer-bc-s{font-size:.63rem;color:var(--tx2);margin-top:2px;}
+.fer-bc-s.urg{color:#7A4D00;font-weight:700;}
 .pag{display:none;max-width:700px;margin:0 auto;padding:14px;}
 .pag.on{display:block;padding-top:108px;}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
@@ -271,6 +350,29 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .drop-zone .di{font-size:1.8rem;margin-bottom:6px;}
 .import-msg{font-size:.8rem;padding:10px 12px;border-radius:8px;margin-top:8px;display:none;}
 /* EXTRA */
+.home-add{margin-bottom:14px;}
+.assenze-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.acard{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:11px 12px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+.acard.urg{border-color:#F0C078;background:#FFF9F0;}
+.acard.fin{border-color:#E7A9A4;}
+.acard-l{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);}
+.acard-v{font-size:1.05rem;font-weight:800;margin-top:2px;color:var(--blu);font-variant-numeric:tabular-nums;}
+.acard-v.fin{color:#B3261E;}
+.acard-s{font-size:.63rem;color:var(--tx2);margin-top:2px;}
+.acard-s.urg{color:#7A4D00;font-weight:700;}
+.home-empty{text-align:center;padding:38px 20px;color:var(--tx2);}
+.home-empty .he-ic{font-size:2.2rem;margin-bottom:10px;}
+.home-empty .he-t{font-size:.95rem;font-weight:800;color:var(--testo);margin-bottom:5px;}
+.home-empty .he-s{font-size:.8rem;line-height:1.5;}
+.sc-modal{padding:20px;}
+.sc-modal h3{font-size:1.05rem;margin:0 0 4px;}
+.sc-modal p{font-size:.8rem;color:var(--tx2);margin:0 0 16px;}
+.sc-opt{display:flex;gap:12px;}
+.sc-opt button{flex:1;flex-direction:column;gap:8px;padding:18px 12px;border:1.5px solid var(--bd);border-radius:12px;background:var(--w);cursor:pointer;font-family:var(--f);}
+.sc-opt button:hover{border-color:var(--blu);background:var(--bg);}
+.sc-opt .sc-ic{font-size:1.6rem;display:block;width:100%;text-align:center;line-height:1;}
+.sc-opt .sc-t{font-size:.85rem;font-weight:800;color:var(--testo);display:block;width:100%;text-align:center;}
+.sc-opt .sc-d{font-size:.66rem;color:var(--tx2);display:block;width:100%;text-align:center;line-height:1.35;}
 .extra-pill{
   display:flex;align-items:center;gap:12px;
   background:linear-gradient(135deg,var(--extra-cc) 0%,#FFF8F3 100%);
@@ -346,38 +448,31 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
     <span>Home</span>
   </button>
-  <button class="nb" id="nt-evento" onclick="vai('evento')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-    <span>Evento</span>
+  <button class="nb" id="nt-impegni" onclick="vai('impegni')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+    <span>Impegni</span>
   </button>
-  <button class="nb" id="nt-registro" onclick="vai('registro')">
-    <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
-    <span>Registro</span>
+  <button class="nb" id="nt-assenze" onclick="vai('assenze')">
+    <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-8-8"/><polyline points="20 5 12 13 9 10"/></svg>
+    <span>Assenze</span>
   </button>
-  <button class="nb" id="nt-timer" onclick="vai('timer')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><line x1="9" y1="3" x2="15" y2="3"/></svg>
-    <span>Timer</span>
-  </button>
-  <button class="nb" id="nt-pdf" onclick="vai('pdf')">
-    <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="14 3 14 9 20 9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
-    <span>PDF</span>
-  </button>
-  <button class="nb" id="nt-storico" onclick="vai('storico')">
-    <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 0 .5-3"/><polyline points="3 4 3 11 10 11"/></svg>
-    <span>Storico</span>
-  </button>
-  <button class="nb" id="nt-ccnl" onclick="vai('ccnl')">
-    <svg viewBox="0 0 24 24"><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7l-8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
-    <span>CCNL</span>
-  </button>
-  <button class="nb" id="nt-guida" onclick="vai('guida')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"/></svg>
-    <span>Guida</span>
+  <button class="nb" id="nt-altro" onclick="vai('altro')">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+    <span>Altro</span>
   </button>
 </nav>
 
 <!-- HOME -->
 <div class="pag on" id="pag-home">
+  <button class="btn btn-blu btn-full home-add" style="margin-top:0" onclick="apriSceltaInserimento()">+ Registra qualcosa</button>
+
+  <div class="home-empty" id="home-empty" style="display:none">
+    <div class="he-ic">&#128203;</div>
+    <div class="he-t">Ancora nessun dato per questo anno</div>
+    <div class="he-s">Tocca <strong>Registra qualcosa</strong> per aggiungere un impegno o un permesso.<br>Qui vedrai i tuoi riepiloghi appena inserisci il primo dato.</div>
+  </div>
+
+  <div id="home-impegni-blocco">
   <div class="cards">
     <div class="card cc2"><div class="c-lbl">Collegiali</div><div class="c-val" id="ore-c">0:00</div><div class="c-sub">su 40:00 max</div></div>
     <div class="card ca2"><div class="c-lbl">Altre att.</div><div class="c-val" id="ore-a">0:00</div><div class="c-sub">su 40:00 max</div></div>
@@ -396,14 +491,250 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="extra-pill-val" id="ore-e">0:00</div>
   </div>
   <div class="avv" id="avv"></div>
+  </div><!-- /home-impegni-blocco -->
+
+  <div class="assenze-cards" id="home-assenze"></div>
+
   <!-- Riepilogo mensile -->
-  <div class="box">
+  <div class="box" id="home-mensile-box">
     <div class="box-h">
       <h2>Riepilogo mensile</h2>
       <span id="anno-home-lbl" style="font-size:.75rem;color:var(--tx2);font-weight:600;"></span>
     </div>
     <div style="padding:8px 14px 0;font-size:.75rem;color:var(--tx2);" id="mese-tot-lbl"></div>
     <div class="mese-grid" id="mese-grid"></div>
+  </div>
+</div>
+
+<!-- EVENTO -->
+
+<!-- IMPEGNI (indice area) -->
+<div class="pag" id="pag-impegni">
+  <div class="hub">
+    <button class="hub-item" onclick="vai('evento')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span class="hi-tx"><span class="hi-t">Nuovo evento</span><br><span class="hi-s">Registra un impegno collegiale o un'altra attività</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('registro')">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+      <span class="hi-tx"><span class="hi-t">Registro</span><br><span class="hi-s">Elenco e calendario degli impegni inseriti</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('timer')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><line x1="9" y1="3" x2="15" y2="3"/></svg>
+      <span class="hi-tx"><span class="hi-t">Timer</span><br><span class="hi-s">Cronometra un impegno in corso</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+  </div>
+</div>
+
+<!-- ASSENZE (indice area) -->
+<div class="pag" id="pag-assenze">
+  <div class="hub">
+    <button class="hub-item" onclick="vai('permessi')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+      <span class="hi-tx"><span class="hi-t">Permessi</span><br><span class="hi-s">Personali, lutto, matrimonio, concorsi</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('brevi')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+      <span class="hi-tx"><span class="hi-t">Permessi brevi</span><br><span class="hi-s">Permessi a ore con recupero</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('ferie')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg>
+      <span class="hi-tx"><span class="hi-t">Ferie</span><br><span class="hi-s">Giorni di ferie e festività soppresse</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+  </div>
+</div>
+
+<!-- ALTRO (indice area) -->
+<div class="pag" id="pag-altro">
+  <div class="hub">
+    <button class="hub-item" onclick="vai('pdf')">
+      <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="14 3 14 9 20 9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+      <span class="hi-tx"><span class="hi-t">PDF ed Excel</span><br><span class="hi-s">Esporta e importa i dati</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('storico')">
+      <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 0 .5-3"/><polyline points="3 4 3 11 10 11"/></svg>
+      <span class="hi-tx"><span class="hi-t">Storico</span><br><span class="hi-s">Gestione degli anni scolastici</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('ccnl')">
+      <svg viewBox="0 0 24 24"><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7l-8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+      <span class="hi-tx"><span class="hi-t">CCNL</span><br><span class="hi-s">Riferimenti contrattuali</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('guida')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor" stroke="none"/></svg>
+      <span class="hi-tx"><span class="hi-t">Guida</span><br><span class="hi-s">Come si usa ProfTime</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- PERMESSI -->
+<div class="pag" id="pag-permessi">
+  <div class="box">
+    <div class="box-h"><h2>Giorni liberi settimanali</h2></div>
+    <div class="box-b">
+      <div class="gl-chips" id="gl-chips"></div>
+      <div class="gl-nota">Seleziona i giorni in cui non presti servizio per questo anno scolastico. La domenica è sempre esclusa dai conteggi, insieme alle festività nazionali.</div>
+    </div>
+  </div>
+
+  <div class="pcnt" id="perm-counters"></div>
+
+  <div class="box">
+    <div class="box-h"><h2>Nuovo permesso</h2></div>
+    <div class="box-b">
+      <div class="fg">
+        <div class="s2"><label class="fl">Tipo di permesso</label>
+          <select id="perm-tipo" onchange="tipoPermCambia()">
+            <option value="">seleziona</option>
+            <option value="personale">Motivi personali o familiari (3 gg, retribuito)</option>
+            <option value="feriePermesso">Ferie come permesso (6 gg, stessi motivi)</option>
+            <option value="matrimonio">Matrimonio (15 gg consecutivi, retribuito)</option>
+            <option value="concorso">Concorso o esame (8 gg, non retribuito)</option>
+          </select>
+        </div>
+        <div id="pf-dal" style="display:none"><label class="fl">Dal</label><input type="date" id="perm-data"></div>
+        <div id="pf-al" style="display:none"><label class="fl">Al (uguale se un solo giorno)</label><input type="date" id="perm-data-fine"></div>
+        <div class="s2" id="pf-p-nota" style="display:none"><div class="gl-nota">Si contano tutti i giorni dell’intervallo tranne domeniche e festività. Il sabato conta sempre, come per le ferie.</div></div>
+        <div id="pf-nozze" style="display:none"><label class="fl">Data del matrimonio</label><input type="date" id="perm-nozze"></div>
+        <div id="pf-inizio-m" style="display:none"><label class="fl">Inizio permesso</label><input type="date" id="perm-inizio-m" onchange="aggFineMatrimonio()"></div>
+        <div class="s2" id="pf-fine-m" style="display:none"><div class="gl-nota" id="perm-fine-m-lbl">La fine viene calcolata automaticamente: 15 giorni consecutivi di calendario.</div></div>
+        <div id="pf-c-inizio" style="display:none"><label class="fl">Inizio</label><input type="date" id="perm-c-inizio"></div>
+        <div id="pf-c-fine" style="display:none"><label class="fl">Fine</label><input type="date" id="perm-c-fine"></div>
+        <div class="s2" id="pf-c-nota" style="display:none"><div class="gl-nota">Per il concorso si contano solo i giorni lavorativi: domeniche, giorni liberi e festività sono esclusi dal conteggio.</div></div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><textarea id="perm-note" placeholder="es. motivo, protocollo domanda"></textarea></div>
+      </div>
+      <div class="perm-warn" id="perm-warn"></div>
+      <button class="btn btn-blu btn-full" onclick="aggiungiPermesso()">Aggiungi permesso</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Permessi inseriti</h2></div>
+    <div class="box-b" id="perm-lista"></div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Lutto</h2></div>
+    <div class="box-b">
+      <div class="gl-nota" style="margin:0 0 10px">Ogni evento dà diritto a 3 giorni, anche non consecutivi. Il contratto non fissa un termine preciso per usarli, ma vanno fruiti in un tempo ragionevole dall’evento.</div>
+      <div class="fg">
+        <div><label class="fl">Data del decesso</label><input type="date" id="lutto-data"></div>
+        <div><label class="fl">Parentela</label>
+          <select id="lutto-rel">
+            <option value="">seleziona</option>
+            <option>Coniuge (anche separato)</option>
+            <option>Padre</option>
+            <option>Madre</option>
+            <option>Figlio/a</option>
+            <option>Fratello / Sorella</option>
+            <option>Nonno/a</option>
+            <option>Nipote (figlio/a di figlio/a)</option>
+            <option>Suocero/a</option>
+            <option>Genero / Nuora</option>
+            <option>Patrigno / Matrigna</option>
+            <option>Convivente stabile (da certificazione)</option>
+            <option>Componente famiglia anagrafica</option>
+          </select>
+        </div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><input type="text" id="lutto-note" placeholder="promemoria personale"></div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="aggiungiEventoLutto()">Registra evento</button>
+      <div id="lutto-lista" style="margin-top:14px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PERMESSI BREVI -->
+<div class="pag" id="pag-brevi">
+  <div class="box">
+    <div class="box-h"><h2>Orario settimanale</h2></div>
+    <div class="box-b">
+      <div class="brev-orario">
+        <label class="fl" style="margin:0">Ore di lezione a settimana</label>
+        <input type="number" id="brev-orario" min="0" max="40" step="1" onchange="salvaOrarioSettimanale()">
+      </div>
+      <div class="brev-tetto" id="brev-tetto" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Nuovo permesso breve</h2></div>
+    <div class="box-b">
+      <div class="fg">
+        <div><label class="fl">Data del permesso</label><input type="date" id="brev-data"></div>
+        <div><label class="fl">Ore</label>
+          <select id="brev-ore"><option value="1">1 ora</option><option value="2">2 ore</option></select>
+        </div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><input type="text" id="brev-note" placeholder="es. motivo o protocollo"></div>
+      </div>
+      <div class="gl-nota" style="margin:0 0 12px">Ogni permesso breve non può superare le 2 ore. Le ore vanno recuperate; la scadenza indicata è una stima pratica basata su due mesi al netto di domeniche e festività, non un termine contrattuale ufficiale.</div>
+      <button class="btn btn-blu btn-full" onclick="aggiungiBreve()">Aggiungi permesso</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Permessi e recuperi</h2></div>
+    <div class="box-b" id="brev-lista"></div>
+  </div>
+</div>
+
+<!-- FERIE -->
+<div class="pag" id="pag-ferie">
+  <div class="box">
+    <div class="box-h"><h2>Anzianità di servizio</h2></div>
+    <div class="box-b">
+      <div class="fer-anz">
+        <div class="fer-anz-tx">
+          <div class="t">Ho superato i 3 anni di servizio</div>
+          <div class="s">Con almeno 3 anni hai 32 giorni di ferie, altrimenti 30. Si eredita in automatico ogni anno.</div>
+        </div>
+        <button class="fer-switch" id="fer-switch" onclick="toggleAnzianita()"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fer-big" id="fer-counters"></div>
+
+  <div class="box">
+    <div class="box-h"><h2>Nuove ferie estive</h2></div>
+    <div class="box-b">
+      <div class="fg">
+        <div><label class="fl">Dal</label><input type="date" id="fer-dal"></div>
+        <div><label class="fl">Al (uguale se un solo giorno)</label><input type="date" id="fer-al"></div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><input type="text" id="fer-note" placeholder="promemoria personale"></div>
+      </div>
+      <div class="gl-nota" style="margin:0 0 12px">Si contano tutti i giorni dell’intervallo tranne domeniche e festività. Il sabato conta sempre. I 6 giorni di ferie come permesso presi durante le lezioni scalano dallo stesso monte.</div>
+      <button class="btn btn-blu btn-full" onclick="aggiungiFerie()">Aggiungi ferie</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Ferie estive inserite</h2></div>
+    <div class="box-b" id="fer-lista"></div>
+  </div>
+
+  <div class="box">
+    <div class="box-h"><h2>Festività soppresse</h2></div>
+    <div class="box-b">
+      <div class="gl-nota" style="margin:0 0 12px">4 giorni l’anno, da fruire entro il 31 agosto. Si contano come le ferie e hanno un monte separato.</div>
+      <div class="fg">
+        <div><label class="fl">Dal</label><input type="date" id="sop-dal"></div>
+        <div><label class="fl">Al (uguale se un solo giorno)</label><input type="date" id="sop-al"></div>
+        <div class="s2"><label class="fl">Note (opzionale)</label><input type="text" id="sop-note" placeholder="promemoria personale"></div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="aggiungiSoppressa()">Aggiungi festività soppressa</button>
+      <div id="sop-lista" style="margin-top:14px"></div>
+    </div>
   </div>
 </div>
 
@@ -702,6 +1033,27 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </div>
 
 <!-- MODAL ELIMINA ANNO -->
+<div class="modal-bg" id="modal-import" onclick="if(event.target===this)annullaImport()">
+  <div class="modal sc-modal">
+    <h3>Importazione impegni</h3>
+    <p>Hai già degli impegni inseriti per questo anno. Vuoi aggiungere i <strong id="import-count">0</strong> nuovi a quelli esistenti, oppure sostituire tutto?</p>
+    <div class="sc-opt">
+      <button onclick="confermaImport('aggiungi')"><span class="sc-t">Aggiungi</span><span class="sc-d">Tieni gli impegni attuali e aggiungi i nuovi</span></button>
+      <button onclick="confermaImport('sostituisci')"><span class="sc-t">Sostituisci</span><span class="sc-d">Cancella gli attuali e tieni solo i nuovi</span></button>
+    </div>
+    <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="annullaImport()">Annulla</button>
+  </div>
+</div>
+<div class="modal-bg" id="modal-scelta" onclick="if(event.target===this)chiudiSceltaInserimento()">
+  <div class="modal sc-modal">
+    <h3>Cosa vuoi registrare?</h3>
+    <p>Scegli il tipo di inserimento.</p>
+    <div class="sc-opt">
+      <button onclick="scegliInserimento('evento')"><span class="sc-ic">&#128197;</span><span class="sc-t">Impegno</span><span class="sc-d">Collegiale, altra attivita, extra</span></button>
+      <button onclick="scegliInserimento('permessi')"><span class="sc-ic">&#127958;</span><span class="sc-t">Permesso</span><span class="sc-d">Personale, lutto, matrimonio, concorso</span></button>
+    </div>
+  </div>
+</div>
 <div class="modal-bg" id="modal-elimina-anno" onclick="if(event.target===this)chiudiModalEliminaAnno()">
   <div class="modal" style="max-width:340px;">
     <div class="modal-conferma-icon">&#9888;&#65039;</div>
@@ -863,6 +1215,7 @@ async function attivaAnno(a) {
       salva();
     }
   }
+  await sincronizzaPermessi();
   aggiorna();
   aggiornaTopSub();
   renderAnni();
@@ -881,14 +1234,847 @@ function aggiornaTopSub() {
   if (el3) el3.textContent = valore;
 }
 
+
+// ── HOME: scelta inserimento e cruscotto adattivo ──────────────────
+function apriSceltaInserimento() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  document.getElementById('modal-scelta').classList.add('on');
+}
+function chiudiSceltaInserimento() {
+  document.getElementById('modal-scelta').classList.remove('on');
+}
+function scegliInserimento(dove) {
+  chiudiSceltaInserimento();
+  vai(dove);
+}
+
+function aggiornaHomeAdattiva() {
+  // Blocco impegni: visibile solo se esiste almeno un impegno
+  const haImpegni = imp.length > 0;
+  const bloccoImp = document.getElementById('home-impegni-blocco');
+  if (bloccoImp) bloccoImp.style.display = haImpegni ? '' : 'none';
+
+  // Caselle assenze: costruite solo per le voci con valore diverso da zero
+  const cont = document.getElementById('home-assenze');
+  let cards = [];
+  if (typeof perm !== 'undefined' && perm) {
+    ['personale', 'feriePermesso', 'concorso'].forEach(function(t) {
+      const usati = permUsati(t);
+      if (usati > 0) {
+        const max = CCNL_PERM[t];
+        const resid = max - usati;
+        const fin = resid <= 0;
+        cards.push('<div class="acard' + (fin ? ' fin' : '') + '"><div class="acard-l">' + PERM_LBL[t] +
+          '</div><div class="acard-v' + (fin ? ' fin' : '') + '">' + Math.max(0, resid) + ' su ' + max +
+          '</div><div class="acard-s">giorni residui</div></div>');
+      }
+    });
+    // Matrimonio: mostrato se registrato
+    const mUsati = permUsati('matrimonio');
+    if (mUsati > 0) {
+      cards.push('<div class="acard"><div class="acard-l">Matrimonio</div><div class="acard-v">' + mUsati +
+        ' gg</div><div class="acard-s">registrati</div></div>');
+    }
+    // Lutto: una casella per ogni evento con giorni ancora da usare o promemoria attivo
+    const oggi = new Date();
+    (perm.eventiLutto || []).forEach(function(ev) {
+      const resid = 3 - ev.giorniUsati.length;
+      const gTrasc = Math.floor((oggi - new Date(ev.dataDecesso + 'T12:00:00')) / 86400000);
+      const urg = (ev.giorniUsati.length === 0 && resid > 0 && gTrasc > 15);
+      if (resid < 3 || urg) {
+        const rel = ev.relazione.length > 16 ? ev.relazione.slice(0, 15) + '\u2026' : ev.relazione;
+        cards.push('<div class="acard' + (urg ? ' urg' : '') + (resid === 0 ? ' fin' : '') + '">' +
+          '<div class="acard-l">Lutto</div>' +
+          '<div class="acard-v' + (resid === 0 ? ' fin' : '') + '">' + resid + ' su 3</div>' +
+          '<div class="acard-s' + (urg ? ' urg' : '') + '">' + (urg ? 'promemoria: ' + gTrasc + ' gg fa' : escHtml(rel)) + '</div></div>');
+      }
+    });
+  }
+    // Ferie: casella visibile se ci sono ferie estive inserite. Il residuo tiene
+    // conto anche delle ferie come permesso, che restano nella loro casella.
+    if (Array.isArray(perm.ferieEstive) && perm.ferieEstive.length > 0) {
+      const residF = ferieResidue();
+      const monteF = monteFerieBase();
+      const finF = residF <= 0;
+      cards.push('<div class="acard' + (finF ? ' fin' : '') + '">' +
+        '<div class="acard-l">Ferie</div>' +
+        '<div class="acard-v' + (finF ? ' fin' : '') + '">' + Math.max(0, residF) + ' su ' + monteF + '</div>' +
+        '<div class="acard-s">giorni residui</div></div>');
+    }
+    // Festivita soppresse: casella visibile se inserite, urgente entro 7 giorni dal 31 agosto.
+    if (Array.isArray(perm.festivitaSoppresse) && perm.festivitaSoppresse.length > 0) {
+      const residS = soppResidue();
+      const oggiS = new Date(); oggiS.setHours(12, 0, 0, 0);
+      const ggS = Math.round((new Date(scadenzaSoppresse() + 'T12:00:00') - oggiS) / 86400000);
+      const urgS = residS > 0 && ggS >= 0 && ggS <= 7;
+      const finS = residS <= 0;
+      cards.push('<div class="acard' + (urgS ? ' urg' : '') + '">' +
+        '<div class="acard-l">Festività soppresse</div>' +
+        '<div class="acard-v' + (finS ? ' fin' : '') + '">' + Math.max(0, residS) + ' su 4</div>' +
+        '<div class="acard-s' + (urgS ? ' urg' : '') + '">' + (urgS ? 'scadono il 31/08' : 'giorni residui') + '</div></div>');
+    }
+    // Permessi brevi: casella visibile se esiste almeno un permesso nell'anno.
+    // Mostra le ore da recuperare, con il totale annuale come contesto,
+    // e si accende in arancione se almeno un permesso ha scadenza entro 7 giorni.
+    if (Array.isArray(perm.permessiBrevi) && perm.permessiBrevi.length > 0) {
+      const debito = brevDebitoAperto();
+      const usato = brevTotaleUsato();
+      const oggiB = new Date(); oggiB.setHours(12, 0, 0, 0);
+      let urgB = false;
+      perm.permessiBrevi.forEach(function(pb) {
+        if (oreDaRecuperare(pb) > 0) {
+          const gg = Math.round((new Date(scadenzaBreve(pb.data) + 'T12:00:00') - oggiB) / 86400000);
+          if (gg <= 7) urgB = true;
+        }
+      });
+      const finB = debito <= 0;
+      cards.push('<div class="acard' + (urgB ? ' urg' : '') + '">' +
+        '<div class="acard-l">Permessi brevi</div>' +
+        '<div class="acard-v">' + debito + (debito === 1 ? ' ora' : ' ore') + '</div>' +
+        '<div class="acard-s' + (urgB ? ' urg' : '') + '">' + (urgB ? 'scadenza vicina' : (finB ? 'tutto recuperato · ' + usato + ' usate' : 'da recuperare · ' + usato + ' usate')) + '</div></div>');
+    }
+
+  if (cont) cont.innerHTML = cards.join('');
+
+  // Riepilogo mensile visibile solo con impegni
+  const mensile = document.getElementById('home-mensile-box');
+  if (mensile) mensile.style.display = haImpegni ? '' : 'none';
+
+  // Messaggio di benvenuto se non c'e' proprio nulla
+  const vuoto = !haImpegni && cards.length === 0;
+  const emp = document.getElementById('home-empty');
+  if (emp) emp.style.display = vuoto ? '' : 'none';
+}
+
+// ── MODULO PERMESSI ──────────────────────────────────────────────────
+// Valori CCNL fissi nel codice: si aggiornano qui se cambia il contratto
+const CCNL_PERM = { personale: 3, feriePermesso: 6, matrimonio: 15, concorso: 8 };
+const PERM_LBL = { personale: 'Personale', feriePermesso: 'Ferie-permesso', matrimonio: 'Matrimonio', concorso: 'Concorso' };
+const GIORNI_SETT = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+
+let perm = permDefault();
+let syncTimeoutPerm = null;
+let permPendingWarn = null;
+let permDelPending = null;
+let luttoDelPending = null;
+let luttoGgPending = null;
+
+function permDefault() { return { giorniLiberi: [], voci: [], eventiLutto: [], permessiBrevi: [], orarioSettimanale: 0, anzianitaOltre3: false, ferieEstive: [], festivitaSoppresse: [] }; }
+function normalizzaPerm(p) {
+  if (!p || typeof p !== 'object') return permDefault();
+  return {
+    giorniLiberi: Array.isArray(p.giorniLiberi) ? p.giorniLiberi : [],
+    voci: Array.isArray(p.voci) ? p.voci : [],
+    eventiLutto: Array.isArray(p.eventiLutto) ? p.eventiLutto : [],
+    permessiBrevi: Array.isArray(p.permessiBrevi) ? p.permessiBrevi : [],
+    orarioSettimanale: (typeof p.orarioSettimanale === 'number' && p.orarioSettimanale >= 0) ? p.orarioSettimanale : 0,
+    anzianitaOltre3: p.anzianitaOltre3 === true,
+    ferieEstive: Array.isArray(p.ferieEstive) ? p.ferieEstive : [],
+    festivitaSoppresse: Array.isArray(p.festivitaSoppresse) ? p.festivitaSoppresse : []
+  };
+}
+function keyPermessi(a) {
+  const uid = currentUser ? currentUser.uid : 'guest';
+  return 'ridp_' + uid + '_' + a.replace('/', '_');
+}
+function fsKeyPermessi(a) { return 'ridp_' + a.replace('/', '_'); }
+
+function salvaPermessi() {
+  if (!annoAttivo) return;
+  try { localStorage.setItem(keyPermessi(annoAttivo), JSON.stringify(perm)); } catch (e) {}
+  if (currentUser && window.fb) {
+    setSyncStatus('wait');
+    clearTimeout(syncTimeoutPerm);
+    const annoSalva = annoAttivo;
+    const uidSalva = currentUser.uid;
+    syncTimeoutPerm = setTimeout(function() {
+      const ref = window.fb.doc(window.fb.db, 'utenti', uidSalva, 'permessi', fsKeyPermessi(annoSalva));
+      window.fb.setDoc(ref, { dati: perm, aggiornato: Date.now() })
+        .then(function() { setSyncStatus('ok'); })
+        .catch(function() { setSyncStatus('off'); });
+    }, 700);
+  }
+}
+function caricaPermessi() {
+  if (!annoAttivo) { perm = permDefault(); return; }
+  try {
+    const d = localStorage.getItem(keyPermessi(annoAttivo));
+    perm = d ? normalizzaPerm(JSON.parse(d)) : permDefault();
+  } catch (e) { perm = permDefault(); }
+}
+async function caricaPermessiDaCloud(anno) {
+  if (!currentUser || !window.fb) return null;
+  try {
+    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'permessi', fsKeyPermessi(anno));
+    const snap = await window.fb.getDoc(ref);
+    if (snap.exists() && !snap.data().eliminato) return normalizzaPerm(snap.data().dati);
+  } catch (e) { console.error('Errore caricamento permessi cloud', e); }
+  return null;
+}
+async function sincronizzaPermessi() {
+  caricaPermessi();
+  if (currentUser && annoAttivo) {
+    const cloud = await caricaPermessiDaCloud(annoAttivo);
+    if (cloud && (cloud.voci.length || cloud.eventiLutto.length || cloud.giorniLiberi.length || cloud.permessiBrevi.length || cloud.ferieEstive.length || cloud.festivitaSoppresse.length || cloud.orarioSettimanale > 0 || cloud.anzianitaOltre3)) {
+      perm = cloud;
+      try { localStorage.setItem(keyPermessi(annoAttivo), JSON.stringify(perm)); } catch (e) {}
+    }
+  }
+  renderPermessi();
+}
+
+// ── Calendario: festivita nazionali e giorni lavorativi ─────────────
+function pasqua(y) {
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
+  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const mese = Math.floor((h + l - 7 * m + 114) / 31);
+  const giorno = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(y, mese - 1, giorno, 12);
+}
+function isFestivo(ds) {
+  const p = ds.split('-');
+  const y = parseInt(p[0]), m = parseInt(p[1]), g = parseInt(p[2]);
+  const fisse = ['1-1', '1-6', '4-25', '5-1', '6-2', '8-15', '11-1', '12-8', '12-25', '12-26'];
+  if (fisse.indexOf(m + '-' + g) >= 0) return true;
+  if (m === 10 && g === 4 && y >= 2026) return true; // San Francesco, Legge 151/2025
+  const pa = pasqua(y);
+  const lp = new Date(pa); lp.setDate(pa.getDate() + 1); // Pasquetta
+  return (m === lp.getMonth() + 1 && g === lp.getDate());
+}
+function isNonLavorativo(ds) {
+  const d = new Date(ds + 'T12:00:00');
+  if (d.getDay() === 0) return true;
+  if (perm.giorniLiberi.indexOf(d.getDay()) >= 0) return true;
+  return isFestivo(ds);
+}
+function giorniStileFerie(a, b) {
+  // Conteggio come le ferie: esclude domeniche e festivita, il sabato conta sempre
+  let n = 0;
+  const d = new Date(a + 'T12:00:00');
+  const f = new Date(b + 'T12:00:00');
+  for (; d <= f; d.setDate(d.getDate() + 1)) {
+    const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    if (d.getDay() !== 0 && !isFestivo(ds)) n++;
+  }
+  return n;
+}
+function sovrapposto(inizio, fine) {
+  // Uno stesso giorno non puo essere coperto da due permessi, di qualsiasi tipo
+  return perm.voci.find(v => inizio <= v.dataFine && fine >= v.dataInizio) || null;
+}
+function giorniLavorativiTra(a, b) {
+  let n = 0;
+  const d = new Date(a + 'T12:00:00');
+  const f = new Date(b + 'T12:00:00');
+  for (; d <= f; d.setDate(d.getDate() + 1)) {
+    const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    if (!isNonLavorativo(ds)) n++;
+  }
+  return n;
+}
+function addGiorniData(ds, n) {
+  const d = new Date(ds + 'T12:00:00');
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function fData(ds) {
+  if (!ds) return '';
+  const p = ds.split('-');
+  return p[2] + '/' + p[1] + '/' + p[0];
+}
+
+// ── Conteggi ─────────────────────────────────────────────────────────
+function permUsati(tipo) {
+  return perm.voci.filter(v => v.tipo === tipo).reduce((s, v) => s + (v.giorni || 1), 0);
+}
+
+// ── Giorni liberi ────────────────────────────────────────────────────
+function toggleGiornoLibero(n) {
+  const i = perm.giorniLiberi.indexOf(n);
+  if (i >= 0) perm.giorniLiberi.splice(i, 1); else perm.giorniLiberi.push(n);
+  salvaPermessi();
+  renderPermessi();
+}
+
+// ── Avvisi inline con doppia conferma ────────────────────────────────
+function resetPermWarn() {
+  permPendingWarn = null;
+  const w = document.getElementById('perm-warn');
+  if (w) { w.style.display = 'none'; w.textContent = ''; }
+}
+function mostraPermWarn(msg, chiave) {
+  permPendingWarn = chiave;
+  const w = document.getElementById('perm-warn');
+  if (w) { w.textContent = msg; w.style.display = 'block'; }
+}
+
+// ── Form nuovo permesso ──────────────────────────────────────────────
+function tipoPermCambia() {
+  const t = document.getElementById('perm-tipo').value;
+  const sing = (t === 'personale' || t === 'feriePermesso') ? '' : 'none';
+  document.getElementById('pf-dal').style.display = sing;
+  document.getElementById('pf-al').style.display = sing;
+  document.getElementById('pf-p-nota').style.display = sing;
+  document.getElementById('pf-nozze').style.display = t === 'matrimonio' ? '' : 'none';
+  document.getElementById('pf-inizio-m').style.display = t === 'matrimonio' ? '' : 'none';
+  document.getElementById('pf-fine-m').style.display = t === 'matrimonio' ? '' : 'none';
+  document.getElementById('pf-c-inizio').style.display = t === 'concorso' ? '' : 'none';
+  document.getElementById('pf-c-fine').style.display = t === 'concorso' ? '' : 'none';
+  document.getElementById('pf-c-nota').style.display = t === 'concorso' ? '' : 'none';
+  resetPermWarn();
+}
+function aggFineMatrimonio() {
+  const i = document.getElementById('perm-inizio-m').value;
+  const lbl = document.getElementById('perm-fine-m-lbl');
+  if (i) lbl.textContent = 'Dal ' + fData(i) + ' al ' + fData(addGiorniData(i, 14)) + ': 15 giorni consecutivi di calendario, festivi compresi.';
+  else lbl.textContent = 'La fine viene calcolata automaticamente: 15 giorni consecutivi di calendario.';
+  resetPermWarn();
+}
+function aggiungiPermesso() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const tipo = document.getElementById('perm-tipo').value;
+  if (!tipo) { toast('\u26a0\ufe0f Seleziona il tipo di permesso'); return; }
+  const note = document.getElementById('perm-note').value.trim();
+  const nuovo = { id: Date.now() + Math.random(), tipo: tipo, note: note, creato: Date.now() };
+
+  if (tipo === 'personale' || tipo === 'feriePermesso') {
+    const dal = document.getElementById('perm-data').value;
+    let al = document.getElementById('perm-data-fine').value;
+    if (!dal) { toast('\u26a0\ufe0f Inserisci la data di inizio'); return; }
+    if (!al) al = dal;
+    if (al < dal) { toast('\u26a0\ufe0f La data finale deve essere uguale o successiva a quella iniziale'); return; }
+    const g = giorniStileFerie(dal, al);
+    if (g === 0) { toast('\u26a0\ufe0f L\u2019intervallo contiene solo domeniche o festivit\u00e0: nessun giorno da conteggiare'); return; }
+    if (permUsati(tipo) + g > CCNL_PERM[tipo]) {
+      toast('\u26a0\ufe0f Supereresti il limite di ' + CCNL_PERM[tipo] + ' giorni annuali (usati ' + permUsati(tipo) + ', richiesti ' + g + ')');
+      return;
+    }
+    if (tipo === 'feriePermesso' && ferieEstiveUsate() + permUsati('feriePermesso') + g > monteFerieBase()) {
+      toast('\u26a0\ufe0f Supereresti il monte ferie di ' + monteFerieBase() + ' giorni: hai gi\u00e0 ' + ferieEstiveUsate() + ' giorni di ferie estive inseriti');
+      return;
+    }
+    const sov = sovrapposto(dal, al);
+    if (sov) { toast('\u26a0\ufe0f Le date si sovrappongono a un permesso gi\u00e0 inserito (' + PERM_LBL[sov.tipo] + ' dal ' + fData(sov.dataInizio) + ')'); return; }
+    nuovo.dataInizio = dal; nuovo.dataFine = al; nuovo.giorni = g;
+
+  } else if (tipo === 'matrimonio') {
+    const nozze = document.getElementById('perm-nozze').value;
+    const inizio = document.getElementById('perm-inizio-m').value;
+    if (!nozze || !inizio) { toast('\u26a0\ufe0f Inserisci data del matrimonio e inizio permesso'); return; }
+    const min = addGiorniData(nozze, -7);
+    const dMax = new Date(nozze + 'T12:00:00'); dMax.setMonth(dMax.getMonth() + 2);
+    const max = dMax.getFullYear() + '-' + String(dMax.getMonth() + 1).padStart(2, '0') + '-' + String(dMax.getDate()).padStart(2, '0');
+    if ((inizio < min || inizio > max) && permPendingWarn !== 'noz-' + inizio) {
+      mostraPermWarn('L\u2019inizio \u00e8 fuori dalla finestra prevista dal contratto, da una settimana prima a due mesi dopo le nozze. Premi di nuovo Aggiungi per inserirlo comunque.', 'noz-' + inizio);
+      return;
+    }
+    const fineM = addGiorniData(inizio, 14);
+    const sovM = sovrapposto(inizio, fineM);
+    if (sovM) { toast('\u26a0\ufe0f Le date si sovrappongono a un permesso gi\u00e0 inserito (' + PERM_LBL[sovM.tipo] + ' dal ' + fData(sovM.dataInizio) + ')'); return; }
+    nuovo.dataNozze = nozze; nuovo.dataInizio = inizio; nuovo.dataFine = fineM; nuovo.giorni = 15;
+
+  } else if (tipo === 'concorso') {
+    const i = document.getElementById('perm-c-inizio').value;
+    let f = document.getElementById('perm-c-fine').value;
+    if (!i) { toast('\u26a0\ufe0f Inserisci la data di inizio'); return; }
+    if (!f) f = i;
+    if (f < i) { toast('\u26a0\ufe0f La fine deve essere uguale o successiva all\u2019inizio'); return; }
+    const g = giorniLavorativiTra(i, f);
+    if (g === 0) { toast('\u26a0\ufe0f L\u2019intervallo contiene solo giorni non lavorativi: nessun giorno da conteggiare'); return; }
+    if (permUsati('concorso') + g > CCNL_PERM.concorso) {
+      toast('\u26a0\ufe0f Supereresti il limite di ' + CCNL_PERM.concorso + ' giorni annuali (usati ' + permUsati('concorso') + ', richiesti ' + g + ')');
+      return;
+    }
+    const sovC = sovrapposto(i, f);
+    if (sovC) { toast('\u26a0\ufe0f Le date si sovrappongono a un permesso gi\u00e0 inserito (' + PERM_LBL[sovC.tipo] + ' dal ' + fData(sovC.dataInizio) + ')'); return; }
+    nuovo.dataInizio = i; nuovo.dataFine = f; nuovo.giorni = g;
+  }
+
+  perm.voci.push(nuovo);
+  perm.voci.sort((a, b) => a.dataInizio.localeCompare(b.dataInizio));
+  resetPermWarn();
+  salvaPermessi();
+  document.getElementById('perm-data').value = '';
+  document.getElementById('perm-data-fine').value = '';
+  document.getElementById('perm-nozze').value = '';
+  document.getElementById('perm-inizio-m').value = '';
+  document.getElementById('perm-c-inizio').value = '';
+  document.getElementById('perm-c-fine').value = '';
+  document.getElementById('perm-note').value = '';
+  renderPermessi();
+  toast('\u2705 Permesso aggiunto');
+}
+function eliminaPermesso(id) {
+  if (permDelPending !== id) { permDelPending = id; renderPermessi(); return; }
+  perm.voci = perm.voci.filter(v => v.id !== id);
+  permDelPending = null;
+  salvaPermessi();
+  renderPermessi();
+  toast('\u2705 Permesso eliminato');
+}
+
+// ── Lutto ────────────────────────────────────────────────────────────
+function aggiungiEventoLutto() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const data = document.getElementById('lutto-data').value;
+  const rel = document.getElementById('lutto-rel').value;
+  const note = document.getElementById('lutto-note').value.trim();
+  if (!data) { toast('\u26a0\ufe0f Inserisci la data del decesso'); return; }
+  if (!rel) { toast('\u26a0\ufe0f Seleziona la parentela'); return; }
+  perm.eventiLutto.push({ id: Date.now() + Math.random(), dataDecesso: data, relazione: rel, giorniUsati: [], note: note });
+  salvaPermessi();
+  document.getElementById('lutto-data').value = '';
+  document.getElementById('lutto-rel').value = '';
+  document.getElementById('lutto-note').value = '';
+  renderPermessi();
+  toast('\u2705 Evento registrato');
+}
+function aggiungiGiornoLutto(idEv) {
+  const ev = perm.eventiLutto.find(e => e.id === idEv);
+  if (!ev) return;
+  const input = document.getElementById('lg-in-' + idEv);
+  const data = input ? input.value : '';
+  if (!data) { toast('\u26a0\ufe0f Scegli la data del giorno di permesso'); return; }
+  if (ev.giorniUsati.length >= 3) { toast('\u26a0\ufe0f Hai gi\u00e0 usato i 3 giorni per questo evento'); return; }
+  if (ev.giorniUsati.indexOf(data) >= 0) { toast('\u26a0\ufe0f Giorno gi\u00e0 inserito'); return; }
+  ev.giorniUsati.push(data);
+  ev.giorniUsati.sort();
+  salvaPermessi();
+  renderPermessi();
+  toast('\u2705 Giorno aggiunto');
+}
+function rimuoviGiornoLutto(idEv, ds) {
+  const chiave = idEv + '|' + ds;
+  if (luttoGgPending !== chiave) { luttoGgPending = chiave; renderPermessi(); return; }
+  const ev = perm.eventiLutto.find(e => e.id === idEv);
+  if (!ev) return;
+  ev.giorniUsati = ev.giorniUsati.filter(g => g !== ds);
+  luttoGgPending = null;
+  salvaPermessi();
+  renderPermessi();
+}
+function eliminaEventoLutto(idEv) {
+  if (luttoDelPending !== idEv) { luttoDelPending = idEv; renderPermessi(); return; }
+  perm.eventiLutto = perm.eventiLutto.filter(e => e.id !== idEv);
+  luttoDelPending = null;
+  salvaPermessi();
+  renderPermessi();
+  toast('\u2705 Evento eliminato');
+}
+
+// ── Render ───────────────────────────────────────────────────────────
+function renderPermessi() {
+  if (typeof aggiornaHomeAdattiva === 'function') aggiornaHomeAdattiva();
+  const chips = document.getElementById('gl-chips');
+  if (!chips) return;
+  chips.innerHTML = [1, 2, 3, 4, 5, 6].map(n =>
+    '<button class="gl-chip' + (perm.giorniLiberi.indexOf(n) >= 0 ? ' on' : '') + '" onclick="toggleGiornoLibero(' + n + ')">' + GIORNI_SETT[n] + '</button>'
+  ).join('');
+
+  const cnt = document.getElementById('perm-counters');
+  cnt.innerHTML = ['personale', 'feriePermesso', 'concorso', 'matrimonio'].map(t => {
+    const usati = permUsati(t);
+    const max = CCNL_PERM[t];
+    const finito = usati >= max;
+    let val;
+    if (t === 'matrimonio') val = usati > 0 ? usati + ' gg registrati' : 'non usato';
+    else val = (max - usati) + ' su ' + max + ' residui';
+    return '<div class="pcnt-c"><div class="pcnt-l">' + PERM_LBL[t] + '</div><div class="pcnt-v' + (finito && t !== 'matrimonio' ? ' fin' : '') + '">' + val + '</div></div>';
+  }).join('');
+
+  const lista = document.getElementById('perm-lista');
+  if (!perm.voci.length) {
+    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso inserito per questo anno.</div>';
+  } else {
+    lista.innerHTML = perm.voci.map(v => {
+      const range = v.dataInizio === v.dataFine ? fData(v.dataInizio) : fData(v.dataInizio) + ' \u2192 ' + fData(v.dataFine);
+      const gg = (v.giorni || 1) + (v.giorni === 1 ? ' giorno' : ' giorni');
+      const pend = permDelPending === v.id;
+      return '<div class="pv-row"><span class="pv-tag">' + PERM_LBL[v.tipo] + '</span>' +
+        '<span class="pv-tx"><span class="pv-t">' + range + '</span>' +
+        '<span class="pv-s">' + gg + (v.tipo === 'matrimonio' ? ' \u00b7 nozze il ' + fData(v.dataNozze) : '') + (v.note ? ' \u00b7 ' + escHtml(v.note) : '') + '</span></span>' +
+        '<button class="pv-del' + (pend ? ' conf' : '') + '" onclick="eliminaPermesso(' + v.id + ')">' + (pend ? 'Conferma?' : 'Elimina') + '</button></div>';
+    }).join('');
+  }
+
+  const ll = document.getElementById('lutto-lista');
+  if (!perm.eventiLutto.length) {
+    ll.innerHTML = '';
+  } else {
+    const oggi = new Date();
+    ll.innerHTML = perm.eventiLutto.map(ev => {
+      const residuo = 3 - ev.giorniUsati.length;
+      const gTrasc = Math.floor((oggi - new Date(ev.dataDecesso + 'T12:00:00')) / 86400000);
+      const promem = (ev.giorniUsati.length === 0 && residuo > 0 && gTrasc > 15)
+        ? '<div class="lutto-promem">Promemoria personale: sono passati ' + gTrasc + ' giorni dall\u2019evento e non hai ancora usato nessun giorno. Il contratto non fissa un termine preciso, ma prevede una fruizione in tempi ragionevoli.</div>' : '';
+      const chips = ev.giorniUsati.map(g => {
+        const pend = luttoGgPending === (ev.id + '|' + g);
+        return '<span class="lg-chip">' + fData(g) + '<button class="lg-x' + (pend ? ' conf' : '') + '" onclick="rimuoviGiornoLutto(' + ev.id + ',' + JSON.stringify(g).replace(/"/g, '&quot;') + ')">\u00d7</button></span>';
+      }).join('');
+      const addRow = residuo > 0
+        ? '<div class="lutto-add"><input type="date" id="lg-in-' + ev.id + '"><button class="btn btn-ghost btn-sm" onclick="aggiungiGiornoLutto(' + ev.id + ')">Aggiungi giorno</button></div>' : '';
+      const pendDel = luttoDelPending === ev.id;
+      return '<div class="lutto-ev"><div class="lutto-h">' +
+        '<span class="lutto-rel">' + escHtml(ev.relazione) + '</span>' +
+        '<span class="lutto-res' + (residuo === 0 ? ' fin' : '') + '">' + residuo + ' di 3 residui</span>' +
+        '<span class="gl-nota" style="margin:0">evento del ' + fData(ev.dataDecesso) + '</span>' +
+        '<button class="pv-del' + (pendDel ? ' conf' : '') + '" style="margin-left:auto" onclick="eliminaEventoLutto(' + ev.id + ')">' + (pendDel ? 'Conferma?' : 'Elimina') + '</button></div>' +
+        (ev.note ? '<div class="pv-s" style="margin-top:4px">' + escHtml(ev.note) + '</div>' : '') +
+        '<div class="lutto-gg">' + chips + '</div>' + addRow + promem + '</div>';
+    }).join('');
+  }
+}
+
+
+
+// ── MODULO PERMESSI BREVI ────────────────────────────────────────────
+let brevRecDelPending = null;
+
+function scadenzaBreve(dataFruizione) {
+  // Parte dal giorno dopo la fruizione. Prende la scadenza a due mesi di
+  // calendario e la spinge in avanti di tanti giorni quante sono le domeniche
+  // e le festivita cadute nel periodo, cosi il tempo non lavorativo non
+  // consuma la finestra e si ottiene piu tempo reale per recuperare.
+  const start = new Date(dataFruizione + 'T12:00:00');
+  start.setDate(start.getDate() + 1); // giorno dopo il permesso
+  const scad = new Date(start);
+  scad.setMonth(scad.getMonth() + 2); // scadenza base a due mesi di calendario
+  // conto i giorni non lavorativi (domeniche + festivita) nella finestra start..scad
+  let nonLav = 0;
+  const c = new Date(start);
+  while (c <= scad) {
+    const ds = c.getFullYear() + '-' + String(c.getMonth() + 1).padStart(2, '0') + '-' + String(c.getDate()).padStart(2, '0');
+    if (c.getDay() === 0 || isFestivo(ds)) nonLav++;
+    c.setDate(c.getDate() + 1);
+  }
+  // spingo la scadenza in avanti di quei giorni, saltando a loro volta i non lavorativi incontrati
+  let daAggiungere = nonLav;
+  while (daAggiungere > 0) {
+    scad.setDate(scad.getDate() + 1);
+    const ds = scad.getFullYear() + '-' + String(scad.getMonth() + 1).padStart(2, '0') + '-' + String(scad.getDate()).padStart(2, '0');
+    if (scad.getDay() !== 0 && !isFestivo(ds)) daAggiungere--;
+  }
+  // se la scadenza finale cade di domenica o festivo, la porto al primo lavorativo successivo
+  let dsf = scad.getFullYear() + '-' + String(scad.getMonth() + 1).padStart(2, '0') + '-' + String(scad.getDate()).padStart(2, '0');
+  while (scad.getDay() === 0 || isFestivo(dsf)) {
+    scad.setDate(scad.getDate() + 1);
+    dsf = scad.getFullYear() + '-' + String(scad.getMonth() + 1).padStart(2, '0') + '-' + String(scad.getDate()).padStart(2, '0');
+  }
+  return dsf;
+}
+
+function oreRecuperate(pb) {
+  return (pb.recuperi || []).reduce((s, r) => s + (r.ore || 0), 0);
+}
+function oreDaRecuperare(pb) {
+  return pb.ore - oreRecuperate(pb);
+}
+function brevTotaleUsato() {
+  return perm.permessiBrevi.reduce((s, pb) => s + (pb.ore || 0), 0);
+}
+function brevDebitoAperto() {
+  return perm.permessiBrevi.reduce((s, pb) => s + Math.max(0, oreDaRecuperare(pb)), 0);
+}
+
+function salvaOrarioSettimanale() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const v = parseInt(document.getElementById('brev-orario').value, 10);
+  perm.orarioSettimanale = (isNaN(v) || v < 0) ? 0 : v;
+  salvaPermessi();
+  renderBrevi();
+}
+
+function aggiungiBreve() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const data = document.getElementById('brev-data').value;
+  const ore = parseInt(document.getElementById('brev-ore').value, 10);
+  const note = document.getElementById('brev-note').value.trim();
+  if (!data) { toast('\u26a0\ufe0f Inserisci la data del permesso'); return; }
+  if (ore !== 1 && ore !== 2) { toast('\u26a0\ufe0f Un permesso breve pu\u00f2 essere di 1 o 2 ore'); return; }
+  perm.permessiBrevi.push({ id: Date.now() + Math.random(), data: data, ore: ore, note: note, recuperi: [], creato: Date.now() });
+  perm.permessiBrevi.sort((a, b) => a.data.localeCompare(b.data));
+  salvaPermessi();
+  document.getElementById('brev-data').value = '';
+  document.getElementById('brev-ore').value = '1';
+  document.getElementById('brev-note').value = '';
+  renderBrevi();
+  toast('\u2705 Permesso breve aggiunto');
+}
+function eliminaBreve(id) {
+  const pb = perm.permessiBrevi.find(x => x.id === id);
+  if (!pb) return;
+  // doppia conferma riusando lo stato brevRecDelPending con chiave speciale
+  if (brevRecDelPending !== 'pb-' + id) { brevRecDelPending = 'pb-' + id; renderBrevi(); return; }
+  perm.permessiBrevi = perm.permessiBrevi.filter(x => x.id !== id);
+  brevRecDelPending = null;
+  salvaPermessi();
+  renderBrevi();
+  toast('\u2705 Permesso eliminato');
+}
+
+function aggiungiRecupero(idPb) {
+  const pb = perm.permessiBrevi.find(x => x.id === idPb);
+  if (!pb) return;
+  const dInput = document.getElementById('brev-rec-data-' + idPb);
+  const oInput = document.getElementById('brev-rec-ore-' + idPb);
+  const data = dInput ? dInput.value : '';
+  const ore = oInput ? parseInt(oInput.value, 10) : 0;
+  if (!data) { toast('\u26a0\ufe0f Scegli la data del recupero'); return; }
+  if (!ore || ore < 1) { toast('\u26a0\ufe0f Indica le ore recuperate'); return; }
+  const resta = oreDaRecuperare(pb);
+  if (ore > resta) { toast('\u26a0\ufe0f Puoi recuperare al massimo ' + resta + (resta === 1 ? ' ora' : ' ore') + ' su questo permesso'); return; }
+  pb.recuperi.push({ id: Date.now() + Math.random(), data: data, ore: ore });
+  pb.recuperi.sort((a, b) => a.data.localeCompare(b.data));
+  salvaPermessi();
+  renderBrevi();
+  toast('\u2705 Recupero registrato');
+}
+function rimuoviRecupero(idPb, idRec) {
+  const chiave = 'rec-' + idPb + '-' + idRec;
+  if (brevRecDelPending !== chiave) { brevRecDelPending = chiave; renderBrevi(); return; }
+  const pb = perm.permessiBrevi.find(x => x.id === idPb);
+  if (!pb) return;
+  pb.recuperi = pb.recuperi.filter(r => r.id !== idRec);
+  brevRecDelPending = null;
+  salvaPermessi();
+  renderBrevi();
+}
+
+function renderBrevi() {
+  if (typeof aggiornaHomeAdattiva === 'function') aggiornaHomeAdattiva();
+  const inp = document.getElementById('brev-orario');
+  if (!inp) return;
+  if (document.activeElement !== inp) inp.value = perm.orarioSettimanale || '';
+
+  const tetto = document.getElementById('brev-tetto');
+  const usato = brevTotaleUsato();
+  if (perm.orarioSettimanale > 0) {
+    const resta = perm.orarioSettimanale - usato;
+    tetto.innerHTML = 'Usate <strong>' + usato + '</strong> ore su un tetto annuale di <strong>' + perm.orarioSettimanale + '</strong> ore. ' +
+      (resta >= 0 ? 'Ne restano ' + resta + '.' : 'Hai superato il tetto di ' + (-resta) + '.');
+  } else {
+    tetto.innerHTML = 'Imposta il tuo orario settimanale per vedere quanto resta del tetto annuale. Usate finora <strong>' + usato + '</strong> ore.';
+  }
+
+  const lista = document.getElementById('brev-lista');
+  if (!perm.permessiBrevi.length) {
+    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso breve inserito per questo anno.</div>';
+    return;
+  }
+  const oggi = new Date(); oggi.setHours(12, 0, 0, 0);
+  lista.innerHTML = perm.permessiBrevi.map(pb => {
+    const resta = oreDaRecuperare(pb);
+    const saldato = resta <= 0;
+    const scad = scadenzaBreve(pb.data);
+    const gg = Math.round((new Date(scad + 'T12:00:00') - oggi) / 86400000);
+    const urg = !saldato && gg <= 7;
+    const recChips = (pb.recuperi || []).map(r => {
+      const pend = brevRecDelPending === ('rec-' + pb.id + '-' + r.id);
+      return '<span class="brev-rec">' + fData(r.data) + ' \u00b7 ' + r.ore + (r.ore === 1 ? ' ora' : ' ore') +
+        '<button class="brev-rec-x' + (pend ? ' conf' : '') + '" onclick="rimuoviRecupero(' + pb.id + ',' + r.id + ')">\u00d7</button></span>';
+    }).join('');
+    const addRow = !saldato
+      ? '<div class="brev-rec-add"><input type="date" id="brev-rec-data-' + pb.id + '">' +
+        '<select id="brev-rec-ore-' + pb.id + '">' + Array.from({length: resta}, (_, i) => '<option value="' + (i + 1) + '">' + (i + 1) + (i === 0 ? ' ora' : ' ore') + '</option>').join('') + '</select>' +
+        '<button class="btn btn-ghost btn-sm" onclick="aggiungiRecupero(' + pb.id + ')">Aggiungi recupero</button></div>'
+      : '';
+    const pendDel = brevRecDelPending === ('pb-' + pb.id);
+    return '<div class="brev-ev' + (saldato ? ' saldato' : '') + (urg ? ' urg' : '') + '">' +
+      '<div class="brev-h">' +
+      '<span class="brev-data">' + fData(pb.data) + '</span>' +
+      '<span class="brev-ore">' + pb.ore + (pb.ore === 1 ? ' ora' : ' ore') + '</span>' +
+      '<span class="brev-stato ' + (saldato ? 'ok' : 'aperto') + '">' + (saldato ? 'Recuperato' : resta + (resta === 1 ? ' ora da recup.' : ' ore da recup.')) + '</span>' +
+      '<button class="pv-del' + (pendDel ? ' conf' : '') + '" style="margin-left:auto" onclick="eliminaBreve(' + pb.id + ')">' + (pendDel ? 'Conferma?' : 'Elimina') + '</button>' +
+      '</div>' +
+      (pb.note ? '<div class="pv-s" style="margin-top:4px">' + escHtml(pb.note) + '</div>' : '') +
+      (saldato ? '' : '<div class="brev-scad' + (urg ? ' urg' : '') + '">Recupero entro il ' + fData(scad) + (urg ? ' \u00b7 mancano ' + (gg < 0 ? 0 : gg) + ' giorni' : '') + '</div>') +
+      (recChips ? '<div class="brev-rec-tit">Recuperi</div>' + recChips : '') +
+      addRow +
+      '</div>';
+  }).join('');
+}
+
+
+
+// ── MODULO FERIE ─────────────────────────────────────────────────────
+let ferDelPending = null;
+let sopDelPending = null;
+
+function monteFerieBase() { return perm.anzianitaOltre3 ? 32 : 30; }
+function ferieEstiveUsate() {
+  return (perm.ferieEstive || []).reduce((s, f) => s + (f.giorni || 0), 0);
+}
+function feriePermessoUsate() {
+  // giorni di ferie come permesso presi nel modulo permessi, stesso monte
+  return permUsati('feriePermesso');
+}
+function ferieUsateTotali() { return ferieEstiveUsate() + feriePermessoUsate(); }
+function ferieResidue() { return monteFerieBase() - ferieUsateTotali(); }
+function soppUsate() {
+  return (perm.festivitaSoppresse || []).reduce((s, f) => s + (f.giorni || 0), 0);
+}
+function soppResidue() { return 4 - soppUsate(); }
+
+function scadenzaSoppresse() {
+  // 31 agosto del secondo anno dell'anno scolastico attivo (es. 2025/2026 -> 2026-08-31)
+  const p = annoAttivo.split('/');
+  return p[1] + '-08-31';
+}
+
+function sovrappostoIn(elenco, inizio, fine) {
+  return (elenco || []).find(v => inizio <= v.dataFine && fine >= v.dataInizio) || null;
+}
+
+function toggleAnzianita() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  perm.anzianitaOltre3 = !perm.anzianitaOltre3;
+  salvaPermessi();
+  renderFerie();
+}
+
+function aggiungiFerie() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const dal = document.getElementById('fer-dal').value;
+  let al = document.getElementById('fer-al').value;
+  const note = document.getElementById('fer-note').value.trim();
+  if (!dal) { toast('\u26a0\ufe0f Inserisci la data di inizio'); return; }
+  if (!al) al = dal;
+  if (al < dal) { toast('\u26a0\ufe0f La data finale deve essere uguale o successiva a quella iniziale'); return; }
+  const g = giorniStileFerie(dal, al);
+  if (g === 0) { toast('\u26a0\ufe0f L\u2019intervallo contiene solo domeniche o festivit\u00e0: nessun giorno da conteggiare'); return; }
+  if (ferieUsateTotali() + g > monteFerieBase()) {
+    toast('\u26a0\ufe0f Supereresti il monte di ' + monteFerieBase() + ' giorni (usati ' + ferieUsateTotali() + ', di cui ' + feriePermessoUsate() + ' come permesso; richiesti ' + g + ')');
+    return;
+  }
+  const sov = sovrappostoIn(perm.ferieEstive, dal, al);
+  if (sov) { toast('\u26a0\ufe0f Le date si sovrappongono a ferie gi\u00e0 inserite (dal ' + fData(sov.dataInizio) + ')'); return; }
+  perm.ferieEstive.push({ id: Date.now() + Math.random(), dataInizio: dal, dataFine: al, giorni: g, note: note, creato: Date.now() });
+  perm.ferieEstive.sort((a, b) => a.dataInizio.localeCompare(b.dataInizio));
+  salvaPermessi();
+  document.getElementById('fer-dal').value = '';
+  document.getElementById('fer-al').value = '';
+  document.getElementById('fer-note').value = '';
+  renderFerie();
+  toast('\u2705 Ferie aggiunte');
+}
+function eliminaFerie(id) {
+  if (ferDelPending !== id) { ferDelPending = id; renderFerie(); return; }
+  perm.ferieEstive = perm.ferieEstive.filter(f => f.id !== id);
+  ferDelPending = null;
+  salvaPermessi();
+  renderFerie();
+  toast('\u2705 Ferie eliminate');
+}
+
+function aggiungiSoppressa() {
+  if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
+  const dal = document.getElementById('sop-dal').value;
+  let al = document.getElementById('sop-al').value;
+  const note = document.getElementById('sop-note').value.trim();
+  if (!dal) { toast('\u26a0\ufe0f Inserisci la data di inizio'); return; }
+  if (!al) al = dal;
+  if (al < dal) { toast('\u26a0\ufe0f La data finale deve essere uguale o successiva a quella iniziale'); return; }
+  const g = giorniStileFerie(dal, al);
+  if (g === 0) { toast('\u26a0\ufe0f L\u2019intervallo contiene solo domeniche o festivit\u00e0: nessun giorno da conteggiare'); return; }
+  if (soppUsate() + g > 4) {
+    toast('\u26a0\ufe0f Supereresti il monte di 4 giorni di festivit\u00e0 soppresse (usati ' + soppUsate() + ', richiesti ' + g + ')');
+    return;
+  }
+  const sov = sovrappostoIn(perm.festivitaSoppresse, dal, al);
+  if (sov) { toast('\u26a0\ufe0f Le date si sovrappongono a giorni gi\u00e0 inseriti (dal ' + fData(sov.dataInizio) + ')'); return; }
+  perm.festivitaSoppresse.push({ id: Date.now() + Math.random(), dataInizio: dal, dataFine: al, giorni: g, note: note, creato: Date.now() });
+  perm.festivitaSoppresse.sort((a, b) => a.dataInizio.localeCompare(b.dataInizio));
+  salvaPermessi();
+  document.getElementById('sop-dal').value = '';
+  document.getElementById('sop-al').value = '';
+  document.getElementById('sop-note').value = '';
+  renderFerie();
+  toast('\u2705 Festivit\u00e0 soppressa aggiunta');
+}
+function eliminaSoppressa(id) {
+  if (sopDelPending !== id) { sopDelPending = id; renderFerie(); return; }
+  perm.festivitaSoppresse = perm.festivitaSoppresse.filter(f => f.id !== id);
+  sopDelPending = null;
+  salvaPermessi();
+  renderFerie();
+  toast('\u2705 Festivit\u00e0 soppressa eliminata');
+}
+
+function renderFerie() {
+  if (typeof aggiornaHomeAdattiva === 'function') aggiornaHomeAdattiva();
+  const sw = document.getElementById('fer-switch');
+  if (!sw) return;
+  sw.classList.toggle('on', perm.anzianitaOltre3);
+
+  // contatori: ferie e soppresse
+  const cnt = document.getElementById('fer-counters');
+  const resFer = ferieResidue();
+  const finFer = resFer <= 0;
+  const permQuota = feriePermessoUsate();
+  const oggi = new Date(); oggi.setHours(12, 0, 0, 0);
+  const ggSop = Math.round((new Date(scadenzaSoppresse() + 'T12:00:00') - oggi) / 86400000);
+  const resSop = soppResidue();
+  const urgSop = resSop > 0 && ggSop >= 0 && ggSop <= 7;
+  cnt.innerHTML =
+    '<div class="fer-bc' + (finFer ? ' fin' : '') + '">' +
+      '<div class="fer-bc-l">Ferie</div>' +
+      '<div class="fer-bc-v' + (finFer ? ' fin' : '') + '">' + resFer + ' su ' + monteFerieBase() + '</div>' +
+      '<div class="fer-bc-s">giorni residui' + (permQuota > 0 ? ' \u00b7 ' + permQuota + ' come permesso' : '') + '</div></div>' +
+    '<div class="fer-bc' + (resSop <= 0 ? ' fin' : (urgSop ? ' urg' : '')) + '">' +
+      '<div class="fer-bc-l">Festivit\u00e0 soppresse</div>' +
+      '<div class="fer-bc-v' + (resSop <= 0 ? ' fin' : '') + '">' + resSop + ' su 4</div>' +
+      '<div class="fer-bc-s' + (urgSop ? ' urg' : '') + '">' + (urgSop ? 'scadono il 31/08' : 'giorni residui') + '</div></div>';
+
+  // lista ferie estive
+  const lf = document.getElementById('fer-lista');
+  if (!perm.ferieEstive.length) {
+    lf.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna ferie estiva inserita per questo anno.</div>';
+  } else {
+    lf.innerHTML = perm.ferieEstive.map(f => {
+      const range = f.dataInizio === f.dataFine ? fData(f.dataInizio) : fData(f.dataInizio) + ' \u2192 ' + fData(f.dataFine);
+      const gg = f.giorni + (f.giorni === 1 ? ' giorno' : ' giorni');
+      const pend = ferDelPending === f.id;
+      return '<div class="pv-row"><span class="pv-tag">Ferie</span>' +
+        '<span class="pv-tx"><span class="pv-t">' + range + '</span>' +
+        '<span class="pv-s">' + gg + (f.note ? ' \u00b7 ' + escHtml(f.note) : '') + '</span></span>' +
+        '<button class="pv-del' + (pend ? ' conf' : '') + '" onclick="eliminaFerie(' + f.id + ')">' + (pend ? 'Conferma?' : 'Elimina') + '</button></div>';
+    }).join('');
+  }
+
+  // lista soppresse
+  const ls = document.getElementById('sop-lista');
+  if (!perm.festivitaSoppresse.length) {
+    ls.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna festivit\u00e0 soppressa inserita per questo anno.</div>';
+  } else {
+    ls.innerHTML = perm.festivitaSoppresse.map(f => {
+      const range = f.dataInizio === f.dataFine ? fData(f.dataInizio) : fData(f.dataInizio) + ' \u2192 ' + fData(f.dataFine);
+      const gg = f.giorni + (f.giorni === 1 ? ' giorno' : ' giorni');
+      const pend = sopDelPending === f.id;
+      return '<div class="pv-row"><span class="pv-tag">Soppr.</span>' +
+        '<span class="pv-tx"><span class="pv-t">' + range + '</span>' +
+        '<span class="pv-s">' + gg + (f.note ? ' \u00b7 ' + escHtml(f.note) : '') + '</span></span>' +
+        '<button class="pv-del' + (pend ? ' conf' : '') + '" onclick="eliminaSoppressa(' + f.id + ')">' + (pend ? 'Conferma?' : 'Elimina') + '</button></div>';
+    }).join('');
+  }
+}
+
+
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
+const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
 function vai(id) {
   document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
   document.getElementById('pag-' + id).classList.add('on');
-  const nb = document.getElementById('nt-' + id);
+  const nb = document.getElementById('nt-' + (AREA_DI[id] || id));
   if (nb) nb.classList.add('on');
   if (id === 'pdf') aggPDF();
+  if (id === 'permessi') renderPermessi();
+  if (id === 'brevi') renderBrevi();
+  if (id === 'ferie') renderFerie();
   if (id === 'registro') renderRegistro();
   if (id === 'storico') { aggiornaTopSub(); renderAnni(); }
   window.scrollTo(0, 0);
@@ -1012,6 +2198,7 @@ function aggiorna() {
     av.className = 'avv';
   }
   renderMensile();
+  aggiornaHomeAdattiva();
 }
 
 // ── RIEPILOGO MENSILE (HOME) ─────────────────────────────────────────
@@ -1287,7 +2474,7 @@ function stampaPDF() {
   ).join('');
   const extraBox = totE > 0 ? `<div class="box"><div class="bl">Extra</div><div class="bv" style="color:#C55A11">${fHM(totE)}h</div></div>` : '';
   const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div>${extraBox}<div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">ProfTime - Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div style="background:#F0F4F8;border-left:3px solid #1F4E79;padding:7px 11px;font-size:10px;color:#44515F;margin-bottom:16px;border-radius:3px">Questo riepilogo comprende esclusivamente gli impegni delle 40+40 ore. Ferie, permessi e assenze non sono inclusi.</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div>${extraBox}<div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">ProfTime - Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
   w.document.close();
   setTimeout(() => w.print(), 400);
 }
@@ -1325,6 +2512,8 @@ function esportaExcel() {
     righe.push({ 'N': '', 'Nome': 'TOTALE EXTRA', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totE), 'Note': 'non conteggiate' });
   }
   righe.push({ 'N': '', 'Nome': 'TOTALE GENERALE (40+40)', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC + totA), 'Note': 'su 80h max' });
+  righe.push({});
+  righe.push({ 'N': '', 'Nome': 'NOTA: questo file riporta solo gli impegni 40+40. Ferie, permessi e assenze non sono inclusi.', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
   const ws = XLSX.utils.json_to_sheet(righe);
   ws['!cols'] = [{ wch: 4 }, { wch: 36 }, { wch: 22 }, { wch: 13 }, { wch: 11 }, { wch: 11 }, { wch: 10 }, { wch: 20 }];
   const wb = XLSX.utils.book_new();
@@ -1334,6 +2523,33 @@ function esportaExcel() {
 }
 
 // ── EXCEL IMPORT ──────────────────────────────────────────────────────
+let importPending = null;
+function confermaImport(modo) {
+  if (!importPending) return;
+  const p = importPending;
+  importPending = null;
+  document.getElementById('modal-import').classList.remove('on');
+  finalizzaImport(modo, p.nuovi, p.errori, p.input);
+}
+function annullaImport() {
+  importPending = null;
+  document.getElementById('modal-import').classList.remove('on');
+}
+function finalizzaImport(modo, nuovi, errori, input) {
+  if (modo === 'aggiungi') {
+    imp = [...imp, ...nuovi];
+  } else {
+    imp = nuovi;
+  }
+  imp.sort((a, b) => a.data.localeCompare(b.data));
+  salva(); aggiorna();
+  const msg = document.getElementById('import-msg');
+  if (msg) {
+    msg.style.cssText = 'display:block;background:var(--verde-c);color:var(--verde)';
+    msg.textContent = 'Importati ' + nuovi.length + ' impegni' + (errori > 0 ? ' (' + errori + ' righe ignorate)' : '') + '.';
+  }
+  if (input) input.value = '';
+}
 function importaExcel(input) {
   if (typeof XLSX === 'undefined') { toast('\u26a0\ufe0f Libreria non disponibile'); return; }
   if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
@@ -1383,16 +2599,13 @@ function importaExcel(input) {
         msg.textContent = 'Nessun dato valido trovato. Controlla il formato.';
         return;
       }
-      if (imp.length === 0 || confirm('Vuoi AGGIUNGERE i ' + nuovi.length + ' impegni a quelli esistenti?\nPremi Annulla per SOSTITUIRE tutto.')) {
-        imp = [...imp, ...nuovi];
+      if (imp.length === 0) {
+        finalizzaImport('sostituisci', nuovi, errori, input);
       } else {
-        imp = nuovi;
+        importPending = { nuovi: nuovi, errori: errori, input: input };
+        document.getElementById('import-count').textContent = nuovi.length;
+        document.getElementById('modal-import').classList.add('on');
       }
-      imp.sort((a, b) => a.data.localeCompare(b.data));
-      salva(); aggiorna();
-      msg.style.cssText = 'display:block;background:var(--verde-c);color:var(--verde)';
-      msg.textContent = 'Importati ' + nuovi.length + ' impegni' + (errori > 0 ? ' (' + errori + ' righe ignorate)' : '') + '.';
-      input.value = '';
     } catch (err) {
       msg.style.cssText = 'display:block;background:var(--rosso-c);color:var(--rosso)';
       msg.textContent = 'Errore lettura file: ' + err.message;
@@ -1436,7 +2649,10 @@ async function confermaNuovoAnno() {
   }
   annoAttivo = nuovo;
   imp = [];
-  salva(); aggiorna(); aggiornaTopSub(); renderAnni();
+  const anzianitaEreditata = perm.anzianitaOltre3 === true;
+  perm = permDefault();
+  perm.anzianitaOltre3 = anzianitaEreditata;
+  salva(); salvaPermessi(); aggiorna(); aggiornaTopSub(); renderAnni();
   toggleFormAnno();
   vai('home');
   toast('Anno ' + nuovo + ' creato');
@@ -1495,16 +2711,19 @@ async function eliminaAnnoConfermato() {
 
   // Cancella un eventuale salvataggio in sospeso per evitare che riscriva
   // dati sull'anno che stiamo per eliminare
-  if (a === annoAttivo) clearTimeout(syncTimeout);
+  if (a === annoAttivo) { clearTimeout(syncTimeout); clearTimeout(syncTimeoutPerm); }
 
   // Rimuovi da localStorage
   try { localStorage.removeItem(keyAnno(a)); } catch (e) {}
+  try { localStorage.removeItem(keyPermessi(a)); } catch (e) {}
 
   // Rimuovi da Firestore se autenticato
   if (currentUser && window.fb) {
     try {
       const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'anni', fsKeyAnno(a));
       await window.fb.setDoc(ref, { dati: [], aggiornato: Date.now(), eliminato: true });
+      const refP = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'permessi', fsKeyPermessi(a));
+      await window.fb.setDoc(refP, { dati: null, aggiornato: Date.now(), eliminato: true });
     } catch (e) { console.error('Errore eliminazione cloud', e); }
   }
 
@@ -1517,11 +2736,15 @@ async function eliminaAnnoConfermato() {
     if (rimasti.length > 0) {
       annoAttivo = rimasti[0];
       carica();
+      caricaPermessi();
+      renderPermessi();
       aggiorna();
       aggiornaTopSub();
     } else {
       // Nessun anno rimasto: stato pulito, nessun anno fantasma
       imp = [];
+      perm = permDefault();
+      renderPermessi();
       annoAttivo = '';
       document.getElementById('top-sub').textContent = 'Nessun anno attivo';
       const lblAttivo = document.getElementById('anno-attivo-lbl');
@@ -1633,6 +2856,7 @@ async function onUserLoggedIn(user) {
     }
   }
 
+  await sincronizzaPermessi();
   setSyncStatus('ok');
   aggiorna();
   renderRegistro();
@@ -1651,6 +2875,7 @@ async function onUserLoggedIn(user) {
 function onUserLoggedOut() {
   currentUser = null;
   imp = [];
+  perm = permDefault();
   // Ferma un eventuale timer attivo per evitare impegni salvati nell'account sbagliato
   if (tOn) {
     clearInterval(tInt);
@@ -1732,7 +2957,13 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   filtra, setVista, calMese, tVia, tStop, stampaPDF, copiaCSV,
   esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
   apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout,
-  confermaEliminaAnno, chiudiModalEliminaAnno, eliminaAnnoConfermato];
+  confermaEliminaAnno, chiudiModalEliminaAnno, eliminaAnnoConfermato,
+  tipoPermCambia, aggFineMatrimonio, aggiungiPermesso, eliminaPermesso, toggleGiornoLibero,
+  aggiungiEventoLutto, aggiungiGiornoLutto, rimuoviGiornoLutto, eliminaEventoLutto,
+  apriSceltaInserimento, chiudiSceltaInserimento, scegliInserimento,
+  salvaOrarioSettimanale, aggiungiBreve, eliminaBreve, aggiungiRecupero, rimuoviRecupero,
+  toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
+  confermaImport, annullaImport];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
@@ -1741,6 +2972,8 @@ const _anni = tuttiAnni();
 if (_anni.length > 0) annoAttivo = _anni[0];
 aggiornaTopSub();
 carica();
+caricaPermessi();
+renderPermessi();
 
 aggiorna();
 
