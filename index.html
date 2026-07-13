@@ -94,6 +94,19 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .gl-chip{padding:7px 13px;border-radius:20px;border:1.5px solid var(--bd);background:var(--w);font-family:var(--f);font-size:.78rem;font-weight:700;color:var(--tx2);cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .gl-chip.on{background:var(--blu);border-color:var(--blu);color:#fff;}
 .gl-nota{font-size:.68rem;color:var(--tx2);margin-top:8px;}
+.or-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.or-tab{display:inline-block;min-width:100%;}
+.or-row{display:flex;}
+.or-cell{flex:0 0 74px;box-sizing:border-box;border:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 2px;font-family:var(--f);}
+.or-corner{flex:0 0 34px;border:1px solid var(--bd);background:var(--bg);}
+.or-oh{flex:0 0 34px;font-size:.7rem;font-weight:700;color:var(--tx2);background:var(--bg);}
+.or-dh{font-size:.72rem;font-weight:800;color:var(--blu);background:var(--blu-cc);}
+.or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;}
+.or-slot.on{background:var(--blu-cc);}
+.or-slot.mensa{background:var(--oro-c);}
+.or-classe{font-weight:800;color:var(--testo);}
+.or-materia{color:var(--tx2);font-size:.62rem;}
+.or-sede{color:var(--blu-m);font-size:.6rem;font-weight:700;}
 .pcnt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .pcnt-c{background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
 .pcnt-l{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--tx2);}
@@ -553,6 +566,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       <span class="hi-tx"><span class="hi-t">Timer</span><br><span class="hi-s">Cronometra un impegno in corso</span></span>
       <span class="hi-arrow">›</span>
     </button>
+    <button class="hub-item" onclick="vai('orario')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="4" x2="8" y2="10"/><line x1="14" y1="4" x2="14" y2="10"/></svg>
+      <span class="hi-tx"><span class="hi-t">Il mio orario</span><br><span class="hi-s">Le tue ore settimanali, classi e sedi</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
   </div>
 </div>
 
@@ -611,6 +629,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="box-b">
       <div class="gl-chips" id="gl-chips"></div>
       <div class="gl-nota">Seleziona i giorni in cui non presti servizio per questo anno scolastico. La domenica è sempre esclusa dai conteggi, insieme alle festività nazionali.</div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="calcolaGiorniLiberiDaOrario()">Calcola dall'orario</button>
     </div>
   </div>
 
@@ -783,6 +802,17 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 </div>
 
 <!-- EVENTO -->
+<!-- ORARIO -->
+<div class="pag" id="pag-orario">
+  <div class="box">
+    <div class="box-h"><h2>Il mio orario</h2></div>
+    <div class="box-b">
+      <p class="gl-nota">Tocca una casella per inserire classe, materia e sede, oppure segnarla come mensa. Le caselle vuote restano libere.</p>
+      <div id="orario-griglia" class="or-wrap"></div>
+    </div>
+  </div>
+</div>
+
 <div class="pag" id="pag-evento">
   <div class="box">
     <div class="box-h"><h2>Nuovo impegno</h2></div>
@@ -1110,6 +1140,30 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="annullaImport()">Annulla</button>
   </div>
 </div>
+<div class="modal-bg" id="modal-orario-cella" onclick="if(event.target===this)chiudiCellaOrario()">
+  <div class="modal">
+    <h3 id="orc-titolo">Ora</h3>
+    <div class="fg" style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="orc-mensa" onchange="toggleOrcMensa()" style="width:18px;height:18px;">
+      <label class="fl" style="margin:0;">Mensa (sorveglianza, non lezione)</label>
+    </div>
+    <div id="orc-campi-lezione">
+      <div class="fg"><label class="fl">Classe</label><input type="text" id="orc-classe" placeholder="es. 3ª B"></div>
+      <div class="fg"><label class="fl">Materia</label><input type="text" id="orc-materia" placeholder="es. Italiano"></div>
+    </div>
+    <div class="fg"><label class="fl">Sede</label>
+      <select id="orc-sede">
+        <option value="">Nessuna</option>
+        <option value="Sant'Antonino">Sant'Antonino</option>
+        <option value="Borgone">Borgone</option>
+      </select>
+    </div>
+    <button class="btn btn-blu btn-full" style="margin-top:10px" onclick="salvaCellaOrario()">Salva</button>
+    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="svuotaCellaOrario()">Svuota casella</button>
+    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="chiudiCellaOrario()">Annulla</button>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal-scelta" onclick="if(event.target===this)chiudiSceltaInserimento()">
   <div class="modal sc-modal">
     <h3>Cosa vuoi registrare?</h3>
@@ -1282,6 +1336,7 @@ async function attivaAnno(a) {
     }
   }
   await sincronizzaPermessi();
+  await sincronizzaOrario();
   aggiorna();
   aggiornaTopSub();
   renderAnni();
@@ -1564,6 +1619,16 @@ function toggleGiornoLibero(n) {
   if (i >= 0) perm.giorniLiberi.splice(i, 1); else perm.giorniLiberi.push(n);
   salvaPermessi();
   renderPermessi();
+}
+function calcolaGiorniLiberiDaOrario() {
+  if (!orarioHaDati()) {
+    toast('\u26a0\ufe0f Compila prima il tuo orario nella pagina Impegni');
+    return;
+  }
+  perm.giorniLiberi = [1, 2, 3, 4, 5, 6].filter(n => orario.giorni[n].every(c => c === null));
+  salvaPermessi();
+  renderPermessi();
+  toast('\u2705 Giorni liberi aggiornati dall\'orario');
 }
 
 // ── Avvisi inline con doppia conferma ────────────────────────────────
@@ -2187,6 +2252,155 @@ async function sincronizzaProfilo() {
     }
   }
 }
+// ── MODULO ORARIO ────────────────────────────────────────────────────
+const SEDI_ORARIO = ["Sant'Antonino", "Borgone"];
+let orario = orarioDefault();
+function orarioDefault() {
+  const g = {};
+  [1, 2, 3, 4, 5, 6].forEach(n => { g[n] = Array(9).fill(null); });
+  return { giorni: g };
+}
+function normalizzaOrario(o) {
+  const base = orarioDefault();
+  if (!o || typeof o !== 'object' || !o.giorni) return base;
+  [1, 2, 3, 4, 5, 6].forEach(n => {
+    const riga = Array.isArray(o.giorni[n]) ? o.giorni[n] : [];
+    base.giorni[n] = Array.from({ length: 9 }, (_, i) => {
+      const c = riga[i];
+      if (!c || typeof c !== 'object') return null;
+      const mensa = !!c.mensa;
+      const classe = mensa ? '' : (typeof c.classe === 'string' ? c.classe : '');
+      const materia = mensa ? '' : (typeof c.materia === 'string' ? c.materia : '');
+      const sede = typeof c.sede === 'string' ? c.sede : '';
+      if (!mensa && !classe && !materia && !sede) return null;
+      return { classe, materia, sede, mensa };
+    });
+  });
+  return base;
+}
+function keyOrario(a) {
+  const uid = currentUser ? currentUser.uid : 'guest';
+  return 'ridor_' + uid + '_' + a.replace('/', '_');
+}
+function fsKeyOrario(a) { return 'ridor_' + a.replace('/', '_'); }
+function orarioHaDati() {
+  return [1, 2, 3, 4, 5, 6].some(n => orario.giorni[n].some(c => c !== null));
+}
+function salvaOrario() {
+  if (!annoAttivo) return;
+  try { localStorage.setItem(keyOrario(annoAttivo), JSON.stringify(orario)); } catch (e) {}
+  if (currentUser && window.fb) {
+    setSyncStatus('wait');
+    clearTimeout(syncTimeoutOrario);
+    const annoSalva = annoAttivo;
+    const uidSalva = currentUser.uid;
+    syncTimeoutOrario = setTimeout(function() {
+      const ref = window.fb.doc(window.fb.db, 'utenti', uidSalva, 'orario', fsKeyOrario(annoSalva));
+      window.fb.setDoc(ref, { dati: orario, aggiornato: Date.now() })
+        .then(function() { setSyncStatus('ok'); })
+        .catch(function() { setSyncStatus('off'); });
+    }, 700);
+  }
+}
+let syncTimeoutOrario;
+function caricaOrario() {
+  if (!annoAttivo) { orario = orarioDefault(); return; }
+  try {
+    const d = localStorage.getItem(keyOrario(annoAttivo));
+    orario = d ? normalizzaOrario(JSON.parse(d)) : orarioDefault();
+  } catch (e) { orario = orarioDefault(); }
+}
+async function caricaOrarioDaCloud(anno) {
+  if (!currentUser || !window.fb) return null;
+  try {
+    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'orario', fsKeyOrario(anno));
+    const snap = await window.fb.getDoc(ref);
+    if (snap.exists()) return normalizzaOrario(snap.data().dati);
+  } catch (e) { console.error('Errore caricamento orario cloud', e); }
+  return null;
+}
+async function sincronizzaOrario() {
+  caricaOrario();
+  if (currentUser && annoAttivo) {
+    const cloud = await caricaOrarioDaCloud(annoAttivo);
+    if (cloud) {
+      orario = cloud;
+      try { localStorage.setItem(keyOrario(annoAttivo), JSON.stringify(orario)); } catch (e) {}
+    }
+  }
+  renderOrario();
+}
+
+let cellaOrarioPending = null;
+function apriCellaOrario(giorno, ora) {
+  cellaOrarioPending = { giorno: giorno, ora: ora };
+  const c = orario.giorni[giorno][ora] || { classe: '', materia: '', sede: '', mensa: false };
+  document.getElementById('orc-titolo').textContent = GIORNI_SETT[giorno] + ', ' + (ora + 1) + 'ª ora';
+  document.getElementById('orc-classe').value = c.classe || '';
+  document.getElementById('orc-materia').value = c.materia || '';
+  document.getElementById('orc-sede').value = c.sede || '';
+  document.getElementById('orc-mensa').checked = !!c.mensa;
+  toggleOrcMensa();
+  document.getElementById('modal-orario-cella').classList.add('on');
+}
+function toggleOrcMensa() {
+  const mensa = document.getElementById('orc-mensa').checked;
+  document.getElementById('orc-campi-lezione').style.display = mensa ? 'none' : '';
+}
+function chiudiCellaOrario() {
+  cellaOrarioPending = null;
+  document.getElementById('modal-orario-cella').classList.remove('on');
+}
+function salvaCellaOrario() {
+  if (!cellaOrarioPending) return;
+  const mensa = document.getElementById('orc-mensa').checked;
+  const classe = mensa ? '' : document.getElementById('orc-classe').value.trim();
+  const materia = mensa ? '' : document.getElementById('orc-materia').value.trim();
+  const sede = document.getElementById('orc-sede').value;
+  const { giorno, ora } = cellaOrarioPending;
+  orario.giorni[giorno][ora] = (mensa || classe || materia || sede) ? { classe, materia, sede, mensa } : null;
+  salvaOrario();
+  chiudiCellaOrario();
+  renderOrario();
+}
+function svuotaCellaOrario() {
+  if (!cellaOrarioPending) return;
+  const { giorno, ora } = cellaOrarioPending;
+  orario.giorni[giorno][ora] = null;
+  salvaOrario();
+  chiudiCellaOrario();
+  renderOrario();
+}
+function renderOrario() {
+  const el = document.getElementById('orario-griglia');
+  if (!el) return;
+  if (!annoAttivo) { el.innerHTML = '<p class="empty-msg">Crea prima un anno scolastico.</p>'; return; }
+  let html = '<div class="or-tab"><div class="or-row or-head"><div class="or-cell or-corner"></div>';
+  [1, 2, 3, 4, 5, 6].forEach(g => { html += '<div class="or-cell or-dh">' + GIORNI_SETT[g] + '</div>'; });
+  html += '</div>';
+  for (let o = 0; o < 9; o++) {
+    html += '<div class="or-row"><div class="or-cell or-oh">' + (o + 1) + 'ª</div>';
+    [1, 2, 3, 4, 5, 6].forEach(g => {
+      const c = orario.giorni[g][o];
+      if (c && c.mensa) {
+        html += '<button class="or-cell or-slot on mensa" onclick="apriCellaOrario(' + g + ',' + o + ')">' +
+          '<span class="or-classe">Mensa</span>' +
+          (c.sede ? '<span class="or-sede">' + escHtml(c.sede) + '</span>' : '') + '</button>';
+      } else if (c) {
+        html += '<button class="or-cell or-slot on" onclick="apriCellaOrario(' + g + ',' + o + ')">' +
+          '<span class="or-classe">' + escHtml(c.classe || '\u2014') + '</span>' +
+          (c.materia ? '<span class="or-materia">' + escHtml(c.materia) + '</span>' : '') +
+          (c.sede ? '<span class="or-sede">' + escHtml(c.sede) + '</span>' : '') + '</button>';
+      } else {
+        html += '<button class="or-cell or-slot" onclick="apriCellaOrario(' + g + ',' + o + ')">+</button>';
+      }
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
 function apriProfilo() {
   const m = document.getElementById('acc-menu');
   if (m) m.classList.remove('on');
@@ -2207,7 +2421,7 @@ function salvaProfiloForm() {
 
 
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
-const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
+const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', orario:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
 function vai(id) {
   document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
@@ -2218,6 +2432,7 @@ function vai(id) {
   if (id === 'permessi') renderPermessi();
   if (id === 'brevi') renderBrevi();
   if (id === 'ferie') renderFerie();
+  if (id === 'orario') renderOrario();
   if (id === 'registro') renderRegistro();
   if (id === 'storico') { aggiornaTopSub(); renderAnni(); }
   window.scrollTo(0, 0);
@@ -2897,7 +3112,9 @@ async function eliminaAnnoConfermato() {
       annoAttivo = rimasti[0];
       carica();
       caricaPermessi();
+      caricaOrario();
       renderPermessi();
+      renderOrario();
       aggiorna();
       aggiornaTopSub();
     } else {
@@ -3042,6 +3259,7 @@ async function onUserLoggedIn(user) {
 
   await sincronizzaPermessi();
   await sincronizzaProfilo();
+  await sincronizzaOrario();
   setSyncStatus('ok');
   aggiorna();
   renderRegistro();
@@ -3149,7 +3367,8 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   apriSceltaInserimento, chiudiSceltaInserimento, scegliInserimento,
   salvaOrarioSettimanale, aggiungiBreve, eliminaBreve, aggiungiRecupero, rimuoviRecupero,
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
-  confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle];
+  confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle,
+  apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
@@ -3160,6 +3379,7 @@ aggiornaTopSub();
 carica();
 caricaPermessi();
 caricaProfilo();
+caricaOrario();
 renderPermessi();
 
 aggiorna();
