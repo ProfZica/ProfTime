@@ -524,7 +524,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   <div class="home-empty" id="home-empty" style="display:none">
     <div class="he-ic">&#128203;</div>
-    <div class="he-t">Ancora nessun dato per questo anno</div>
+    <div class="he-t">Ancora nessun dato per quest'anno</div>
     <div class="he-s">Tocca <strong>Registra qualcosa</strong> per aggiungere un impegno o un permesso.<br>Qui vedrai i tuoi riepiloghi appena inserisci il primo dato.</div>
   </div>
 
@@ -1167,7 +1167,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <div class="modal-bg" id="modal-import" onclick="if(event.target===this)annullaImport()">
   <div class="modal sc-modal">
     <h3>Importazione impegni</h3>
-    <p>Hai già degli impegni inseriti per questo anno. Vuoi aggiungere i <strong id="import-count">0</strong> nuovi a quelli esistenti, oppure sostituire tutto?</p>
+    <p>Hai già degli impegni inseriti per quest'anno. Vuoi aggiungere i <strong id="import-count">0</strong> nuovi a quelli esistenti, oppure sostituire tutto?</p>
     <div class="sc-opt">
       <button onclick="confermaImport('aggiungi')"><span class="sc-t">Aggiungi</span><span class="sc-d">Tieni gli impegni attuali e aggiungi i nuovi</span></button>
       <button onclick="confermaImport('sostituisci')"><span class="sc-t">Sostituisci</span><span class="sc-d">Cancella gli attuali e tieni solo i nuovi</span></button>
@@ -1890,7 +1890,7 @@ function renderPermessi() {
 
   const lista = document.getElementById('perm-lista');
   if (!perm.voci.length) {
-    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso inserito per questo anno.</div>';
+    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso inserito per quest\'anno.</div>';
   } else {
     lista.innerHTML = perm.voci.map(v => {
       const range = v.dataInizio === v.dataFine ? fData(v.dataInizio) : fData(v.dataInizio) + ' \u2192 ' + fData(v.dataFine);
@@ -2064,7 +2064,7 @@ function renderBrevi() {
 
   const lista = document.getElementById('brev-lista');
   if (!perm.permessiBrevi.length) {
-    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso breve inserito per questo anno.</div>';
+    lista.innerHTML = '<div class="gl-nota" style="margin:0">Nessun permesso breve inserito per quest\'anno.</div>';
     return;
   }
   const oggi = new Date(); oggi.setHours(12, 0, 0, 0);
@@ -2234,7 +2234,7 @@ function renderFerie() {
   // lista ferie estive
   const lf = document.getElementById('fer-lista');
   if (!perm.ferieEstive.length) {
-    lf.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna ferie estiva inserita per questo anno.</div>';
+    lf.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna ferie estiva inserita per quest\'anno.</div>';
   } else {
     lf.innerHTML = perm.ferieEstive.map(f => {
       const range = f.dataInizio === f.dataFine ? fData(f.dataInizio) : fData(f.dataInizio) + ' \u2192 ' + fData(f.dataFine);
@@ -2250,7 +2250,7 @@ function renderFerie() {
   // lista soppresse
   const ls = document.getElementById('sop-lista');
   if (!perm.festivitaSoppresse.length) {
-    ls.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna festivit\u00e0 soppressa inserita per questo anno.</div>';
+    ls.innerHTML = '<div class="gl-nota" style="margin:0">Nessuna festivit\u00e0 soppressa inserita per quest\'anno.</div>';
   } else {
     ls.innerHTML = perm.festivitaSoppresse.map(f => {
       const range = f.dataInizio === f.dataFine ? fData(f.dataInizio) : fData(f.dataInizio) + ' \u2192 ' + fData(f.dataFine);
