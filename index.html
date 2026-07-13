@@ -325,6 +325,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .doc-hero p{font-size:.82rem;opacity:.82;line-height:1.5;}
 .doc-box{background:var(--w);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:12px;overflow:hidden;}
 .doc-hdr{padding:11px 15px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;}
+.faq-item{border-bottom:1px solid var(--bd);}
+.faq-item:last-child{border-bottom:none;}
+.faq-item summary{padding:13px 15px;font-size:.86rem;font-weight:700;color:var(--testo);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:'+';font-size:1.1rem;color:var(--tx2);flex-shrink:0;font-weight:400;}
+.faq-item[open] summary::after{content:'\2212';}
+.faq-item p{padding:0 15px 15px;margin:0;font-size:.82rem;color:var(--tx2);line-height:1.5;}
 .dh-b{background:var(--blu);}.dh-v{background:var(--verde);}.dh-g{background:#555;}
 .doc-item{display:flex;gap:12px;padding:11px 15px;border-bottom:1px solid var(--bd);}
 .doc-item:last-child{border-bottom:none;}
@@ -535,13 +542,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="card ct"><div class="c-lbl">Totale</div><div class="c-val" id="ore-t">0:00</div><div class="c-sub">su 80:00 max</div></div>
   </div>
   <div class="barre">
-    <div class="bw barre-c"><div class="bh"><strong>Attivita Collegiali</strong><span id="pct-c">0%</span></div><div class="bt"><div class="bf" id="fill-c" style="width:0%"></div></div></div>
-    <div class="bw barre-a"><div class="bh"><strong>Altre Attivita</strong><span id="pct-a">0%</span></div><div class="bt"><div class="bf" id="fill-a" style="width:0%"></div></div></div>
+    <div class="bw barre-c"><div class="bh"><strong>Attività Collegiali</strong><span id="pct-c">0%</span></div><div class="bt"><div class="bf" id="fill-c" style="width:0%"></div></div></div>
+    <div class="bw barre-a"><div class="bh"><strong>Altre Attività</strong><span id="pct-a">0%</span></div><div class="bt"><div class="bf" id="fill-a" style="width:0%"></div></div></div>
   </div>
   <div class="extra-pill" id="extra-pill">
     <div class="extra-pill-icon">&#10022;</div>
     <div class="extra-pill-info">
-      <div class="extra-pill-lbl">Attivita Extra</div>
+      <div class="extra-pill-lbl">Attività Extra</div>
       <div class="extra-pill-sub">Non conteggiate nelle 40+40</div>
     </div>
     <div class="extra-pill-val" id="ore-e">0:00</div>
@@ -632,6 +639,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <button class="hub-item" onclick="vai('ccnl')">
       <svg viewBox="0 0 24 24"><path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7l-8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
       <span class="hi-tx"><span class="hi-t">CCNL</span><br><span class="hi-s">Riferimenti contrattuali</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('faq')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/><path d="M4 4l16 16" opacity="0"/></svg>
+      <span class="hi-tx"><span class="hi-t">Domande frequenti</span><br><span class="hi-s">Le domande scomode, con risposta</span></span>
       <span class="hi-arrow">›</span>
     </button>
     <button class="hub-item" onclick="vai('guida')">
@@ -839,13 +851,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="box-h"><h2>Nuovo impegno</h2></div>
     <div class="box-b">
       <div class="fg">
-        <div class="s2"><label class="fl">Evento / Attivita</label><input type="text" id="ev-nome" placeholder="es. Collegio Docenti"></div>
+        <div class="s2"><label class="fl">Evento / Attività</label><input type="text" id="ev-nome" placeholder="es. Collegio Docenti"></div>
         <div class="s2"><label class="fl">Categoria</label>
           <select id="ev-cat" onchange="catStile(this,'sc','sa')">
             <option value="">seleziona</option>
-            <option value="coll">Attivita Collegiale</option>
-            <option value="altre">Altre Attivita</option>
-            <option value="extra">Attivita Extra (non conteggiata)</option>
+            <option value="coll">Attività Collegiale</option>
+            <option value="altre">Altre Attività</option>
+            <option value="extra">Attività Extra (non conteggiata)</option>
           </select>
         </div>
         <div><label class="fl">Data</label><input type="date" id="ev-data"></div>
@@ -903,7 +915,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="cal-grid" id="cal-grid"></div>
     <div class="cal-leg">
       <div class="leg-i"><div class="leg-d lg-c"></div><span>Att. Collegiale</span></div>
-      <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attivita</span></div>
+      <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attività</span></div>
       <div class="leg-i"><div class="leg-d lg-e"></div><span>Extra</span></div>
     </div>
   </div>
@@ -924,7 +936,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         <select id="t-cat">
           <option value="">seleziona</option>
           <option value="coll">Att. Collegiale</option>
-          <option value="altre">Altre Attivita</option>
+          <option value="altre">Altre Attività</option>
         </select>
       </div>
     </div>
@@ -945,7 +957,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       <div class="pdf-ante">
         <h3>Riepilogo attuale</h3>
         <div class="pdf-r"><span>Ore collegiali</span><strong id="pdf-c">--</strong></div>
-        <div class="pdf-r"><span>Ore altre attivita</span><strong id="pdf-a">--</strong></div>
+        <div class="pdf-r"><span>Ore altre attività</span><strong id="pdf-a">--</strong></div>
         <div class="pdf-r"><span>Totale ore</span><strong id="pdf-t">--</strong></div>
         <div class="pdf-r"><span>Impegni registrati</span><strong id="pdf-n">--</strong></div>
         <div class="pdf-r"><span>Anno scolastico</span><strong id="pdf-anno">--</strong></div>
@@ -1018,9 +1030,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <!-- CCNL -->
 <div class="pag" id="pag-ccnl">
   <div class="doc-hero dh-blu"><h2>Art. 29 CCNL Scuola</h2><p>Ore funzionali all'insegnamento - Comparto Istruzione e Ricerca 2016-2018</p></div>
-  <div class="nota"><strong>Limite contrattuale annuale</strong>Massimo 40 ore di attivita collegiali + 40 ore di altre attivita funzionali = 80 ore totali annue.</div>
+  <div class="nota"><strong>Limite contrattuale annuale</strong>Massimo 40 ore di attività collegiali + 40 ore di altre attività funzionali = 80 ore totali annue.</div>
   <div class="doc-box">
-    <div class="doc-hdr dh-b">40 ore - Attivita Collegiali</div>
+    <div class="doc-hdr dh-b">40 ore - Attività Collegiali</div>
     <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Collegio dei Docenti</strong><span>Riunioni plenarie convocate dal DS. Sempre obbligatorie.</span></div></div>
     <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Consigli di Classe / Interclasse</strong><span>Tutte le sedute convocate dal DS o dal coordinatore, incluse le straordinarie.</span></div></div>
     <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Dipartimenti disciplinari e verticali</strong><span>Riunioni di area convocate formalmente dal DS.</span></div></div>
@@ -1029,7 +1041,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="doc-item"><div class="dot db"></div><div class="dit"><strong>Organi Collegiali (se membro eletto)</strong><span>Es. Consiglio di Istituto per i docenti eletti.</span></div></div>
   </div>
   <div class="doc-box">
-    <div class="doc-hdr dh-v">40 ore - Altre Attivita Funzionali</div>
+    <div class="doc-hdr dh-v">40 ore - Altre Attività Funzionali</div>
     <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Ricevimento genitori</strong><span>Colloqui individuali, ricevimenti generali e assemblee di classe con le famiglie.</span></div></div>
     <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>Open day e orientamento</strong><span>Presentazione dell'offerta formativa a famiglie e futuri studenti.</span></div></div>
     <div class="doc-item"><div class="dot dv"></div><div class="dit"><strong>GLO / GLHO</strong><span>Riunioni per PEI alunni con disabilita (L. 104/92). Obbligatorie per il docente di sostegno e i contitolari.</span></div></div>
@@ -1043,14 +1055,61 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Preparazione individuale delle lezioni</strong><span>Inclusa nell'orario complessivo ma non nelle ore funzionali.</span></div></div>
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Formazione volontaria</strong><span>Corsi e webinar scelti autonomamente.</span></div></div>
     <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Assemblee sindacali</strong><span>Hanno disciplina separata, non rientrano nelle 80h.</span></div></div>
-    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Attivita extracurricolari su base volontaria</strong><span>Gite, visite guidate, teatro, sport scolastico, progetti facoltativi: compensati a parte o su base volontaria.</span></div></div>
+    <div class="doc-item"><div class="dot dg"></div><div class="dit"><strong>Attività extracurricolari su base volontaria</strong><span>Gite, visite guidate, teatro, sport scolastico, progetti facoltativi: compensati a parte o su base volontaria.</span></div></div>
   </div>
   <div class="doc-box">
     <div class="doc-hdr" style="background:var(--extra)">Categoria Extra in ProfTime</div>
-    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>A cosa serve</strong><span>Tutte le attivita elencate sopra, che non rientrano nelle 80 ore contrattuali, vanno registrate con la categoria Extra.</span></div></div>
-    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>Perche tenerle comunque</strong><span>Utile per avere una panoramica completa del tuo impegno reale, anche se non si conteggia nel monte 40+40.</span></div></div>
+    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>A cosa serve</strong><span>Tutte le attività elencate sopra, che non rientrano nelle 80 ore contrattuali, vanno registrate con la categoria Extra.</span></div></div>
+    <div class="doc-item"><div class="dot" style="background:var(--extra)"></div><div class="dit"><strong>Perché tenerle comunque</strong><span>Utile per avere una panoramica completa del tuo impegno reale, anche se non si conteggia nel monte 40+40.</span></div></div>
   </div>
-  <div class="nota"><strong>Nota normativa</strong>Il Contratto Integrativo di Istituto (CII) puo integrare queste indicazioni. Rif.: art. 29 CCNL Istruzione e Ricerca 2016-2018.</div>
+  <div class="nota"><strong>Nota normativa</strong>Il Contratto Integrativo di Istituto (CII) può integrare queste indicazioni. Rif.: art. 29 CCNL Istruzione e Ricerca 2016-2018.</div>
+</div>
+
+<!-- GUIDA -->
+<!-- FAQ -->
+<div class="pag" id="pag-faq">
+  <p class="gl-nota" style="margin:0 0 12px">Le domande che un docente si pone spesso, e non sempre sa a chi chiedere. Le risposte riprendono il CCNL, la giurisprudenza e le note ARAN più recenti, ma restano informazioni generali: per situazioni particolari conviene sempre sentire la segreteria.</p>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Permessi retribuiti</div>
+    <details class="faq-item"><summary>Posso prendere i tre giorni di permesso personale non tutti insieme?</summary><p>Sì. Non c'è obbligo di prenderli in un'unica soluzione: puoi frazionarli anche in tre giorni separati nel corso dell'anno.</p></details>
+    <details class="faq-item"><summary>Devo dichiarare il motivo alla segreteria?</summary><p>Sì, ma basta l'autocertificazione, senza bisogno di documenti. Il dirigente non può entrare nel merito del motivo, deve solo verificare che la richiesta sia formalmente corretta. Una sentenza recente della Cassazione ha però chiarito che il motivo scritto deve essere specifico, non basta una frase generica come "motivi personali".</p></details>
+    <details class="faq-item"><summary>Se non li uso, i giorni si accumulano per l'anno dopo?</summary><p>No. I tre giorni valgono per l'anno scolastico in corso e non si trasferiscono a quello successivo, né si convertono in altro.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">Ferie</div>
+    <details class="faq-item"><summary>Le ferie non godute si perdono o si possono monetizzare?</summary><p>Per chi è di ruolo, non si perdono e in costanza di rapporto non si convertono in denaro. Se non riesci a usarle per esigenze di servizio, personali o per malattia, si spostano automaticamente all'anno scolastico successivo, da usare nei periodi di sospensione delle lezioni. Diventano monetizzabili solo alla cessazione del rapporto, ad esempio per pensionamento. Per chi ha un contratto a tempo determinato le regole sono diverse: se il contratto finisce prima che tu possa usarle, hai diritto a un'indennità sostitutiva.</p></details>
+    <details class="faq-item"><summary>Posso prendere le ferie durante l'anno scolastico, non solo in estate?</summary><p>Le ferie vere e proprie si prendono nei periodi di sospensione delle lezioni: estate, vacanze di Natale, di Pasqua, ponti. Se invece ti serve un giorno libero mentre le lezioni sono in corso, puoi usare i sei giorni di ferie come permesso, che nell'app trovi nel modulo Permessi: seguono le stesse regole dei tre giorni di permesso personale, ma restano comunque parte del tuo monte ferie.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-g">Permessi brevi</div>
+    <details class="faq-item"><summary>Quante ore di permesso breve mi spettano in un anno?</summary><p>Non è un numero fisso uguale per tutti: corrisponde al tuo orario di cattedra settimanale. Se hai una cattedra a diciotto ore, hai diritto a diciotto ore annue di permesso breve.</p></details>
+    <details class="faq-item"><summary>Cosa succede se non recupero le ore in tempo?</summary><p>Hai due mesi lavorativi di tempo dalla data del permesso. Se il recupero non avviene per una causa che dipende da te, per esempio rifiuti la data proposta o non ti presenti, la scuola trattiene dallo stipendio l'equivalente delle ore non recuperate. Se invece non hai potuto farlo per un motivo che non dipende da te, come una malattia proprio in quei giorni, non scatta nessuna trattenuta.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr" style="background:var(--extra)">Lutto</div>
+    <details class="faq-item"><summary>Per quali parenti spettano i giorni di lutto?</summary><p>Coniuge anche separato, genitori, figli, fratelli e sorelle, nonni, nipoti, suoceri, generi e nuore, patrigno e matrigna, il convivente stabile con certificazione, e chi fa parte della stessa famiglia anagrafica.</p></details>
+    <details class="faq-item"><summary>Quanti giorni spettano e in che modo si usano?</summary><p>Tre giorni per ogni evento, che puoi usare anche non consecutivi, uno alla volta nei giorni che scegli tu, non necessariamente subito dopo il lutto.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Matrimonio</div>
+    <details class="faq-item"><summary>Entro quanto tempo vanno usati i quindici giorni?</summary><p>La finestra utile va da una settimana prima del matrimonio a due mesi dopo. Sono quindici giorni consecutivi di calendario, quindi contano anche i giorni festivi compresi nel mezzo.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">Le 40+40 ore</div>
+    <details class="faq-item"><summary>Cosa succede se supero il tetto delle 40+40 ore?</summary><p>Dipende da quale delle due parti sfori. Se superi le quaranta ore del Collegio docenti e delle sue articolazioni, hai diritto a essere pagato per le ore in più, oppure a essere esonerato dalle convocazioni successive. Se invece superi le quaranta ore dei Consigli di classe, il contratto non prevede un compenso aggiuntivo: è compito della scuola organizzare meglio gli impegni per evitare che succeda. Scrutini ed esami non contano in nessuna delle due voci, sono dovuti comunque.</p></details>
+    <details class="faq-item"><summary>Sono obbligato ad accettare supplenze oltre le 40+40 ore?</summary><p>Le supplenze per sostituire un collega assente sono una cosa diversa dalle riunioni delle 40+40 ore. Fuori dal tuo orario di servizio normale, il contratto non prevede un obbligo chiaro di accettare supplenze aggiuntive. Se invece hai già delle ore a disposizione previste nel tuo orario proprio per le sostituzioni, quelle rientrano nei tuoi doveri ordinari.</p></details>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-g">Festività soppresse</div>
+    <details class="faq-item"><summary>Cosa sono davvero e perché scadono il 31 agosto?</summary><p>Sono quattro giorni equiparati a festività che un tempo erano ricorrenze religiose soppresse dal calendario civile. Vanno usati entro l'anno a cui si riferiscono, e nell'app la scadenza è fissata al 31 agosto del secondo anno dell'anno scolastico, così hai tutta l'estate per usarli se non l'hai già fatto durante le lezioni.</p></details>
+  </div>
 </div>
 
 <!-- GUIDA -->
@@ -1204,9 +1263,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <h3>Cosa vuoi registrare?</h3>
     <p>Scegli il tipo di inserimento.</p>
     <div class="sc-opt">
-      <button onclick="scegliInserimento('evento')"><span class="sc-ic">&#128197;</span><span class="sc-t">Impegno</span><span class="sc-d">Collegiale o altra attivita</span></button>
+      <button onclick="scegliInserimento('evento')"><span class="sc-ic">&#128197;</span><span class="sc-t">Impegno</span><span class="sc-d">Collegiale o altra attività</span></button>
       <button onclick="scegliInserimento('permessi')"><span class="sc-ic">&#127958;</span><span class="sc-t">Permesso</span><span class="sc-d">Personale, lutto, matrimonio, concorso</span></button>
-      <button onclick="scegliInserimento('extra')"><span class="sc-ic">&#11088;</span><span class="sc-t">Attivita Extra</span><span class="sc-d">Non conteggiata nelle 40+40</span></button>
+      <button onclick="scegliInserimento('extra')"><span class="sc-ic">&#11088;</span><span class="sc-t">Attività Extra</span><span class="sc-d">Non conteggiata nelle 40+40</span></button>
     </div>
   </div>
 </div>
@@ -1244,13 +1303,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="modal-b">
       <input type="hidden" id="mod-id">
       <div class="fg" style="gap:11px">
-        <div class="s2"><label class="fl">Evento / Attivita</label><input type="text" id="mod-nome"></div>
+        <div class="s2"><label class="fl">Evento / Attività</label><input type="text" id="mod-nome"></div>
         <div class="s2"><label class="fl">Categoria</label>
           <select id="mod-cat" onchange="catStile(this,'sc','sa')">
             <option value="">seleziona</option>
-            <option value="coll">Attivita Collegiale</option>
-            <option value="altre">Altre Attivita</option>
-            <option value="extra">Attivita Extra (non conteggiata)</option>
+            <option value="coll">Attività Collegiale</option>
+            <option value="altre">Altre Attività</option>
+            <option value="extra">Attività Extra (non conteggiata)</option>
           </select>
         </div>
         <div><label class="fl">Data</label><input type="date" id="mod-data"></div>
@@ -1532,7 +1591,7 @@ function aggiornaHomeAdattiva() {
   const mensile = document.getElementById('home-mensile-box');
   if (mensile) mensile.style.display = haImpegni ? '' : 'none';
 
-  // Messaggio di benvenuto se non c'e' proprio nulla
+  // Messaggio di benvenuto se non c'è proprio nulla
   const vuoto = !haImpegni && cards.length === 0;
   const emp = document.getElementById('home-empty');
   if (emp) emp.style.display = vuoto ? '' : 'none';
@@ -1655,7 +1714,7 @@ function giorniStileFerie(a, b) {
   return n;
 }
 function sovrapposto(inizio, fine) {
-  // Uno stesso giorno non puo essere coperto da due permessi, di qualsiasi tipo
+  // Uno stesso giorno non può essere coperto da due permessi, di qualsiasi tipo
   return perm.voci.find(v => inizio <= v.dataFine && fine >= v.dataInizio) || null;
 }
 function giorniLavorativiTra(a, b) {
@@ -1939,8 +1998,8 @@ let brevRecDelPending = null;
 function scadenzaBreve(dataFruizione) {
   // Parte dal giorno dopo la fruizione. Prende la scadenza a due mesi di
   // calendario e la spinge in avanti di tanti giorni quante sono le domeniche
-  // e le festivita cadute nel periodo, cosi il tempo non lavorativo non
-  // consuma la finestra e si ottiene piu tempo reale per recuperare.
+  // e le festivita cadute nel periodo, così il tempo non lavorativo non
+  // consuma la finestra e si ottiene più tempo reale per recuperare.
   const start = new Date(dataFruizione + 'T12:00:00');
   start.setDate(start.getDate() + 1); // giorno dopo il permesso
   const scad = new Date(start);
@@ -2504,7 +2563,7 @@ function salvaProfiloForm() {
 
 
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
-const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', orario:'impegni', calendario:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
+const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', orario:'impegni', calendario:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', faq:'altro', guida:'altro' };
 function vai(id) {
   document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
@@ -2634,9 +2693,9 @@ function aggiorna() {
   const av = document.getElementById('avv');
   let msgs = [], sup = false;
   if (totC > MAX) { msgs.push(`Superato limite collegiali di ${fHM(totC - MAX)}h.`); sup = true; }
-  if (totA > MAX) { msgs.push(`Superato limite altre attivita di ${fHM(totA - MAX)}h.`); sup = true; }
+  if (totA > MAX) { msgs.push(`Superato limite altre attività di ${fHM(totA - MAX)}h.`); sup = true; }
   if (!sup && totC >= MAX * 0.85) msgs.push(`Sei all${pC}% delle ore collegiali, rimangono ${fHM(MAX - totC)}h.`);
-  if (!sup && totA >= MAX * 0.85) msgs.push(`Sei all${pA}% delle altre attivita, rimangono ${fHM(MAX - totA)}h.`);
+  if (!sup && totA >= MAX * 0.85) msgs.push(`Sei all${pA}% delle altre attività, rimangono ${fHM(MAX - totA)}h.`);
   if (msgs.length) {
     av.innerHTML = '<strong>' + (sup ? '\u26d4 Limite superato' : '\u26a0\ufe0f Attenzione') + '</strong> ' + msgs.join(' ');
     av.className = 'avv on' + (sup ? ' red' : '');
@@ -2768,17 +2827,17 @@ function renderLista() {
     let html = '';
     if (coll.length) {
       const tot = coll.reduce(function(s, i) { return s + i.dur; }, 0);
-      html += '<div class="gruppo-hdr gh-c">\u{1f3db} Attivita Collegiali <span>' + coll.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
+      html += '<div class="gruppo-hdr gh-c">\u{1f3db} Attività Collegiali <span>' + coll.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
       html += renderGruppoMensile(coll);
     }
     if (altre.length) {
       const tot = altre.reduce(function(s, i) { return s + i.dur; }, 0);
-      html += '<div class="gruppo-hdr gh-a">\u{1f4cc} Altre Attivita <span>' + altre.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
+      html += '<div class="gruppo-hdr gh-a">\u{1f4cc} Altre Attività <span>' + altre.length + ' imp. \u00b7 ' + fHM(tot) + 'h</span></div>';
       html += renderGruppoMensile(altre);
     }
     if (extra.length) {
       const tot = extra.reduce(function(s, i) { return s + i.dur; }, 0);
-      html += '<div class="gruppo-hdr gh-e">\u2728 Attivita Extra <span>' + extra.length + ' imp. \u00b7 ' + fHM(tot) + 'h \u00b7 non conteggiate</span></div>';
+      html += '<div class="gruppo-hdr gh-e">\u2728 Attività Extra <span>' + extra.length + ' imp. \u00b7 ' + fHM(tot) + 'h \u00b7 non conteggiate</span></div>';
       html += renderGruppoMensile(extra);
     }
     el.innerHTML = html;
@@ -2929,7 +2988,7 @@ function stampaPDF() {
   const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
   const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
   const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
-  const catLabel = c => c === 'coll' ? 'Att. Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
+  const catLabel = c => c === 'coll' ? 'Att. Collegiale' : c === 'altre' ? 'Altre Attività' : 'Extra';
   const catColor = c => c === 'coll' ? '#1F4E79' : c === 'altre' ? '#1E5631' : '#C55A11';
   const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map(i =>
     `<tr><td>${fD(i.data)}</td><td>${i.nome}</td><td>${catLabel(i.cat)}</td><td>${i.ini}&ndash;${i.fine}</td><td style="font-weight:700;color:${catColor(i.cat)}">${fHM(i.dur)}h</td><td>${i.note || ''}</td></tr>`
@@ -2942,7 +3001,7 @@ function stampaPDF() {
 }
 
 function copiaCSV() {
-  const catLabelCsv = c => c === 'coll' ? 'Attivita Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
+  const catLabelCsv = c => c === 'coll' ? 'Attività Collegiale' : c === 'altre' ? 'Altre Attività' : 'Extra';
   const h = 'Data,Evento,Categoria,Inizio,Fine,Durata(min),Note\n';
   const r = [...imp].sort((a, b) => a.data.localeCompare(b.data))
     .map(i => `${fD(i.data)},"${i.nome}",${catLabelCsv(i.cat)},${i.ini},${i.fine},${i.dur},"${i.note || ''}"`).join('\n');
@@ -2956,7 +3015,7 @@ function esportaExcel() {
   const totC = imp.filter(i => i.cat === 'coll').reduce((s, i) => s + i.dur, 0);
   const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
   const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
-  const catLabelXls = c => c === 'coll' ? 'Attivita Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
+  const catLabelXls = c => c === 'coll' ? 'Attività Collegiale' : c === 'altre' ? 'Altre Attività' : 'Extra';
   const righe = [];
   if (profilo.nomeDocente || profilo.istituto || profilo.codiceMecc || profilo.emailIst) {
     if (profilo.nomeDocente) righe.push({ 'N': '', 'Nome': 'Docente', 'Categoria': profilo.nomeDocente, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
@@ -3168,7 +3227,7 @@ let annoDaEliminare = null;
 function confermaEliminaAnno(a) {
   annoDaEliminare = a;
   document.getElementById('elimina-anno-testo').textContent =
-    'Stai per eliminare definitivamente tutti gli impegni dell\'anno scolastico ' + a + '. Questa azione non puo essere annullata.';
+    'Stai per eliminare definitivamente tutti gli impegni dell\'anno scolastico ' + a + '. Questa azione non può essere annullata.';
   document.getElementById('modal-elimina-anno').classList.add('on');
 }
 
@@ -3263,7 +3322,7 @@ function traduciErroreFirebase(code) {
     'auth/user-not-found': 'Nessun account trovato con questa email.',
     'auth/wrong-password': 'Password errata.',
     'auth/invalid-credential': 'Email o password errati.',
-    'auth/email-already-in-use': 'Esiste gia un account con questa email.',
+    'auth/email-already-in-use': 'Esiste già un account con questa email.',
     'auth/weak-password': 'La password deve avere almeno 6 caratteri.',
     'auth/too-many-requests': 'Troppi tentativi. Riprova tra qualche minuto.',
     'auth/network-request-failed': 'Errore di connessione. Controlla internet.',
@@ -3322,11 +3381,11 @@ async function onUserLoggedIn(user) {
   // Reset completo: azzera qualsiasi dato presente in memoria prima del login
   imp = [];
 
-  // Cerca se questo utente ha gia anni salvati in locale su questo browser
+  // Cerca se questo utente ha già anni salvati in locale su questo browser
   const anniEsistenti = tuttiAnni();
 
   if (anniEsistenti.length > 0) {
-    // Usa l'anno piu recente gia presente
+    // Usa l'anno più recente già presente
     annoAttivo = anniEsistenti[0];
     carica();
     const cloudData = await caricaDaCloud(annoAttivo);
@@ -3439,7 +3498,7 @@ function apriGiorno(ds) {
   const nm = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   document.getElementById('modal-giorno-titolo').textContent = parseInt(p[2]) + ' ' + nm[parseInt(p[1])] + ' ' + p[0];
   document.getElementById('modal-giorno-body').innerHTML = ev.map(i => {
-    const catLbl = i.cat === 'coll' ? 'Att. Collegiale' : i.cat === 'altre' ? 'Altre Attivita' : 'Extra';
+    const catLbl = i.cat === 'coll' ? 'Att. Collegiale' : i.cat === 'altre' ? 'Altre Attività' : 'Extra';
     const catCls = i.cat === 'coll' ? 'mge-c' : i.cat === 'altre' ? 'mge-a' : 'mge-e';
     const orario = (i.ini && i.fine) ? i.ini + ' - ' + i.fine : 'Orario non inserito';
     const durata = i.dur > 0 ? fHM(i.dur) + 'h' : '';
@@ -3462,7 +3521,7 @@ function chiudiModalGiorno() {
   document.getElementById('modal-giorno').classList.remove('on');
 }
 
-const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica,
+const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica, renderLista,
   filtra, calMese, tVia, tStop, stampaPDF, copiaCSV,
   esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
   apriGiorno, apriNuovoEventoData, chiudiModalGiorno, loginTab, doLogin, doLogout,
