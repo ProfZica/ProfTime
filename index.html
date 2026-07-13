@@ -95,14 +95,15 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .gl-chip.on{background:var(--blu);border-color:var(--blu);color:#fff;}
 .gl-nota{font-size:.68rem;color:var(--tx2);margin-top:8px;}
 .or-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.or-tab{display:grid;grid-template-columns:34px repeat(6,74px);width:max-content;border-top:1px solid var(--bd);border-left:1px solid var(--bd);}
+.or-tab{display:grid;grid-template-columns:34px repeat(6,74px);width:478px;border-top:1px solid var(--bd);border-left:1px solid var(--bd);}
 .or-cell{box-sizing:border-box;border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 2px;font-family:var(--f);margin:0;}
 .or-corner{background:var(--bg);}
 .or-oh{font-size:.7rem;font-weight:700;color:var(--tx2);background:var(--bg);}
 .or-dh{font-size:.72rem;font-weight:800;color:var(--blu);background:var(--blu-cc);}
-.or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;-webkit-appearance:none;appearance:none;border-radius:0;}
+.or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;-webkit-appearance:none;appearance:none;border-radius:0;border-left:4px solid transparent;}
 .or-slot.on{background:var(--blu-cc);}
 .or-slot.mensa{background:var(--oro-c);}
+.or-slot.ricevimento{background:#E0F7FA;}
 .or-classe{font-weight:800;color:var(--testo);}
 .or-materia{color:var(--tx2);font-size:.62rem;}
 .or-sede{color:var(--blu-m);font-size:.6rem;font-weight:700;}
@@ -511,7 +512,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <!-- HOME -->
 <div class="pag on" id="pag-home">
   <button class="btn btn-blu btn-full home-add" style="margin-top:0" onclick="apriSceltaInserimento()">+ Registra qualcosa</button>
-  <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="vai('calendario')">📅 Vai al calendario</button>
+  <button class="btn btn-ghost btn-full" style="margin-top:8px;margin-bottom:14px" onclick="vai('calendario')">📅 Vai al calendario</button>
 
   <div class="home-empty" id="home-empty" style="display:none">
     <div class="he-ic">&#128203;</div>
@@ -819,7 +820,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   <div class="box">
     <div class="box-h"><h2>Il mio orario</h2></div>
     <div class="box-b">
-      <p class="gl-nota">Tocca una casella per inserire classe, materia e sede, oppure segnarla come mensa. Le caselle vuote restano libere.</p>
+      <p class="gl-nota">Tocca una casella per inserire una lezione con classe, materia e sede, oppure segnarla come mensa o ricevimento genitori. Ogni classe ha un colore automatico, per riconoscerla a colpo d'occhio.</p>
       <div id="orario-griglia" class="or-wrap"></div>
     </div>
   </div>
@@ -1169,20 +1170,20 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <div class="modal-bg" id="modal-orario-cella" onclick="if(event.target===this)chiudiCellaOrario()">
   <div class="modal sc-modal">
     <h3 id="orc-titolo">Ora</h3>
-    <div style="display:flex;align-items:center;gap:9px;margin:16px 0 2px;">
-      <input type="checkbox" id="orc-mensa" onchange="toggleOrcMensa()" style="width:18px;height:18px;flex-shrink:0;">
-      <label class="fl" style="margin:0;">Mensa (sorveglianza, non lezione)</label>
+    <div style="margin-top:14px;"><label class="fl">Tipo</label>
+      <select id="orc-tipo" onchange="toggleOrcMensa()">
+        <option value="lezione">Lezione</option>
+        <option value="mensa">Mensa (sorveglianza)</option>
+        <option value="ricevimento">Ricevimento genitori</option>
+      </select>
     </div>
+    <div style="margin-top:14px;"><label class="fl">Classe</label><input type="text" id="orc-classe" placeholder="es. 3ª B"></div>
     <div id="orc-campi-lezione">
-      <div style="margin-top:14px;"><label class="fl">Classe</label><input type="text" id="orc-classe" placeholder="es. 3ª B"></div>
       <div style="margin-top:14px;"><label class="fl">Materia</label><input type="text" id="orc-materia" placeholder="es. Italiano"></div>
     </div>
     <div style="margin-top:14px;"><label class="fl">Sede</label>
-      <select id="orc-sede">
-        <option value="">Nessuna</option>
-        <option value="Sant'Antonino">Sant'Antonino</option>
-        <option value="Borgone">Borgone</option>
-      </select>
+      <input type="text" id="orc-sede" list="orc-sedi-list" placeholder="es. Sant'Antonino">
+      <datalist id="orc-sedi-list"></datalist>
     </div>
     <button class="btn btn-blu btn-full" style="margin-top:18px" onclick="salvaCellaOrario()">Salva</button>
     <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="svuotaCellaOrario()">Svuota casella</button>
@@ -2297,17 +2298,19 @@ function orarioDefault() {
 function normalizzaOrario(o) {
   const base = orarioDefault();
   if (!o || typeof o !== 'object' || !o.giorni) return base;
+  const tipiValidi = ['lezione', 'mensa', 'ricevimento'];
   [1, 2, 3, 4, 5, 6].forEach(n => {
     const riga = Array.isArray(o.giorni[n]) ? o.giorni[n] : [];
     base.giorni[n] = Array.from({ length: 9 }, (_, i) => {
       const c = riga[i];
       if (!c || typeof c !== 'object') return null;
-      const mensa = !!c.mensa;
-      const classe = mensa ? '' : (typeof c.classe === 'string' ? c.classe : '');
-      const materia = mensa ? '' : (typeof c.materia === 'string' ? c.materia : '');
+      let tipo = typeof c.tipo === 'string' && tipiValidi.indexOf(c.tipo) >= 0 ? c.tipo : null;
+      if (!tipo) tipo = c.mensa ? 'mensa' : 'lezione'; // compatibilita con i dati salvati prima del ricevimento
+      const classe = typeof c.classe === 'string' ? c.classe : '';
+      const materia = tipo === 'lezione' ? (typeof c.materia === 'string' ? c.materia : '') : '';
       const sede = typeof c.sede === 'string' ? c.sede : '';
-      if (!mensa && !classe && !materia && !sede) return null;
-      return { classe, materia, sede, mensa };
+      if (tipo === 'lezione' && !classe && !materia && !sede) return null;
+      return { classe, materia, sede, tipo };
     });
   });
   return base;
@@ -2365,21 +2368,32 @@ async function sincronizzaOrario() {
   renderOrario();
 }
 
+const PALETTE_CLASSI = ['#2E75B6', '#70AD47', '#C9A227', '#C55A11', '#6B4FA0', '#C2185B', '#00796B', '#546E7A', '#8D6E63', '#D32F2F'];
+function coloreClasse(nome) {
+  if (!nome) return null;
+  let h = 0;
+  for (let i = 0; i < nome.length; i++) h = (h * 31 + nome.charCodeAt(i)) % PALETTE_CLASSI.length;
+  return PALETTE_CLASSI[Math.abs(h) % PALETTE_CLASSI.length];
+}
+
 let cellaOrarioPending = null;
 function apriCellaOrario(giorno, ora) {
   cellaOrarioPending = { giorno: giorno, ora: ora };
-  const c = orario.giorni[giorno][ora] || { classe: '', materia: '', sede: '', mensa: false };
+  const c = orario.giorni[giorno][ora] || { classe: '', materia: '', sede: '', tipo: 'lezione' };
   document.getElementById('orc-titolo').textContent = GIORNI_SETT[giorno] + ', ' + (ora + 1) + 'ª ora';
+  document.getElementById('orc-tipo').value = c.tipo || 'lezione';
   document.getElementById('orc-classe').value = c.classe || '';
   document.getElementById('orc-materia').value = c.materia || '';
   document.getElementById('orc-sede').value = c.sede || '';
-  document.getElementById('orc-mensa').checked = !!c.mensa;
+  const sedi = new Set();
+  [1, 2, 3, 4, 5, 6].forEach(g => orario.giorni[g].forEach(cc => { if (cc && cc.sede) sedi.add(cc.sede); }));
+  document.getElementById('orc-sedi-list').innerHTML = Array.from(sedi).map(s => '<option value="' + escHtml(s) + '">').join('');
   toggleOrcMensa();
   document.getElementById('modal-orario-cella').classList.add('on');
 }
 function toggleOrcMensa() {
-  const mensa = document.getElementById('orc-mensa').checked;
-  document.getElementById('orc-campi-lezione').style.display = mensa ? 'none' : '';
+  const tipo = document.getElementById('orc-tipo').value;
+  document.getElementById('orc-campi-lezione').style.display = tipo === 'lezione' ? '' : 'none';
 }
 function chiudiCellaOrario() {
   cellaOrarioPending = null;
@@ -2387,12 +2401,13 @@ function chiudiCellaOrario() {
 }
 function salvaCellaOrario() {
   if (!cellaOrarioPending) return;
-  const mensa = document.getElementById('orc-mensa').checked;
-  const classe = mensa ? '' : document.getElementById('orc-classe').value.trim();
-  const materia = mensa ? '' : document.getElementById('orc-materia').value.trim();
-  const sede = document.getElementById('orc-sede').value;
+  const tipo = document.getElementById('orc-tipo').value;
+  const classe = document.getElementById('orc-classe').value.trim();
+  const materia = tipo === 'lezione' ? document.getElementById('orc-materia').value.trim() : '';
+  const sede = document.getElementById('orc-sede').value.trim();
   const { giorno, ora } = cellaOrarioPending;
-  orario.giorni[giorno][ora] = (mensa || classe || materia || sede) ? { classe, materia, sede, mensa } : null;
+  const daSalvare = (tipo !== 'lezione') || classe || materia || sede;
+  orario.giorni[giorno][ora] = daSalvare ? { classe, materia, sede, tipo } : null;
   salvaOrario();
   chiudiCellaOrario();
   renderOrario();
@@ -2409,24 +2424,24 @@ function renderOrario() {
   const el = document.getElementById('orario-griglia');
   if (!el) return;
   if (!annoAttivo) { el.innerHTML = '<p class="empty-msg">Crea prima un anno scolastico.</p>'; return; }
+  const TIPO_LBL = { mensa: 'Mensa', ricevimento: 'Ricevimento' };
   let html = '<div class="or-tab"><div class="or-cell or-corner"></div>';
   [1, 2, 3, 4, 5, 6].forEach(g => { html += '<div class="or-cell or-dh">' + GIORNI_SETT[g] + '</div>'; });
   for (let o = 0; o < 9; o++) {
     html += '<div class="or-cell or-oh">' + (o + 1) + 'ª</div>';
     [1, 2, 3, 4, 5, 6].forEach(g => {
       const c = orario.giorni[g][o];
-      if (c && c.mensa) {
-        html += '<button class="or-cell or-slot on mensa" onclick="apriCellaOrario(' + g + ',' + o + ')">' +
-          '<span class="or-classe">Mensa</span>' +
-          (c.sede ? '<span class="or-sede">' + escHtml(c.sede) + '</span>' : '') + '</button>';
-      } else if (c) {
-        html += '<button class="or-cell or-slot on" onclick="apriCellaOrario(' + g + ',' + o + ')">' +
-          '<span class="or-classe">' + escHtml(c.classe || '\u2014') + '</span>' +
-          (c.materia ? '<span class="or-materia">' + escHtml(c.materia) + '</span>' : '') +
-          (c.sede ? '<span class="or-sede">' + escHtml(c.sede) + '</span>' : '') + '</button>';
-      } else {
-        html += '<button class="or-cell or-slot" onclick="apriCellaOrario(' + g + ',' + o + ')">+</button>';
-      }
+      if (!c) { html += '<button class="or-cell or-slot" onclick="apriCellaOrario(' + g + ',' + o + ')">+</button>'; return; }
+      const tipo = c.tipo || 'lezione';
+      const tipoLbl = TIPO_LBL[tipo];
+      const col = coloreClasse(c.classe);
+      const stile = col ? ' style="border-left-color:' + col + '"' : '';
+      const primario = c.classe || tipoLbl || '\u2014';
+      const secondario = (tipoLbl && c.classe) ? tipoLbl : (tipo === 'lezione' && c.materia ? c.materia : '');
+      html += '<button class="or-cell or-slot on' + (tipo !== 'lezione' ? ' ' + tipo : '') + '" onclick="apriCellaOrario(' + g + ',' + o + ')"' + stile + '>' +
+        '<span class="or-classe">' + escHtml(primario) + '</span>' +
+        (secondario ? '<span class="or-materia">' + escHtml(secondario) + '</span>' : '') +
+        (c.sede ? '<span class="or-sede">' + escHtml(c.sede) + '</span>' : '') + '</button>';
     });
   }
   html += '</div>';
