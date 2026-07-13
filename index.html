@@ -103,7 +103,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;-webkit-appearance:none;appearance:none;border-radius:0;border-left:4px solid transparent;}
 .or-slot.on{background:var(--blu-cc);}
 .or-slot.mensa{background:var(--oro-c);}
-.or-slot.ricevimento{background:#E0F7FA;}
+.or-slot.ricevimento{background:var(--verde-c);}
 .or-classe{font-weight:800;color:var(--testo);}
 .or-materia{color:var(--tx2);font-size:.62rem;}
 .or-sede{color:var(--blu-m);font-size:.6rem;font-weight:700;}
@@ -386,6 +386,12 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .acard-s{font-size:.63rem;color:var(--tx2);margin-top:2px;}
 .acard-s.urg{color:#7A4D00;font-weight:700;}
 .home-empty{text-align:center;padding:38px 20px;color:var(--tx2);}
+.home-promemoria-box{background:var(--w);border:1px solid var(--blu-c);border-left:4px solid var(--blu-m);border-radius:var(--r);padding:14px 15px;margin-bottom:14px;box-shadow:var(--sh);}
+.hp-titolo{font-weight:800;font-size:.85rem;color:var(--blu);margin-bottom:6px;}
+.hp-riga{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--bd);font-size:.8rem;}
+.hp-riga:last-child{border-bottom:none;}
+.hp-nome{font-weight:700;color:var(--testo);}
+.hp-meta{color:var(--tx2);font-size:.72rem;text-align:right;flex-shrink:0;}
 .home-empty .he-ic{font-size:2.2rem;margin-bottom:10px;}
 .home-empty .he-t{font-size:.95rem;font-weight:800;color:var(--testo);margin-bottom:5px;}
 .home-empty .he-s{font-size:.8rem;line-height:1.5;}
@@ -513,6 +519,8 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <div class="pag on" id="pag-home">
   <button class="btn btn-blu btn-full home-add" style="margin-top:0" onclick="apriSceltaInserimento()">+ Registra qualcosa</button>
   <button class="btn btn-ghost btn-full" style="margin-top:8px;margin-bottom:14px" onclick="vai('calendario')">📅 Vai al calendario</button>
+
+  <div id="home-promemoria"></div>
 
   <div class="home-empty" id="home-empty" style="display:none">
     <div class="he-ic">&#128203;</div>
@@ -841,7 +849,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           </select>
         </div>
         <div><label class="fl">Data</label><input type="date" id="ev-data"></div>
-        <div></div>
+        <div><label class="fl">Luogo (opzionale)</label><input type="text" id="ev-luogo" placeholder="es. Aula magna"></div>
         <div><label class="fl">Ora inizio</label><input type="time" id="ev-ini"></div>
         <div><label class="fl">Ora fine</label><input type="time" id="ev-fine"></div>
         <div class="s2"><label class="fl">Note (opzionale)</label><textarea id="ev-note" placeholder="es. Verbale n. 3"></textarea></div>
@@ -1246,7 +1254,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           </select>
         </div>
         <div><label class="fl">Data</label><input type="date" id="mod-data"></div>
-        <div></div>
+        <div><label class="fl">Luogo (opzionale)</label><input type="text" id="mod-luogo"></div>
         <div><label class="fl">Ora inizio</label><input type="time" id="mod-ini"></div>
         <div><label class="fl">Ora fine</label><input type="time" id="mod-fine"></div>
         <div class="s2"><label class="fl">Note</label><input type="text" id="mod-note" placeholder="opzionale"></div>
@@ -1404,7 +1412,35 @@ function scegliInserimento(dove) {
   vai(dove);
 }
 
+function oggiStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function rigaPromemoria(i) {
+  const orario = (i.ini && i.fine) ? i.ini + '\u2013' + i.fine : '';
+  return '<div class="hp-riga"><span class="hp-nome">' + escHtml(i.nome) + '</span><span class="hp-meta">' + orario + (i.luogo ? ' \u00b7 \ud83d\udccd ' + escHtml(i.luogo) : '') + '</span></div>';
+}
+function renderPromemoriaHome() {
+  const el = document.getElementById('home-promemoria');
+  if (!el) return;
+  if (typeof imp === 'undefined' || !imp.length) { el.innerHTML = ''; return; }
+  const oggi = oggiStr();
+  const domani = addGiorniData(oggi, 1);
+  const impOggi = imp.filter(i => i.data === oggi).sort((a, b) => (a.ini || '').localeCompare(b.ini || ''));
+  const impDomani = imp.filter(i => i.data === domani).sort((a, b) => (a.ini || '').localeCompare(b.ini || ''));
+  if (!impOggi.length && !impDomani.length) { el.innerHTML = ''; return; }
+  let html = '<div class="home-promemoria-box">';
+  if (impOggi.length) {
+    html += '<div class="hp-titolo">\ud83d\udccc Oggi</div>' + impOggi.map(rigaPromemoria).join('');
+  }
+  if (impDomani.length) {
+    html += '<div class="hp-titolo" style="margin-top:' + (impOggi.length ? '12px' : '0') + '">Domani</div>' + impDomani.map(rigaPromemoria).join('');
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
 function aggiornaHomeAdattiva() {
+  renderPromemoriaHome();
   // Blocco impegni: visibile solo se esiste almeno un impegno
   const haImpegni = imp.length > 0;
   const bloccoImp = document.getElementById('home-impegni-blocco');
@@ -2497,6 +2533,7 @@ function aggiungi() {
   const nome = document.getElementById('ev-nome').value.trim();
   const cat = document.getElementById('ev-cat').value;
   const data = document.getElementById('ev-data').value;
+  const luogo = document.getElementById('ev-luogo').value.trim();
   const ini = document.getElementById('ev-ini').value;
   const fine = document.getElementById('ev-fine').value;
   const note = document.getElementById('ev-note').value.trim();
@@ -2506,12 +2543,13 @@ function aggiungi() {
   if (!ini || !fine) { toast('\u26a0\ufe0f Inserisci ora inizio e ora fine'); return; }
   const dur = dM(ini, fine);
   if (dur <= 0) { toast('\u26a0\ufe0f Ora fine deve essere dopo ora inizio'); return; }
-  imp.push({ id: Date.now() + Math.random(), nome, cat, data, ini, fine, dur, note });
+  imp.push({ id: Date.now() + Math.random(), nome, cat, data, luogo, ini, fine, dur, note });
   imp.sort((a, b) => a.data.localeCompare(b.data));
   salva();
   document.getElementById('ev-nome').value = '';
   document.getElementById('ev-cat').value = '';
   document.getElementById('ev-cat').className = '';
+  document.getElementById('ev-luogo').value = '';
   document.getElementById('ev-ini').value = '';
   document.getElementById('ev-fine').value = '';
   document.getElementById('ev-note').value = '';
@@ -2537,6 +2575,7 @@ function modifica(id) {
   document.getElementById('mod-cat').value = item.cat;
   catStile(document.getElementById('mod-cat'), 'sc', 'sa');
   document.getElementById('mod-data').value = item.data;
+  document.getElementById('mod-luogo').value = item.luogo || '';
   document.getElementById('mod-ini').value = item.ini;
   document.getElementById('mod-fine').value = item.fine;
   document.getElementById('mod-note').value = item.note || '';
@@ -2552,6 +2591,7 @@ function salvaModifica() {
   const nome = document.getElementById('mod-nome').value.trim();
   const cat = document.getElementById('mod-cat').value;
   const data = document.getElementById('mod-data').value;
+  const luogo = document.getElementById('mod-luogo').value.trim();
   const ini = document.getElementById('mod-ini').value;
   const fine = document.getElementById('mod-fine').value;
   const note = document.getElementById('mod-note').value.trim();
@@ -2563,7 +2603,7 @@ function salvaModifica() {
   if (dur <= 0) { toast('\u26a0\ufe0f Ora fine deve essere dopo ora inizio'); return; }
   const idx = imp.findIndex(i => i.id === id);
   if (idx === -1) return;
-  imp[idx] = { id, nome, cat, data, ini, fine, dur, note };
+  imp[idx] = { id, nome, cat, data, luogo, ini, fine, dur, note };
   imp.sort((a, b) => a.data.localeCompare(b.data));
   salva();
   aggiorna();
@@ -2681,7 +2721,7 @@ function renderImpegno(i) {
     '<div class="imp-badge ' + (i.cat === 'coll' ? 'ib-c' : i.cat === 'altre' ? 'ib-a' : 'ib-e') + '" style="font-size:1.1rem">' + (i.cat === 'coll' ? '\u{1f3db}' : i.cat === 'altre' ? '\u{1f4cc}' : '\u2728') + '</div>' +
     '<div class="imp-info">' +
       '<div class="imp-nome">' + escHtml(i.nome) + '</div>' +
-      '<div class="imp-meta">' + fD(i.data) + ' \u00b7 ' + i.ini + '\u2013' + i.fine + (i.note ? ' \u00b7 ' + escHtml(i.note) : '') + '</div>' +
+      '<div class="imp-meta">' + fD(i.data) + ' \u00b7 ' + i.ini + '\u2013' + i.fine + (i.luogo ? ' \u00b7 \ud83d\udccd ' + escHtml(i.luogo) : '') + (i.note ? ' \u00b7 ' + escHtml(i.note) : '') + '</div>' +
     '</div>' +
     '<div class="imp-ore ' + (i.cat === 'coll' ? 'ioc' : i.cat === 'altre' ? 'ioa' : 'ioe') + '">' + fHM(i.dur) + 'h</div>' +
     '<button class="btn-mod" onclick="modifica(' + i.id + ')" title="Modifica">\u270e</button>' +
@@ -2709,7 +2749,7 @@ function renderLista() {
   const cercaInput = document.getElementById('cerca-ev');
   const cerca = cercaInput ? cercaInput.value.toLowerCase().trim() : '';
   const matchCerca = function(i) {
-    return !cerca || i.nome.toLowerCase().includes(cerca) || (i.note && i.note.toLowerCase().includes(cerca));
+    return !cerca || i.nome.toLowerCase().includes(cerca) || (i.note && i.note.toLowerCase().includes(cerca)) || (i.luogo && i.luogo.toLowerCase().includes(cerca));
   };
 
   if (filtro === 't') {
@@ -2809,11 +2849,12 @@ function renderCal() {
       return `<div class="cal-ev ${i.cat === 'coll' ? 'ce-c' : i.cat === 'altre' ? 'ce-a' : 'ce-e'}">
         <div class="ce-nome">${escHtml(i.nome)}</div>
         ${orario ? `<div class="ce-info">${orario}${durata}</div>` : ''}
+        ${i.luogo ? `<div class="ce-info">\ud83d\udccd ${escHtml(i.luogo)}</div>` : ''}
       </div>`;
     }).join('');
     const badgeAss = ass.map(a => `<div class="cal-ev ce-${a.tipo}"><div class="ce-nome">${escHtml(a.label)}</div></div>`).join('');
     const clickDs = ds;
-    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${isRosso ? ' festivo' : ''}${(ev.length || ass.length) ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
+    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${isRosso ? ' festivo' : ''}${(ev.length || ass.length) ? ' ha-ev' : ''}" onclick="apriGiorno('${clickDs}')" style="cursor:pointer">
       <div class="cal-n">${g}</div>
       ${eventi}${badgeAss}
     </div>`;
@@ -3389,9 +3430,11 @@ function avviaFirebaseAuth() {
 }
 
 // ── ESPONI SU WINDOW ─────────────────────────────────────────────────
+let giornoModalDs = null;
 function apriGiorno(ds) {
   const ev = imp.filter(i => i.data === ds);
-  if (!ev.length) return;
+  if (!ev.length) { apriNuovoEventoData(ds); return; }
+  giornoModalDs = ds;
   const p = ds.split('-');
   const nm = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
   document.getElementById('modal-giorno-titolo').textContent = parseInt(p[2]) + ' ' + nm[parseInt(p[1])] + ' ' + p[0];
@@ -3404,10 +3447,16 @@ function apriGiorno(ds) {
       '<div><span class="mge-badge ' + catCls + '">' + catLbl + '</span></div>' +
       '<div class="mge-nome">' + escHtml(i.nome) + '</div>' +
       '<div class="mge-info"><span>' + orario + '</span>' + (durata ? '<span>' + durata + '</span>' : '') + '</div>' +
+      (i.luogo ? '<div class="mge-note">\ud83d\udccd ' + escHtml(i.luogo) + '</div>' : '') +
       (i.note ? '<div class="mge-note">' + escHtml(i.note) + '</div>' : '') +
       '</div>';
-  }).join('');
+  }).join('') + '<button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="apriNuovoEventoData(\'' + ds + '\')">+ Aggiungi un altro impegno in questo giorno</button>';
   document.getElementById('modal-giorno').classList.add('on');
+}
+function apriNuovoEventoData(ds) {
+  document.getElementById('modal-giorno').classList.remove('on');
+  vai('evento');
+  document.getElementById('ev-data').value = ds;
 }
 function chiudiModalGiorno() {
   document.getElementById('modal-giorno').classList.remove('on');
@@ -3416,7 +3465,7 @@ function chiudiModalGiorno() {
 const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica,
   filtra, calMese, tVia, tStop, stampaPDF, copiaCSV,
   esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
-  apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout,
+  apriGiorno, apriNuovoEventoData, chiudiModalGiorno, loginTab, doLogin, doLogout,
   confermaEliminaAnno, chiudiModalEliminaAnno, eliminaAnnoConfermato,
   tipoPermCambia, aggFineMatrimonio, aggiungiPermesso, eliminaPermesso, toggleGiornoLibero,
   aggiungiEventoLutto, aggiungiGiornoLutto, rimuoviGiornoLutto, eliminaEventoLutto,
