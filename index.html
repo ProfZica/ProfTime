@@ -1141,24 +1141,24 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 </div>
 <div class="modal-bg" id="modal-orario-cella" onclick="if(event.target===this)chiudiCellaOrario()">
-  <div class="modal">
+  <div class="modal sc-modal">
     <h3 id="orc-titolo">Ora</h3>
-    <div class="fg" style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-      <input type="checkbox" id="orc-mensa" onchange="toggleOrcMensa()" style="width:18px;height:18px;">
+    <div style="display:flex;align-items:center;gap:9px;margin:16px 0 2px;">
+      <input type="checkbox" id="orc-mensa" onchange="toggleOrcMensa()" style="width:18px;height:18px;flex-shrink:0;">
       <label class="fl" style="margin:0;">Mensa (sorveglianza, non lezione)</label>
     </div>
     <div id="orc-campi-lezione">
-      <div class="fg"><label class="fl">Classe</label><input type="text" id="orc-classe" placeholder="es. 3ª B"></div>
-      <div class="fg"><label class="fl">Materia</label><input type="text" id="orc-materia" placeholder="es. Italiano"></div>
+      <div style="margin-top:14px;"><label class="fl">Classe</label><input type="text" id="orc-classe" placeholder="es. 3ª B"></div>
+      <div style="margin-top:14px;"><label class="fl">Materia</label><input type="text" id="orc-materia" placeholder="es. Italiano"></div>
     </div>
-    <div class="fg"><label class="fl">Sede</label>
+    <div style="margin-top:14px;"><label class="fl">Sede</label>
       <select id="orc-sede">
         <option value="">Nessuna</option>
         <option value="Sant'Antonino">Sant'Antonino</option>
         <option value="Borgone">Borgone</option>
       </select>
     </div>
-    <button class="btn btn-blu btn-full" style="margin-top:10px" onclick="salvaCellaOrario()">Salva</button>
+    <button class="btn btn-blu btn-full" style="margin-top:18px" onclick="salvaCellaOrario()">Salva</button>
     <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="svuotaCellaOrario()">Svuota casella</button>
     <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="chiudiCellaOrario()">Annulla</button>
   </div>
