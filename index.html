@@ -511,6 +511,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <!-- HOME -->
 <div class="pag on" id="pag-home">
   <button class="btn btn-blu btn-full home-add" style="margin-top:0" onclick="apriSceltaInserimento()">+ Registra qualcosa</button>
+  <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="vai('calendario')">📅 Vai al calendario</button>
 
   <div class="home-empty" id="home-empty" style="display:none">
     <div class="he-ic">&#128203;</div>
@@ -564,7 +565,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     </button>
     <button class="hub-item" onclick="vai('registro')">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
-      <span class="hi-tx"><span class="hi-t">Registro</span><br><span class="hi-s">Elenco e calendario degli impegni inseriti</span></span>
+      <span class="hi-tx"><span class="hi-t">Registro</span><br><span class="hi-s">Elenco degli impegni inseriti</span></span>
       <span class="hi-arrow">›</span>
     </button>
     <button class="hub-item" onclick="vai('timer')">
@@ -575,6 +576,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <button class="hub-item" onclick="vai('orario')">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="4" x2="8" y2="10"/><line x1="14" y1="4" x2="14" y2="10"/></svg>
       <span class="hi-tx"><span class="hi-t">Il mio orario</span><br><span class="hi-s">Le tue ore settimanali, classi e sedi</span></span>
+      <span class="hi-arrow">›</span>
+    </button>
+    <button class="hub-item" onclick="vai('calendario')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><circle cx="8" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.2" fill="currentColor" stroke="none"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg>
+      <span class="hi-tx"><span class="hi-t">Calendario</span><br><span class="hi-s">Vista del mese con impegni e assenze</span></span>
       <span class="hi-arrow">›</span>
     </button>
   </div>
@@ -855,42 +861,41 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   <div class="box">
     <div class="box-h">
       <h2>Registro (<span id="n-imp">0</span>)</h2>
-      <div class="toggle-v">
-        <button class="tv on" id="tv-lista" onclick="setVista('lista')">Lista</button>
-        <button class="tv" id="tv-cal" onclick="setVista('cal')">Calendario</button>
-      </div>
     </div>
-    <div id="vista-lista">
-      <div style="padding:10px 15px;border-bottom:1px solid var(--bd);">
-        <input type="text" id="cerca-ev" placeholder="Cerca evento..." oninput="renderLista()" style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="filtri">
-            <button class="fi at" onclick="filtra('t',this)">Tutti</button>
-            <button class="fi" onclick="filtra('c',this)">Coll.</button>
-            <button class="fi" onclick="filtra('a',this)">Altre</button>
-            <button class="fi" onclick="filtra('e',this)">Extra</button>
-          </div>
-          <span style="font-size:.7rem;color:var(--tx2)" id="ore-filtro"></span>
+    <div style="padding:10px 15px;border-bottom:1px solid var(--bd);">
+      <input type="text" id="cerca-ev" placeholder="Cerca evento..." oninput="renderLista()" style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="filtri">
+          <button class="fi at" onclick="filtra('t',this)">Tutti</button>
+          <button class="fi" onclick="filtra('c',this)">Coll.</button>
+          <button class="fi" onclick="filtra('a',this)">Altre</button>
+          <button class="fi" onclick="filtra('e',this)">Extra</button>
         </div>
+        <span style="font-size:.7rem;color:var(--tx2)" id="ore-filtro"></span>
       </div>
-      <div id="lista"></div>
     </div>
-    <div id="vista-cal" style="display:none;">
-      <div class="cal-nav">
-        <button class="cn" onclick="calMese(-1)">&#8249;</button>
-        <h3 id="cal-titolo"></h3>
-        <button class="cn" onclick="calMese(+1)">&#8250;</button>
-      </div>
-      <div class="cal-hdr">
-        <div class="cal-dl">Lun</div><div class="cal-dl">Mar</div><div class="cal-dl">Mer</div>
-        <div class="cal-dl">Gio</div><div class="cal-dl">Ven</div><div class="cal-dl">Sab</div><div class="cal-dl">Dom</div>
-      </div>
-      <div class="cal-grid" id="cal-grid"></div>
-      <div class="cal-leg">
-        <div class="leg-i"><div class="leg-d lg-c"></div><span>Att. Collegiale</span></div>
-        <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attivita</span></div>
-        <div class="leg-i"><div class="leg-d lg-e"></div><span>Extra</span></div>
-      </div>
+    <div id="lista"></div>
+  </div>
+</div>
+
+<!-- CALENDARIO -->
+<div class="pag" id="pag-calendario">
+  <div class="box">
+    <div class="box-h"><h2>Calendario</h2></div>
+    <div class="cal-nav">
+      <button class="cn" onclick="calMese(-1)">&#8249;</button>
+      <h3 id="cal-titolo"></h3>
+      <button class="cn" onclick="calMese(+1)">&#8250;</button>
+    </div>
+    <div class="cal-hdr">
+      <div class="cal-dl">Lun</div><div class="cal-dl">Mar</div><div class="cal-dl">Mer</div>
+      <div class="cal-dl">Gio</div><div class="cal-dl">Ven</div><div class="cal-dl">Sab</div><div class="cal-dl">Dom</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-leg">
+      <div class="leg-i"><div class="leg-d lg-c"></div><span>Att. Collegiale</span></div>
+      <div class="leg-i"><div class="leg-d lg-a"></div><span>Altre Attivita</span></div>
+      <div class="leg-i"><div class="leg-d lg-e"></div><span>Extra</span></div>
     </div>
   </div>
 </div>
@@ -1071,7 +1076,14 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Lista - Tutti</strong><span>Mostra tre gruppi separati: Attività Collegiali, Altre Attività ed Extra, ciascuno con il proprio totale ore.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Filtri singoli</strong><span>I pulsanti Coll. / Altre / Extra mostrano solo quella categoria, raggruppata per mese.</span></div></div>
     <div class="step"><div class="sn">4</div><div class="st"><strong>Modifica ed elimina</strong><span>Premi la matita per modificare un impegno, la X per eliminarlo.</span></div></div>
-    <div class="step"><div class="sn">5</div><div class="st"><strong>Vista Calendario</strong><span>Toggle in alto a destra. Tocca un giorno con impegni per vedere tutti i dettagli in un riquadro leggibile.</span></div></div>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Calendario</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Dove trovarlo</strong><span>Ha una pagina tutta sua in Impegni, e un collegamento rapido anche in Home, così lo raggiungi in un solo tocco.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Impegni e assenze insieme</strong><span>Ogni giorno mostra le schede degli impegni delle 40+40 ore e, sotto, le etichette colorate di ferie, permessi, permessi brevi, lutto e festività soppresse.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Colori delle assenze</strong><span>Ferie in dorato, personale in viola, matrimonio in rosa, concorso in verde acqua, permesso breve in grigio ardesia, lutto in grigio scuro, festività soppresse in marrone chiaro.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Tocca un giorno</strong><span>Solo i giorni con impegni si aprono al tocco, per vedere i dettagli in un riquadro leggibile. Le assenze si gestiscono dalle loro pagine in Assenze.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -1254,7 +1266,7 @@ let fbTentativi = 0;
 avviaFirebaseAuth();
 
 // ── STATO ────────────────────────────────────────────────────────────
-let imp = [], filtro = 't', vista = 'lista';
+let imp = [], filtro = 't';
 let annoAttivo = '2025/2026';
 let calAnno = new Date().getFullYear(), calMeseN = new Date().getMonth();
 let tInt = null, tStart = null, tOn = false;
@@ -2441,7 +2453,7 @@ function salvaProfiloForm() {
 
 
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
-const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', orario:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
+const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', orario:'impegni', calendario:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
 function vai(id) {
   document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
@@ -2453,7 +2465,8 @@ function vai(id) {
   if (id === 'brevi') renderBrevi();
   if (id === 'ferie') renderFerie();
   if (id === 'orario') renderOrario();
-  if (id === 'registro') renderRegistro();
+  if (id === 'registro') renderLista();
+  if (id === 'calendario') renderCal();
   if (id === 'storico') { aggiornaTopSub(); renderAnni(); }
   window.scrollTo(0, 0);
 }
@@ -2644,8 +2657,8 @@ function filtra(t, btn) {
 }
 
 function renderRegistro() {
-  if (vista === 'lista') renderLista();
-  else renderCal();
+  renderLista();
+  renderCal();
 }
 
 function renderImpegno(i) {
@@ -2733,16 +2746,6 @@ function renderLista() {
 }
 
 // ── REGISTRO CALENDARIO ──────────────────────────────────────────────
-function setVista(v) {
-  vista = v;
-  document.getElementById('tv-lista').classList.toggle('on', v === 'lista');
-  document.getElementById('tv-cal').classList.toggle('on', v === 'cal');
-  document.getElementById('vista-lista').style.display = v === 'lista' ? '' : 'none';
-  document.getElementById('vista-cal').style.display = v === 'cal' ? '' : 'none';
-  if (v === 'cal') renderCal();
-  else renderLista();
-}
-
 function calMese(delta) {
   calMeseN += delta;
   if (calMeseN < 0) { calMeseN = 11; calAnno--; }
@@ -3396,7 +3399,7 @@ function chiudiModalGiorno() {
 }
 
 const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModifica,
-  filtra, setVista, calMese, tVia, tStop, stampaPDF, copiaCSV,
+  filtra, calMese, tVia, tStop, stampaPDF, copiaCSV,
   esportaExcel, importaExcel, toggleFormAnno, confermaNuovoAnno, attivaAnno,
   apriGiorno, chiudiModalGiorno, loginTab, doLogin, doLogout,
   confermaEliminaAnno, chiudiModalEliminaAnno, eliminaAnnoConfermato,
