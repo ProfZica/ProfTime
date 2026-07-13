@@ -65,7 +65,14 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .topbar h1{font-size:.95rem;font-weight:800;letter-spacing:-.3px;}
 .topbar p{font-size:.68rem;opacity:.65;margin-top:1px;}
 .topbar-credit{font-size:.62rem;opacity:.55;text-align:right;white-space:nowrap;padding-top:2px;}
-.bnav{position:fixed;top:52px;left:0;right:0;z-index:200;background:var(--w);border-bottom:1px solid var(--bd);display:flex;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.topbar-credit-sub{font-size:.6rem;opacity:.5;margin-top:3px;}
+.topbar-acc{position:relative;flex-shrink:0;}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:#fff;color:var(--blu);border:none;font-weight:800;font-size:.95rem;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.15);-webkit-tap-highlight-color:transparent;}
+.acc-menu{position:absolute;top:46px;right:0;background:var(--w);border:1px solid var(--bd);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.2);padding:14px;min-width:210px;display:none;z-index:400;}
+.acc-menu.on{display:block;}
+.acc-menu-email{font-size:.82rem;font-weight:700;color:var(--testo);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:6px;}
+.acc-menu-status{font-size:.72rem;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+.bnav{position:fixed;top:68px;left:0;right:0;z-index:200;background:var(--w);border-bottom:1px solid var(--bd);display:flex;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 2px;border:none;background:none;cursor:pointer;color:var(--tx2);font-family:var(--f);-webkit-tap-highlight-color:transparent;}
 .nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
@@ -150,7 +157,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .fer-bc-s{font-size:.63rem;color:var(--tx2);margin-top:2px;}
 .fer-bc-s.urg{color:#7A4D00;font-weight:700;}
 .pag{display:none;max-width:700px;margin:0 auto;padding:14px;}
-.pag.on{display:block;padding-top:108px;}
+.pag.on{display:block;padding-top:124px;}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
 @media(max-width:440px){.cards{grid-template-columns:1fr 1fr;}.ct{grid-column:1/-1;}}
 .card{background:var(--w);border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh);border-top:4px solid transparent;}
@@ -176,7 +183,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 .s2{grid-column:1/-1;}
 .fl{display:block;font-size:.68rem;font-weight:700;color:var(--tx2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
-input[type=text],input[type=date],input[type=time],input[type=password],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:.92rem;font-family:var(--f);color:var(--testo);background:var(--w);transition:border-color .15s;-webkit-appearance:none;appearance:none;}
+input[type=text],input[type=date],input[type=time],input[type=password],input[type=email],input[type=number],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:.92rem;font-family:var(--f);color:var(--testo);background:var(--w);transition:border-color .15s;-webkit-appearance:none;appearance:none;}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blu-m);box-shadow:0 0 0 3px rgba(46,117,182,.1);}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7A8D' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
 select.sc{border-color:var(--blu-m);background-color:var(--blu-cc);color:var(--blu);}
@@ -232,6 +239,8 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .cal-cella.altro-m .cal-n{color:#CCC;}
 .cal-n{font-size:.78rem;font-weight:700;margin-bottom:3px;}
 .cal-cella.oggi .cal-n{color:var(--blu);font-weight:800;}
+.cal-cella.festivo .cal-n{color:#C62828;}
+.cal-cella.oggi.festivo .cal-n{color:var(--blu);}
 .cal-ev{border-radius:4px;padding:3px 5px;margin-bottom:2px;overflow:hidden;}
 .cal-ev.ce-c{background:var(--blu-c);border-left:3px solid var(--blu-m);}
 .cal-ev.ce-a{background:var(--verde-c);border-left:3px solid var(--verde-m);}
@@ -439,8 +448,17 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   <div>
     <h1>ProfTime</h1>
     <p id="top-sub">A.S. 2025/2026</p>
+    <p class="topbar-credit-sub">&copy; Pasquale Zicarelli</p>
   </div>
-  <div class="topbar-credit">&copy; Pasquale Zicarelli</div>
+  <div class="topbar-acc">
+    <button class="topbar-avatar" id="acc-avatar" onclick="toggleAccountMenu(event)">?</button>
+    <div class="acc-menu" id="acc-menu">
+      <div class="acc-menu-email" id="acc-email">--</div>
+      <div class="acc-menu-status" id="acc-status"><span class="sync-dot sync-wait"></span>Connessione...</div>
+      <button class="btn btn-ghost btn-full" style="margin-bottom:8px" onclick="apriProfilo()">I miei dati</button>
+      <button class="btn btn-ghost btn-full" onclick="doLogout()">Esci</button>
+    </div>
+  </div>
 </div>
 
 <nav class="bnav">
@@ -738,6 +756,23 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 </div>
 
+<!-- PROFILO -->
+<div class="pag" id="pag-profilo">
+  <div class="box">
+    <div class="box-h"><h2>I miei dati</h2></div>
+    <div class="box-b">
+      <div class="gl-nota" style="margin:0 0 12px">Questi dati si salvano una volta e compaiono nell’intestazione dei tuoi export PDF ed Excel. Sono legati al tuo account, quindi li ritrovi su ogni dispositivo.</div>
+      <div class="fg">
+        <div class="s2"><label class="fl">Nome docente</label><input type="text" id="prof-nome" placeholder="Mario Rossi"></div>
+        <div class="s2"><label class="fl">Istituto</label><input type="text" id="prof-istituto" placeholder="IC Esempio"></div>
+        <div class="s2"><label class="fl">Codice meccanografico</label><input type="text" id="prof-mecc" placeholder="es. TOIC800000"></div>
+        <div class="s2"><label class="fl">Email istituzionale</label><input type="email" id="prof-email" placeholder="nome@istruzione.it"></div>
+      </div>
+      <button class="btn btn-blu btn-full" onclick="salvaProfiloForm()">Salva dati</button>
+    </div>
+  </div>
+</div>
+
 <!-- EVENTO -->
 <div class="pag" id="pag-evento">
   <div class="box">
@@ -889,17 +924,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 <!-- STORICO -->
 <div class="pag" id="pag-storico">
   <div class="box">
-    <div class="box-h"><h2>Account</h2></div>
-    <div class="account-box">
-      <div class="account-avatar" id="acc-avatar">?</div>
-      <div class="account-info">
-        <div class="account-email" id="acc-email">--</div>
-        <div class="account-status" id="acc-status"><span class="sync-dot sync-wait"></span>Connessione...</div>
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Esci</button>
-    </div>
-  </div>
-  <div class="box">
     <div class="box-h"><h2>Anno attivo</h2><span id="anno-attivo-lbl" style="font-size:.82rem;font-weight:700;color:var(--blu)"></span></div>
     <div class="box-b">
       <p style="font-size:.83rem;color:var(--tx2);margin-bottom:14px;line-height:1.6;">Ogni anno scolastico ha il suo registro separato. Crea un nuovo anno a settembre senza perdere i dati precedenti.</p>
@@ -978,7 +1002,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="doc-hdr dh-b">Account e accesso</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Registrati con email e password</strong><span>La prima volta crea un account. I tuoi dati sono privati e visibili solo a te, su qualsiasi dispositivo.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Accedi da più dispositivi</strong><span>Usa le stesse credenziali su telefono, tablet e computer: i dati si sincronizzano automaticamente.</span></div></div>
-    <div class="step"><div class="sn">3</div><div class="st"><strong>Stato sincronizzazione</strong><span>Nella pagina Storico vedi un pallino verde quando i dati sono sincronizzati, giallo durante il salvataggio.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Stato sincronizzazione</strong><span>Tocca la tua iniziale in alto a destra: un pallino verde indica che i dati sono sincronizzati, giallo durante il salvataggio.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -986,6 +1010,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="step"><div class="sn">1</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Ore accumulate per Attività Collegiali e Altre Attività, con quanto rimane al limite delle 40h ciascuna.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Attività Extra</strong><span>Il riquadro arancione mostra le ore di attività extra, che non rientrano nel conteggio 40+40.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Riepilogo mensile</strong><span>Una card per ogni mese dell'anno scolastico, con le ore di ciascuna categoria e una barra proporzionale.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Caselle delle assenze</strong><span>Quando inserisci permessi, ferie o permessi brevi, in Home compaiono le caselle con i giorni residui e le scadenze in avvicinamento, evidenziate quando manca poco.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -1011,10 +1036,42 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 
   <div class="doc-box">
+    <div class="doc-hdr dh-v">Assenze, permessi</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Apri l'area Assenze</strong><span>Nella barra in alto trovi Assenze, con tre voci: Permessi, Permessi brevi e Ferie.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Imposta i giorni liberi</strong><span>In cima alla pagina Permessi scegli i giorni della settimana in cui non presti servizio. La domenica è sempre esclusa dai conteggi, insieme alle festività.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>I tipi di permesso</strong><span>Motivi personali o familiari, 3 giorni. Ferie come permesso, 6 giorni con gli stessi motivi. Matrimonio, 15 giorni consecutivi. Concorso o esame, 8 giorni non retribuiti.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Come si contano i giorni</strong><span>Per i motivi personali e le ferie come permesso puoi inserire un intervallo di più giorni. Il sabato conta, mentre domeniche e festività no. L'app blocca se superi il limite previsto.</span></div></div>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Assenze, lutto</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Registra l'evento</strong><span>In fondo alla pagina Permessi registra un lutto scegliendo la data e la parentela dall'elenco previsto dal contratto.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Tre giorni per evento</strong><span>Ogni evento dà diritto a 3 giorni, che puoi usare anche non consecutivi, aggiungendoli uno alla volta con la loro data.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Promemoria</strong><span>Se passano più di 15 giorni senza aver usato i giorni spettanti, l'app te lo ricorda. È solo un aiuto pratico, non un termine fissato dal contratto.</span></div></div>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Assenze, permessi brevi</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Imposta l'orario settimanale</strong><span>In cima alla pagina inserisci le tue ore di lezione a settimana. Servono a mostrarti quanto resta del tetto annuale, senza mai bloccarti.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Inserisci un permesso</strong><span>Ogni permesso breve può essere di 1 o 2 ore. Le ore prese vanno poi recuperate.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Registra i recuperi</strong><span>Man mano che recuperi le ore, le aggiungi al permesso con la loro data. L'app tiene il conto di quante ne mancano e segna come recuperati i permessi saldati.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>La scadenza del recupero</strong><span>L'app calcola una scadenza indicativa, circa due mesi al netto di domeniche e festività, e ti avvisa 7 giorni prima. È una stima pratica di comodo, non un termine ufficiale della segreteria.</span></div></div>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-b">Assenze, ferie</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Imposta l'anzianità</strong><span>L'interruttore in cima dice se hai superato i 3 anni di servizio. Con almeno 3 anni hai 32 giorni di ferie, altrimenti 30. Si imposta una volta e si eredita ogni anno nuovo.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Inserisci le ferie estive</strong><span>Aggiungi i giorni di ferie a intervalli. Il sabato conta come giorno di ferie, mentre domeniche e festività no.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Collegamento con i permessi</strong><span>I 6 giorni di ferie come permesso presi durante l'anno fanno parte dello stesso monte, quindi vengono scalati in automatico dal totale.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Festività soppresse</strong><span>Sono 4 giorni con un conteggio separato, da usare entro il 31 agosto. L'app ti avvisa 7 giorni prima della scadenza.</span></div></div>
+  </div>
+
+  <div class="doc-box">
     <div class="doc-hdr dh-b">PDF ed Excel</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>PDF</strong><span>Genera un registro stampabile da allegare alla documentazione o inviare alla segreteria.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Excel export</strong><span>Scarica un file .xlsx con tutti i dati e il riepilogo ore.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Excel import</strong><span>Importa un file .xlsx per ripristinare i dati, ad esempio dopo aver cambiato dispositivo.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Solo le 40+40</strong><span>L'esportazione riguarda soltanto gli impegni delle 40+40 ore. Ferie, permessi e assenze non sono inclusi, perché seguono una gestione separata con i loro moduli.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -2063,8 +2120,85 @@ function renderFerie() {
 }
 
 
+
+// ── MODULO PROFILO (dati docente e sede) ─────────────────────────────
+let profilo = profiloDefault();
+let syncTimeoutProfilo = null;
+
+function profiloDefault() { return { nomeDocente: '', istituto: '', codiceMecc: '', emailIst: '' }; }
+function normalizzaProfilo(p) {
+  if (!p || typeof p !== 'object') return profiloDefault();
+  return {
+    nomeDocente: typeof p.nomeDocente === 'string' ? p.nomeDocente : '',
+    istituto: typeof p.istituto === 'string' ? p.istituto : '',
+    codiceMecc: typeof p.codiceMecc === 'string' ? p.codiceMecc : '',
+    emailIst: typeof p.emailIst === 'string' ? p.emailIst : ''
+  };
+}
+function keyProfilo() {
+  const uid = currentUser ? currentUser.uid : 'guest';
+  return 'ridprofilo_' + uid;
+}
+function salvaProfilo() {
+  try { localStorage.setItem(keyProfilo(), JSON.stringify(profilo)); } catch (e) {}
+  if (currentUser && window.fb) {
+    setSyncStatus('wait');
+    clearTimeout(syncTimeoutProfilo);
+    const uidSalva = currentUser.uid;
+    syncTimeoutProfilo = setTimeout(function() {
+      const ref = window.fb.doc(window.fb.db, 'utenti', uidSalva, 'profilo', 'dati');
+      window.fb.setDoc(ref, { dati: profilo, aggiornato: Date.now() })
+        .then(function() { setSyncStatus('ok'); })
+        .catch(function() { setSyncStatus('off'); });
+    }, 700);
+  }
+}
+function caricaProfilo() {
+  try {
+    const d = localStorage.getItem(keyProfilo());
+    profilo = d ? normalizzaProfilo(JSON.parse(d)) : profiloDefault();
+  } catch (e) { profilo = profiloDefault(); }
+}
+async function caricaProfiloDaCloud() {
+  if (!currentUser || !window.fb) return null;
+  try {
+    const ref = window.fb.doc(window.fb.db, 'utenti', currentUser.uid, 'profilo', 'dati');
+    const snap = await window.fb.getDoc(ref);
+    if (snap.exists()) return normalizzaProfilo(snap.data().dati);
+  } catch (e) { console.error('Errore caricamento profilo cloud', e); }
+  return null;
+}
+async function sincronizzaProfilo() {
+  caricaProfilo();
+  if (currentUser) {
+    const cloud = await caricaProfiloDaCloud();
+    if (cloud && (cloud.nomeDocente || cloud.istituto || cloud.codiceMecc || cloud.emailIst)) {
+      profilo = cloud;
+      try { localStorage.setItem(keyProfilo(), JSON.stringify(profilo)); } catch (e) {}
+    }
+  }
+}
+function apriProfilo() {
+  const m = document.getElementById('acc-menu');
+  if (m) m.classList.remove('on');
+  document.getElementById('prof-nome').value = profilo.nomeDocente;
+  document.getElementById('prof-istituto').value = profilo.istituto;
+  document.getElementById('prof-mecc').value = profilo.codiceMecc;
+  document.getElementById('prof-email').value = profilo.emailIst;
+  vai('profilo');
+}
+function salvaProfiloForm() {
+  profilo.nomeDocente = document.getElementById('prof-nome').value.trim();
+  profilo.istituto = document.getElementById('prof-istituto').value.trim();
+  profilo.codiceMecc = document.getElementById('prof-mecc').value.trim();
+  profilo.emailIst = document.getElementById('prof-email').value.trim();
+  salvaProfilo();
+  toast('\u2705 Dati salvati');
+}
+
+
 // ── NAVIGAZIONE ──────────────────────────────────────────────────────
-const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
+const AREA_DI = { home:'home', impegni:'impegni', evento:'impegni', registro:'impegni', timer:'impegni', assenze:'assenze', permessi:'assenze', brevi:'assenze', ferie:'assenze', altro:'altro', profilo:'altro', pdf:'altro', storico:'altro', ccnl:'altro', guida:'altro' };
 function vai(id) {
   document.querySelectorAll('.pag').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
@@ -2387,6 +2521,8 @@ function renderCal() {
   for (let g = 1; g <= giorni; g++) {
     const ds = `${calAnno}-${String(calMeseN + 1).padStart(2, '0')}-${String(g).padStart(2, '0')}`;
     const isOggi = oggi.getFullYear() === calAnno && oggi.getMonth() === calMeseN && oggi.getDate() === g;
+    const dowCella = new Date(calAnno, calMeseN, g).getDay();
+    const isRosso = dowCella === 0 || isFestivo(ds);
     const ev = byData[ds] || [];
     const eventi = ev.map(i => {
       const orario = i.ini ? `${i.ini}` : '';
@@ -2397,7 +2533,7 @@ function renderCal() {
       </div>`;
     }).join('');
     const clickDs = ds;
-    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${ev.length ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
+    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${isRosso ? ' festivo' : ''}${ev.length ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
       <div class="cal-n">${g}</div>
       ${eventi}
     </div>`;
@@ -2459,6 +2595,11 @@ function aggPDF() {
   document.getElementById('pdf-t').textContent = fHM(totC + totA) + 'h';
   document.getElementById('pdf-n').textContent = imp.length;
   document.getElementById('pdf-anno').textContent = annoAttivo || '--';
+  // Precompila nome e istituto dai dati del profilo, se presenti
+  const cn = document.getElementById('pdf-nome');
+  const cs = document.getElementById('pdf-sc');
+  if (cn && profilo.nomeDocente && !cn.value) cn.value = profilo.nomeDocente;
+  if (cs && profilo.istituto && !cs.value) cs.value = profilo.istituto;
 }
 
 function stampaPDF() {
@@ -2474,7 +2615,7 @@ function stampaPDF() {
   ).join('');
   const extraBox = totE > 0 ? `<div class="box"><div class="bl">Extra</div><div class="bv" style="color:#C55A11">${fHM(totE)}h</div></div>` : '';
   const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div><div style="background:#F0F4F8;border-left:3px solid #1F4E79;padding:7px 11px;font-size:10px;color:#44515F;margin-bottom:16px;border-radius:3px">Questo riepilogo comprende esclusivamente gli impegni delle 40+40 ore. Ferie, permessi e assenze non sono inclusi.</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div>${extraBox}<div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">ProfTime - Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Registro Impegni</title><style>body{font-family:Arial,sans-serif;font-size:11px;color:#1A2332;margin:24px}h1{font-size:15px;color:#1F4E79;margin-bottom:3px}.sub{color:#6B7A8D;font-size:10px;margin-bottom:16px}.rie{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap}.box{border:1.5px solid #DDE3EA;border-radius:6px;padding:9px 13px;min-width:110px}.bl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7A8D;margin-bottom:3px}.bv{font-size:17px;font-weight:800}.blu{color:#1F4E79}.verde{color:#1E5631}.oro{color:#C9A227}table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1F4E79;color:#fff;padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #EEE}tr:nth-child(even) td{background:#F9FAFB}.ft{margin-top:18px;font-size:9px;color:#999;border-top:1px solid #EEE;padding-top:8px}</style></head><body><h1>ProfTime</h1><div class="sub">A.S. ${annoAttivo} &middot; ${nome} &middot; ${sc} &middot; Stampato il ${new Date().toLocaleDateString('it-IT')}</div>${(profilo.codiceMecc || profilo.emailIst) ? `<div class="sub" style="margin-top:-12px">${profilo.codiceMecc ? 'Cod. mecc. ' + profilo.codiceMecc : ''}${profilo.codiceMecc && profilo.emailIst ? ' &middot; ' : ''}${profilo.emailIst || ''}</div>` : ''}<div style="background:#F0F4F8;border-left:3px solid #1F4E79;padding:7px 11px;font-size:10px;color:#44515F;margin-bottom:16px;border-radius:3px">Questo riepilogo comprende esclusivamente gli impegni delle 40+40 ore. Ferie, permessi e assenze non sono inclusi.</div><div class="rie"><div class="box"><div class="bl">Collegiali</div><div class="bv blu">${fHM(totC)}h</div></div><div class="box"><div class="bl">Altre att.</div><div class="bv verde">${fHM(totA)}h</div></div><div class="box"><div class="bl">Totale</div><div class="bv oro">${fHM(totC + totA)}h</div></div>${extraBox}<div class="box"><div class="bl">Impegni</div><div class="bv">${imp.length}</div></div></div><table><thead><tr><th>Data</th><th>Evento</th><th>Categoria</th><th>Orario</th><th>Ore</th><th>Note</th></tr></thead><tbody>${righe}</tbody></table><div class="ft">ProfTime - Registro Impegni Docente &middot; Art. 29 CCNL Istruzione e Ricerca 2016-2018</div></body></html>`);
   w.document.close();
   setTimeout(() => w.print(), 400);
 }
@@ -2495,7 +2636,16 @@ function esportaExcel() {
   const totA = imp.filter(i => i.cat === 'altre').reduce((s, i) => s + i.dur, 0);
   const totE = imp.filter(i => i.cat === 'extra').reduce((s, i) => s + i.dur, 0);
   const catLabelXls = c => c === 'coll' ? 'Attivita Collegiale' : c === 'altre' ? 'Altre Attivita' : 'Extra';
-  const righe = [...imp].sort((a, b) => a.data.localeCompare(b.data)).map((i, idx) => ({
+  const righe = [];
+  if (profilo.nomeDocente || profilo.istituto || profilo.codiceMecc || profilo.emailIst) {
+    if (profilo.nomeDocente) righe.push({ 'N': '', 'Nome': 'Docente', 'Categoria': profilo.nomeDocente, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
+    if (profilo.istituto) righe.push({ 'N': '', 'Nome': 'Istituto', 'Categoria': profilo.istituto, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
+    if (profilo.codiceMecc) righe.push({ 'N': '', 'Nome': 'Codice meccanografico', 'Categoria': profilo.codiceMecc, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
+    if (profilo.emailIst) righe.push({ 'N': '', 'Nome': 'Email istituzionale', 'Categoria': profilo.emailIst, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
+    righe.push({ 'N': '', 'Nome': 'Anno scolastico', 'Categoria': annoAttivo, 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': '', 'Note': '' });
+    righe.push({});
+  }
+  [...imp].sort((a, b) => a.data.localeCompare(b.data)).forEach((i, idx) => righe.push({
     'N': idx + 1,
     'Nome': i.nome,
     'Categoria': catLabelXls(i.cat),
@@ -2505,6 +2655,7 @@ function esportaExcel() {
     'Durata': fHM(i.dur),
     'Note': i.note || ''
   }));
+  righe.push({});
   righe.push({});
   righe.push({ 'N': '', 'Nome': 'TOTALE COLLEGIALI', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totC), 'Note': 'su 40h max' });
   righe.push({ 'N': '', 'Nome': 'TOTALE ALTRE ATTIVITA', 'Categoria': '', 'Data': '', 'Ora Inizio': '', 'Ora Fine': '', 'Durata': fHM(totA), 'Note': 'su 40h max' });
@@ -2810,8 +2961,22 @@ function doLogin() {
 }
 
 function doLogout() {
+  const m = document.getElementById('acc-menu');
+  if (m) m.classList.remove('on');
   if (window.fb) window.fb.signOut(window.fb.auth);
 }
+function toggleAccountMenu(e) {
+  if (e) e.stopPropagation();
+  const m = document.getElementById('acc-menu');
+  if (m) m.classList.toggle('on');
+}
+document.addEventListener('click', function(e) {
+  const m = document.getElementById('acc-menu');
+  const a = document.getElementById('acc-avatar');
+  if (m && m.classList.contains('on') && a && !m.contains(e.target) && !a.contains(e.target)) {
+    m.classList.remove('on');
+  }
+});
 
 async function onUserLoggedIn(user) {
   currentUser = user;
@@ -2857,6 +3022,7 @@ async function onUserLoggedIn(user) {
   }
 
   await sincronizzaPermessi();
+  await sincronizzaProfilo();
   setSyncStatus('ok');
   aggiorna();
   renderRegistro();
@@ -2876,6 +3042,7 @@ function onUserLoggedOut() {
   currentUser = null;
   imp = [];
   perm = permDefault();
+  profilo = profiloDefault();
   // Ferma un eventuale timer attivo per evitare impegni salvati nell'account sbagliato
   if (tOn) {
     clearInterval(tInt);
@@ -2963,7 +3130,7 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   apriSceltaInserimento, chiudiSceltaInserimento, scegliInserimento,
   salvaOrarioSettimanale, aggiungiBreve, eliminaBreve, aggiungiRecupero, rimuoviRecupero,
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
-  confermaImport, annullaImport];
+  confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
@@ -2973,6 +3140,7 @@ if (_anni.length > 0) annoAttivo = _anni[0];
 aggiornaTopSub();
 carica();
 caricaPermessi();
+caricaProfilo();
 renderPermessi();
 
 aggiorna();
