@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
   try {
@@ -38,6 +38,9 @@
     signIn: signInWithEmailAndPassword,
     signOut: signOut,
     onAuthChange: onAuthStateChanged,
+    googleProvider: new GoogleAuthProvider(),
+    signInWithRedirect: signInWithRedirect,
+    getRedirectResult: getRedirectResult,
     doc, setDoc, getDoc
   };
   window.fbReady = true;
@@ -440,6 +443,12 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       <div class="s2"><label class="fl">Password</label><input type="password" id="login-pass" placeholder="Almeno 6 caratteri"></div>
     </div>
     <button class="btn btn-blu btn-full" id="login-btn" onclick="doLogin()">Accedi</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:14px 0;">
+      <div style="flex:1;height:1px;background:var(--bd);"></div>
+      <span style="font-size:.72rem;color:var(--tx2);">oppure</span>
+      <div style="flex:1;height:1px;background:var(--bd);"></div>
+    </div>
+    <button class="btn btn-ghost btn-full" id="login-google-btn" onclick="doLoginGoogle()">Accedi con Google</button>
     <p style="font-size:.72rem;color:var(--tx2);text-align:center;margin-top:14px;">I tuoi dati restano privati e visibili solo a te, su tutti i dispositivi dove accedi.</p>
   </div>
 </div>
@@ -2960,6 +2969,12 @@ function doLogin() {
   azione.catch(err => mostraErroreLogin(traduciErroreFirebase(err.code)));
 }
 
+function doLoginGoogle() {
+  if (!window.fb) { mostraErroreLogin('Servizio non disponibile, riprova.'); return; }
+  document.getElementById('login-err').classList.remove('show');
+  window.fb.signInWithRedirect(window.fb.auth, window.fb.googleProvider);
+}
+
 function doLogout() {
   const m = document.getElementById('acc-menu');
   if (m) m.classList.remove('on');
@@ -3088,6 +3103,10 @@ function avviaFirebaseAuth() {
     setTimeout(avviaFirebaseAuth, 200);
     return;
   }
+  window.fb.getRedirectResult(window.fb.auth).catch(err => {
+    console.error('Errore accesso con Google', err);
+    mostraErroreLogin(traduciErroreFirebase(err.code));
+  });
   window.fb.onAuthChange(window.fb.auth, (user) => {
     document.getElementById('login-loading').style.display = 'none';
     if (user) onUserLoggedIn(user);
@@ -3130,7 +3149,7 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   apriSceltaInserimento, chiudiSceltaInserimento, scegliInserimento,
   salvaOrarioSettimanale, aggiungiBreve, eliminaBreve, aggiungiRecupero, rimuoviRecupero,
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
-  confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm];
+  confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
