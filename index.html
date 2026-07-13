@@ -416,6 +416,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .ib-e{background:#FCE4D6;}
 .ioe{color:#C55A11;}
 .cal-ev.ce-e{background:#FCE4D6;border-left:3px solid #C55A11;}
+.cal-ev.ce-ferie{background:var(--oro-c);border-left:3px solid var(--oro);}
+.cal-ev.ce-sopp{background:#EFEBE9;border-left:3px solid #8D6E63;}
+.cal-ev.ce-personale{background:#EDE7F6;border-left:3px solid #6B4FA0;}
+.cal-ev.ce-matrimonio{background:#FCE4EC;border-left:3px solid #C2185B;}
+.cal-ev.ce-concorso{background:#E0F2F1;border-left:3px solid #00796B;}
+.cal-ev.ce-breve{background:#ECEFF1;border-left:3px solid #546E7A;}
+.cal-ev.ce-lutto{background:#EEEEEE;border-left:3px solid #424242;}
 .fi.ae{background:#C55A11;color:#fff;border-color:#C55A11;}
 .btn-del-anno{background:none;border:1.5px solid var(--bd);cursor:pointer;color:var(--rosso);font-size:.9rem;padding:6px 9px;border-radius:7px;transition:all .15s;flex-shrink:0;}
 .btn-del-anno:hover{background:var(--rosso-c);border-color:var(--rosso);}
@@ -2743,6 +2750,22 @@ function calMese(delta) {
   renderCal();
 }
 
+function assenzeDelGiorno(ds) {
+  const list = [];
+  if (typeof perm === 'undefined' || !perm) return list;
+  (perm.ferieEstive || []).forEach(f => { if (ds >= f.dataInizio && ds <= f.dataFine) list.push({ tipo: 'ferie', label: 'Ferie' }); });
+  (perm.festivitaSoppresse || []).forEach(f => { if (ds >= f.dataInizio && ds <= f.dataFine) list.push({ tipo: 'sopp', label: 'Sopp.' }); });
+  (perm.voci || []).forEach(v => {
+    if (ds < v.dataInizio || ds > v.dataFine) return;
+    if (v.tipo === 'feriePermesso') list.push({ tipo: 'ferie', label: 'Ferie' });
+    else if (v.tipo === 'personale') list.push({ tipo: 'personale', label: 'Personale' });
+    else if (v.tipo === 'matrimonio') list.push({ tipo: 'matrimonio', label: 'Matrimonio' });
+    else if (v.tipo === 'concorso') list.push({ tipo: 'concorso', label: 'Concorso' });
+  });
+  (perm.permessiBrevi || []).forEach(pb => { if (pb.data === ds) list.push({ tipo: 'breve', label: 'Permesso breve' }); });
+  (perm.eventiLutto || []).forEach(ev => { if ((ev.giorniUsati || []).indexOf(ds) >= 0) list.push({ tipo: 'lutto', label: 'Lutto' }); });
+  return list;
+}
 function renderCal() {
   const nm = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
   document.getElementById('cal-titolo').textContent = `${nm[calMeseN]} ${calAnno}`;
@@ -2761,6 +2784,7 @@ function renderCal() {
     const dowCella = new Date(calAnno, calMeseN, g).getDay();
     const isRosso = dowCella === 0 || isFestivo(ds);
     const ev = byData[ds] || [];
+    const ass = assenzeDelGiorno(ds);
     const eventi = ev.map(i => {
       const orario = i.ini ? `${i.ini}` : '';
       const durata = i.dur > 0 ? ` (${fHM(i.dur)})` : '';
@@ -2769,10 +2793,11 @@ function renderCal() {
         ${orario ? `<div class="ce-info">${orario}${durata}</div>` : ''}
       </div>`;
     }).join('');
+    const badgeAss = ass.map(a => `<div class="cal-ev ce-${a.tipo}"><div class="ce-nome">${escHtml(a.label)}</div></div>`).join('');
     const clickDs = ds;
-    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${isRosso ? ' festivo' : ''}${ev.length ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
+    html += `<div class="cal-cella${isOggi ? ' oggi' : ''}${isRosso ? ' festivo' : ''}${(ev.length || ass.length) ? ' ha-ev' : ''}" ${ev.length ? 'onclick="apriGiorno(\'' + clickDs + '\')" style="cursor:pointer"' : ''}>
       <div class="cal-n">${g}</div>
-      ${eventi}
+      ${eventi}${badgeAss}
     </div>`;
   }
   grid.innerHTML = html;
