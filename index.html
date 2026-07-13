@@ -95,13 +95,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .gl-chip.on{background:var(--blu);border-color:var(--blu);color:#fff;}
 .gl-nota{font-size:.68rem;color:var(--tx2);margin-top:8px;}
 .or-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.or-tab{display:inline-block;min-width:100%;}
-.or-row{display:flex;}
-.or-cell{flex:0 0 74px;box-sizing:border-box;border:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 2px;font-family:var(--f);}
-.or-corner{flex:0 0 34px;border:1px solid var(--bd);background:var(--bg);}
-.or-oh{flex:0 0 34px;font-size:.7rem;font-weight:700;color:var(--tx2);background:var(--bg);}
+.or-tab{display:grid;grid-template-columns:34px repeat(6,74px);width:max-content;border-top:1px solid var(--bd);border-left:1px solid var(--bd);}
+.or-cell{box-sizing:border-box;border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 2px;font-family:var(--f);margin:0;}
+.or-corner{background:var(--bg);}
+.or-oh{font-size:.7rem;font-weight:700;color:var(--tx2);background:var(--bg);}
 .or-dh{font-size:.72rem;font-weight:800;color:var(--blu);background:var(--blu-cc);}
-.or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;}
+.or-slot{height:52px;background:var(--w);cursor:pointer;font-size:.66rem;line-height:1.15;-webkit-appearance:none;appearance:none;border-radius:0;}
 .or-slot.on{background:var(--blu-cc);}
 .or-slot.mensa{background:var(--oro-c);}
 .or-classe{font-weight:800;color:var(--testo);}
@@ -1075,6 +1074,14 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 
   <div class="doc-box">
+    <div class="doc-hdr dh-b">Impegni, il mio orario</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Apri la griglia</strong><span>In Impegni trovi Il mio orario, con i giorni da lunedì a sabato in colonna e le ore in riga.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Compila una casella</strong><span>Tocca una casella vuota e inserisci classe, materia e sede. Tocca una casella già compilata per modificarla o svuotarla.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>La mensa</strong><span>Se quell'ora è un turno di sorveglianza mensa e non una lezione, spunta la casella Mensa: classe e materia spariscono, resta solo la sede.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Collegamento con i permessi</strong><span>Nella pagina Permessi, il tasto Calcola dall'orario imposta i giorni liberi guardando la tua griglia. Restano comunque modificabili a mano in ogni momento.</span></div></div>
+  </div>
+
+  <div class="doc-box">
     <div class="doc-hdr dh-v">Assenze, permessi</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Apri l'area Assenze</strong><span>Nella barra in alto trovi Assenze, con tre voci: Permessi, Permessi brevi e Ferie.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Imposta i giorni liberi</strong><span>In cima alla pagina Permessi scegli i giorni della settimana in cui non presti servizio. La domenica è sempre esclusa dai conteggi, insieme alle festività.</span></div></div>
@@ -1169,8 +1176,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <h3>Cosa vuoi registrare?</h3>
     <p>Scegli il tipo di inserimento.</p>
     <div class="sc-opt">
-      <button onclick="scegliInserimento('evento')"><span class="sc-ic">&#128197;</span><span class="sc-t">Impegno</span><span class="sc-d">Collegiale, altra attivita, extra</span></button>
+      <button onclick="scegliInserimento('evento')"><span class="sc-ic">&#128197;</span><span class="sc-t">Impegno</span><span class="sc-d">Collegiale o altra attivita</span></button>
       <button onclick="scegliInserimento('permessi')"><span class="sc-ic">&#127958;</span><span class="sc-t">Permesso</span><span class="sc-d">Personale, lutto, matrimonio, concorso</span></button>
+      <button onclick="scegliInserimento('extra')"><span class="sc-ic">&#11088;</span><span class="sc-t">Attivita Extra</span><span class="sc-d">Non conteggiata nelle 40+40</span></button>
     </div>
   </div>
 </div>
@@ -1366,6 +1374,13 @@ function chiudiSceltaInserimento() {
 }
 function scegliInserimento(dove) {
   chiudiSceltaInserimento();
+  if (dove === 'extra') {
+    vai('evento');
+    const cat = document.getElementById('ev-cat');
+    cat.value = 'extra';
+    catStile(cat, 'sc', 'sa');
+    return;
+  }
   vai(dove);
 }
 
@@ -2375,11 +2390,10 @@ function renderOrario() {
   const el = document.getElementById('orario-griglia');
   if (!el) return;
   if (!annoAttivo) { el.innerHTML = '<p class="empty-msg">Crea prima un anno scolastico.</p>'; return; }
-  let html = '<div class="or-tab"><div class="or-row or-head"><div class="or-cell or-corner"></div>';
+  let html = '<div class="or-tab"><div class="or-cell or-corner"></div>';
   [1, 2, 3, 4, 5, 6].forEach(g => { html += '<div class="or-cell or-dh">' + GIORNI_SETT[g] + '</div>'; });
-  html += '</div>';
   for (let o = 0; o < 9; o++) {
-    html += '<div class="or-row"><div class="or-cell or-oh">' + (o + 1) + 'ª</div>';
+    html += '<div class="or-cell or-oh">' + (o + 1) + 'ª</div>';
     [1, 2, 3, 4, 5, 6].forEach(g => {
       const c = orario.giorni[g][o];
       if (c && c.mensa) {
@@ -2395,7 +2409,6 @@ function renderOrario() {
         html += '<button class="or-cell or-slot" onclick="apriCellaOrario(' + g + ',' + o + ')">+</button>';
       }
     });
-    html += '</div>';
   }
   html += '</div>';
   el.innerHTML = html;
