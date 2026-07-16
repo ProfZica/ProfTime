@@ -537,15 +537,15 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   <div id="home-impegni-blocco">
   <div class="cards">
-    <div class="card cc2"><div class="c-lbl">Collegiali</div><div class="c-val" id="ore-c">0:00</div><div class="c-sub">su 40:00 max</div></div>
-    <div class="card ca2"><div class="c-lbl">Altre att.</div><div class="c-val" id="ore-a">0:00</div><div class="c-sub">su 40:00 max</div></div>
-    <div class="card ct"><div class="c-lbl">Totale</div><div class="c-val" id="ore-t">0:00</div><div class="c-sub">su 80:00 max</div></div>
+    <div class="card cc2" style="cursor:pointer" onclick="vaiRegistroFiltrato('c')"><div class="c-lbl">Collegiali</div><div class="c-val" id="ore-c">0:00</div><div class="c-sub">su 40:00 max</div></div>
+    <div class="card ca2" style="cursor:pointer" onclick="vaiRegistroFiltrato('a')"><div class="c-lbl">Altre att.</div><div class="c-val" id="ore-a">0:00</div><div class="c-sub">su 40:00 max</div></div>
+    <div class="card ct" style="cursor:pointer" onclick="vaiRegistroFiltrato('t')"><div class="c-lbl">Totale</div><div class="c-val" id="ore-t">0:00</div><div class="c-sub">su 80:00 max</div></div>
   </div>
   <div class="barre">
-    <div class="bw barre-c"><div class="bh"><strong>Attività Collegiali</strong><span id="pct-c">0%</span></div><div class="bt"><div class="bf" id="fill-c" style="width:0%"></div></div></div>
-    <div class="bw barre-a"><div class="bh"><strong>Altre Attività</strong><span id="pct-a">0%</span></div><div class="bt"><div class="bf" id="fill-a" style="width:0%"></div></div></div>
+    <div class="bw barre-c" style="cursor:pointer" onclick="vaiRegistroFiltrato('c')"><div class="bh"><strong>Attività Collegiali</strong><span id="pct-c">0%</span></div><div class="bt"><div class="bf" id="fill-c" style="width:0%"></div></div></div>
+    <div class="bw barre-a" style="cursor:pointer" onclick="vaiRegistroFiltrato('a')"><div class="bh"><strong>Altre Attività</strong><span id="pct-a">0%</span></div><div class="bt"><div class="bf" id="fill-a" style="width:0%"></div></div></div>
   </div>
-  <div class="extra-pill" id="extra-pill">
+  <div class="extra-pill" id="extra-pill" style="cursor:pointer" onclick="vaiRegistroFiltrato('e')">
     <div class="extra-pill-icon">&#10022;</div>
     <div class="extra-pill-info">
       <div class="extra-pill-lbl">Attività Extra</div>
@@ -1542,7 +1542,7 @@ function aggiornaHomeAdattiva() {
         const max = CCNL_PERM[t];
         const resid = max - usati;
         const fin = resid <= 0;
-        cards.push('<div class="acard' + (fin ? ' fin' : '') + '"><div class="acard-l">' + PERM_LBL[t] +
+        cards.push('<div class="acard' + (fin ? ' fin' : '') + '" style="cursor:pointer" onclick="vai(\'permessi\')"><div class="acard-l">' + PERM_LBL[t] +
           '</div><div class="acard-v' + (fin ? ' fin' : '') + '">' + Math.max(0, resid) + ' su ' + max +
           '</div><div class="acard-s">giorni residui</div></div>');
       }
@@ -1550,7 +1550,7 @@ function aggiornaHomeAdattiva() {
     // Matrimonio: mostrato se registrato
     const mUsati = permUsati('matrimonio');
     if (mUsati > 0) {
-      cards.push('<div class="acard"><div class="acard-l">Matrimonio</div><div class="acard-v">' + mUsati +
+      cards.push('<div class="acard" style="cursor:pointer" onclick="vai(\'permessi\')"><div class="acard-l">Matrimonio</div><div class="acard-v">' + mUsati +
         ' gg</div><div class="acard-s">registrati</div></div>');
     }
     // Lutto: una casella per ogni evento con giorni ancora da usare o promemoria attivo
@@ -1561,7 +1561,7 @@ function aggiornaHomeAdattiva() {
       const urg = (ev.giorniUsati.length === 0 && resid > 0 && gTrasc > 15);
       if (resid < 3 || urg) {
         const rel = ev.relazione.length > 16 ? ev.relazione.slice(0, 15) + '\u2026' : ev.relazione;
-        cards.push('<div class="acard' + (urg ? ' urg' : '') + (resid === 0 ? ' fin' : '') + '">' +
+        cards.push('<div class="acard' + (urg ? ' urg' : '') + (resid === 0 ? ' fin' : '') + '" style="cursor:pointer" onclick="vai(\'permessi\')">' +
           '<div class="acard-l">Lutto</div>' +
           '<div class="acard-v' + (resid === 0 ? ' fin' : '') + '">' + resid + ' su 3</div>' +
           '<div class="acard-s' + (urg ? ' urg' : '') + '">' + (urg ? 'promemoria: ' + gTrasc + ' gg fa' : escHtml(rel)) + '</div></div>');
@@ -1574,7 +1574,7 @@ function aggiornaHomeAdattiva() {
       const residF = ferieResidue();
       const monteF = monteFerieBase();
       const finF = residF <= 0;
-      cards.push('<div class="acard' + (finF ? ' fin' : '') + '">' +
+      cards.push('<div class="acard' + (finF ? ' fin' : '') + '" style="cursor:pointer" onclick="vai(\'ferie\')">' +
         '<div class="acard-l">Ferie</div>' +
         '<div class="acard-v' + (finF ? ' fin' : '') + '">' + Math.max(0, residF) + ' su ' + monteF + '</div>' +
         '<div class="acard-s">giorni residui</div></div>');
@@ -1586,7 +1586,7 @@ function aggiornaHomeAdattiva() {
       const ggS = Math.round((new Date(scadenzaSoppresse() + 'T12:00:00') - oggiS) / 86400000);
       const urgS = residS > 0 && ggS >= 0 && ggS <= 7;
       const finS = residS <= 0;
-      cards.push('<div class="acard' + (urgS ? ' urg' : '') + '">' +
+      cards.push('<div class="acard' + (urgS ? ' urg' : '') + '" style="cursor:pointer" onclick="vai(\'ferie\')">' +
         '<div class="acard-l">Festività soppresse</div>' +
         '<div class="acard-v' + (finS ? ' fin' : '') + '">' + Math.max(0, residS) + ' su 4</div>' +
         '<div class="acard-s' + (urgS ? ' urg' : '') + '">' + (urgS ? 'scadono il 31/08' : 'giorni residui') + '</div></div>');
@@ -1606,7 +1606,7 @@ function aggiornaHomeAdattiva() {
         }
       });
       const finB = debito <= 0;
-      cards.push('<div class="acard' + (urgB ? ' urg' : '') + '">' +
+      cards.push('<div class="acard' + (urgB ? ' urg' : '') + '" style="cursor:pointer" onclick="vai(\'brevi\')">' +
         '<div class="acard-l">Permessi brevi</div>' +
         '<div class="acard-v">' + debito + (debito === 1 ? ' ora' : ' ore') + '</div>' +
         '<div class="acard-s' + (urgB ? ' urg' : '') + '">' + (urgB ? 'scadenza vicina' : (finB ? 'tutto recuperato · ' + usato + ' usate' : 'da recuperare · ' + usato + ' usate')) + '</div></div>');
@@ -2790,6 +2790,12 @@ function renderMensile() {
 }
 
 // ── REGISTRO LISTA ───────────────────────────────────────────────────
+function vaiRegistroFiltrato(t) {
+  vai('registro');
+  const idx = { t: 0, c: 1, a: 2, e: 3 }[t];
+  const btn = document.querySelectorAll('.filtri .fi')[idx];
+  if (btn) filtra(t, btn);
+}
 function filtra(t, btn) {
   filtro = t;
   document.querySelectorAll('.fi').forEach(b => b.className = 'fi');
@@ -3599,7 +3605,7 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
   confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle,
   apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario,
-  scaricaBackupCompleto];
+  scaricaBackupCompleto, vaiRegistroFiltrato];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
