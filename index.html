@@ -64,7 +64,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100vh;padding-bottom:16px;}
-.topbar{background:var(--blu);color:#fff;padding:12px 16px 10px;position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:flex-start;}
+.topbar{background:var(--blu);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 10px;position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:flex-start;}
 .topbar h1{font-size:.95rem;font-weight:800;letter-spacing:-.3px;}
 .topbar p{font-size:.68rem;opacity:.65;margin-top:1px;}
 .topbar-credit{font-size:.62rem;opacity:.55;text-align:right;white-space:nowrap;padding-top:2px;}
@@ -75,7 +75,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .acc-menu.on{display:block;}
 .acc-menu-email{font-size:.82rem;font-weight:700;color:var(--testo);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:6px;}
 .acc-menu-status{font-size:.72rem;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
-.bnav{position:fixed;top:68px;left:0;right:0;z-index:200;background:var(--w);border-bottom:1px solid var(--bd);display:flex;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.bnav{position:fixed;top:calc(68px + env(safe-area-inset-top));left:0;right:0;z-index:200;background:var(--w);border-bottom:1px solid var(--bd);display:flex;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 2px;border:none;background:none;cursor:pointer;color:var(--tx2);font-family:var(--f);-webkit-tap-highlight-color:transparent;}
 .nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
@@ -173,7 +173,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--testo);min-height:100
 .fer-bc-s{font-size:.63rem;color:var(--tx2);margin-top:2px;}
 .fer-bc-s.urg{color:#7A4D00;font-weight:700;}
 .pag{display:none;max-width:700px;margin:0 auto;padding:14px;}
-.pag.on{display:block;padding-top:124px;}
+.pag.on{display:block;padding-top:calc(124px + env(safe-area-inset-top));}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
 @media(max-width:440px){.cards{grid-template-columns:1fr 1fr;}.ct{grid-column:1/-1;}}
 .card{background:var(--w);border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh);border-top:4px solid transparent;}
@@ -1019,6 +1019,13 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         </div>
       </div>
       <button class="btn btn-blu btn-full" onclick="toggleFormAnno()" id="btn-nuovo-anno" style="margin-top:0">+ Nuovo anno scolastico</button>
+    </div>
+  </div>
+  <div class="box">
+    <div class="box-h"><h2>Backup completo</h2></div>
+    <div class="box-b">
+      <p style="font-size:.83rem;color:var(--tx2);margin-bottom:14px;line-height:1.6;">Scarica un unico file con tutti i tuoi dati, il profilo, l'orario, e per ogni anno scolastico gli impegni e tutti i moduli dei permessi. Tienilo da parte come copia di sicurezza tua, indipendente dal cloud.</p>
+      <button class="btn btn-ghost btn-full" style="margin-top:0" onclick="scaricaBackupCompleto()">Scarica backup completo</button>
     </div>
   </div>
   <div class="box">
@@ -3002,6 +3009,45 @@ function aggPDF() {
   if (cs && profilo.istituto && !cs.value) cs.value = profilo.istituto;
 }
 
+function scaricaBackupCompleto() {
+  const uid = currentUser ? currentUser.uid : 'guest';
+  const dati = {
+    formato: 'proftime-backup',
+    versione: 1,
+    esportatoIl: new Date().toISOString(),
+    profilo: (typeof profilo !== 'undefined' && profilo) ? profilo : null,
+    anni: {}
+  };
+  tuttiAnni().forEach(function(a) {
+    let impA = [];
+    let permA = permDefault();
+    let orarioA = orarioDefault();
+    try {
+      const dImp = localStorage.getItem('rid_' + uid + '_' + a.replace('/', '_'));
+      impA = dImp ? JSON.parse(dImp) : [];
+    } catch (e) {}
+    try {
+      const dPerm = localStorage.getItem('ridp_' + uid + '_' + a.replace('/', '_'));
+      permA = dPerm ? normalizzaPerm(JSON.parse(dPerm)) : permDefault();
+    } catch (e) {}
+    try {
+      const dOr = localStorage.getItem('ridor_' + uid + '_' + a.replace('/', '_'));
+      orarioA = dOr ? normalizzaOrario(JSON.parse(dOr)) : orarioDefault();
+    } catch (e) {}
+    dati.anni[a] = { imp: impA, perm: permA, orario: orarioA };
+  });
+  const blob = new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'proftime-backup-' + oggiStr() + '.json';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  toast('\u2705 Backup scaricato');
+}
+
 function stampaPDF() {
   const nome = document.getElementById('pdf-nome').value.trim() || '--';
   const sc = document.getElementById('pdf-sc').value.trim() || '--';
@@ -3552,7 +3598,8 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   salvaOrarioSettimanale, aggiungiBreve, eliminaBreve, aggiungiRecupero, rimuoviRecupero,
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
   confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle,
-  apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario];
+  apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario,
+  scaricaBackupCompleto];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
