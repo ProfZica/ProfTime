@@ -738,9 +738,14 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   <div class="box">
     <div class="box-h"><h2>Orario settimanale</h2></div>
     <div class="box-b">
-      <div class="brev-orario">
+      <div class="brev-orario" id="brev-orario-manuale">
         <label class="fl" style="margin:0">Ore di lezione a settimana</label>
         <input type="number" id="brev-orario" min="0" max="40" step="1" onchange="salvaOrarioSettimanale()">
+      </div>
+      <div id="brev-orario-auto" style="display:none;">
+        <div class="fl" style="margin:0">Ore di lezione a settimana</div>
+        <div style="font-size:1.3rem;font-weight:800;color:var(--blu);margin-top:4px;" id="brev-orario-auto-val">0</div>
+        <div class="gl-nota" style="margin-top:2px;">Calcolato in automatico dal tuo orario. <a href="javascript:void(0)" onclick="vai('orario')" style="color:var(--blu);font-weight:700;">Modifica l'orario</a> se vuoi cambiarlo.</div>
       </div>
       <div class="brev-tetto" id="brev-tetto" style="margin-top:10px"></div>
     </div>
@@ -1212,7 +1217,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   <div class="doc-box">
     <div class="doc-hdr dh-b">Assenze, permessi brevi</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Imposta l'orario settimanale</strong><span>In cima alla pagina inserisci le tue ore di lezione a settimana. Servono a mostrarti quanto resta del tetto annuale, senza mai bloccarti.</span></div></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Imposta l'orario settimanale</strong><span>Se hai compilato Il mio orario, le ore di lezione a settimana si calcolano da sole. Se non l'hai ancora fatto, puoi comunque scriverle a mano qui. Servono a mostrarti quanto resta del tetto annuale, senza mai bloccarti.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Inserisci un permesso</strong><span>Ogni permesso breve può essere di 1 o 2 ore. Le ore prese vanno poi recuperate.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Registra i recuperi</strong><span>Man mano che recuperi le ore, le aggiungi al permesso con la loro data. L'app tiene il conto di quante ne mancano e segna come recuperati i permessi saldati.</span></div></div>
     <div class="step"><div class="sn">!</div><div class="st"><strong>La scadenza del recupero</strong><span>L'app calcola una scadenza indicativa, circa due mesi al netto di domeniche e festività, e ti avvisa 7 giorni prima. È una stima pratica di comodo, non un termine ufficiale della segreteria.</span></div></div>
@@ -2068,6 +2073,19 @@ function brevDebitoAperto() {
   return perm.permessiBrevi.reduce((s, pb) => s + Math.max(0, oreDaRecuperare(pb)), 0);
 }
 
+function oreLezioneOrario() {
+  if (typeof orario === 'undefined' || !orario || !orario.giorni) return 0;
+  let n = 0;
+  [1, 2, 3, 4, 5, 6].forEach(function(g) {
+    (orario.giorni[g] || []).forEach(function(c) {
+      if (c && (!c.tipo || c.tipo === 'lezione')) n++;
+    });
+  });
+  return n;
+}
+function orarioHaLezioni() { return oreLezioneOrario() > 0; }
+function tettoOreBrevi() { return orarioHaLezioni() ? oreLezioneOrario() : perm.orarioSettimanale; }
+
 function salvaOrarioSettimanale() {
   if (!annoAttivo) { toast('\u26a0\ufe0f Crea prima un anno scolastico in Storico'); vai('storico'); return; }
   const v = parseInt(document.getElementById('brev-orario').value, 10);
@@ -2138,11 +2156,22 @@ function renderBrevi() {
   if (!inp) return;
   if (document.activeElement !== inp) inp.value = perm.orarioSettimanale || '';
 
+  const haLezioni = orarioHaLezioni();
+  const blManuale = document.getElementById('brev-orario-manuale');
+  const blAuto = document.getElementById('brev-orario-auto');
+  if (blManuale) blManuale.style.display = haLezioni ? 'none' : '';
+  if (blAuto) blAuto.style.display = haLezioni ? '' : 'none';
+  if (haLezioni) {
+    const val = document.getElementById('brev-orario-auto-val');
+    if (val) val.textContent = oreLezioneOrario();
+  }
+
   const tetto = document.getElementById('brev-tetto');
   const usato = brevTotaleUsato();
-  if (perm.orarioSettimanale > 0) {
-    const resta = perm.orarioSettimanale - usato;
-    tetto.innerHTML = 'Usate <strong>' + usato + '</strong> ore su un tetto annuale di <strong>' + perm.orarioSettimanale + '</strong> ore. ' +
+  const t = tettoOreBrevi();
+  if (t > 0) {
+    const resta = t - usato;
+    tetto.innerHTML = 'Usate <strong>' + usato + '</strong> ore su un tetto annuale di <strong>' + t + '</strong> ore. ' +
       (resta >= 0 ? 'Ne restano ' + resta + '.' : 'Hai superato il tetto di ' + (-resta) + '.');
   } else {
     tetto.innerHTML = 'Imposta il tuo orario settimanale per vedere quanto resta del tetto annuale. Usate finora <strong>' + usato + '</strong> ore.';
@@ -2782,7 +2811,7 @@ function renderMensile() {
       corpo = '<div class="mc-nessuno">Nessun impegno</div>';
     }
 
-    html += '<div class="mese-card' + (hasData ? ' has-data' : '') + (isCurrent ? ' mese-attivo' : '') + '"><div class="mc-nome">' + nome + ' ' + yyyy + '</div>' + corpo + '</div>';
+    html += '<div class="mese-card' + (hasData ? ' has-data' : '') + (isCurrent ? ' mese-attivo' : '') + '" style="cursor:pointer" onclick="vaiCalendarioMese(' + yyyy + ',' + mm + ')"><div class="mc-nome">' + nome + ' ' + yyyy + '</div>' + corpo + '</div>';
   });
   el.innerHTML = html;
   const lbl = document.getElementById('mese-tot-lbl');
@@ -2790,6 +2819,11 @@ function renderMensile() {
 }
 
 // ── REGISTRO LISTA ───────────────────────────────────────────────────
+function vaiCalendarioMese(anno, meseUno) {
+  calAnno = anno;
+  calMeseN = meseUno - 1;
+  vai('calendario');
+}
 function vaiRegistroFiltrato(t) {
   vai('registro');
   const idx = { t: 0, c: 1, a: 2, e: 3 }[t];
@@ -3605,7 +3639,7 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
   confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle,
   apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario,
-  scaricaBackupCompleto, vaiRegistroFiltrato];
+  scaricaBackupCompleto, vaiRegistroFiltrato, vaiCalendarioMese];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
