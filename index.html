@@ -443,7 +443,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .modal-conferma-icon{font-size:2.2rem;text-align:center;padding:20px 0 6px;}
 .modal-conferma-testo{font-size:.85rem;color:var(--tx2);text-align:center;padding:0 20px 16px;line-height:1.6;}
 /* MODAL GIORNO */
-.modal-giorno-ev{padding:14px 16px;border-bottom:1px solid var(--bd);}
+.modal-giorno-ev{padding:14px 16px;border-bottom:1px solid var(--bd);position:relative;}
+.mge-del{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--tx2);font-size:1rem;cursor:pointer;padding:4px 6px;line-height:1;}
+.mge-del:hover{color:var(--rosso);}
 .modal-giorno-ev:last-child{border-bottom:none;}
 .mge-badge{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:5px;}
 .mge-c{background:var(--blu-c);color:var(--blu);}
@@ -1150,30 +1152,40 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   <div class="doc-box">
     <div class="doc-hdr dh-b">Account e accesso</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Registrati con email e password</strong><span>La prima volta crea un account. I tuoi dati sono privati e visibili solo a te, su qualsiasi dispositivo.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Accedi da più dispositivi</strong><span>Usa le stesse credenziali su telefono, tablet e computer: i dati si sincronizzano automaticamente.</span></div></div>
-    <div class="step"><div class="sn">3</div><div class="st"><strong>Stato sincronizzazione</strong><span>Tocca la tua iniziale in alto a destra: un pallino verde indica che i dati sono sincronizzati, giallo durante il salvataggio.</span></div></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Registrati con email e password</strong><span>La prima volta crea un account, oppure tocca Accedi con Google per entrare con un account Google. I tuoi dati sono privati e visibili solo a te, su qualsiasi dispositivo.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Accedi da più dispositivi</strong><span>Usa lo stesso account, email o Google, su telefono, tablet e computer: i dati si sincronizzano automaticamente.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Stato sincronizzazione</strong><span>Tocca la tua iniziale in alto a destra: un pallino verde indica che i dati sono sincronizzati, giallo durante il salvataggio. Dallo stesso menu raggiungi anche I miei dati.</span></div></div>
+  </div>
+
+  <div class="doc-box">
+    <div class="doc-hdr dh-v">I miei dati</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Dove trovarli</strong><span>Tocca la tua iniziale in alto a destra, poi I miei dati.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Cosa contengono</strong><span>Nome, istituto, codice meccanografico ed email istituzionale. Si salvano una volta e restano legati al tuo account, li ritrovi su ogni dispositivo.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Collegamento con l'export</strong><span>Nome e istituto precompilano automaticamente la pagina PDF, e tutti e quattro i dati compaiono nell'intestazione di PDF ed Excel quando li hai inseriti.</span></div></div>
   </div>
 
   <div class="doc-box">
     <div class="doc-hdr dh-b">Home</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Ore accumulate per Attività Collegiali e Altre Attività, con quanto rimane al limite delle 40h ciascuna.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Attività Extra</strong><span>Il riquadro arancione mostra le ore di attività extra, che non rientrano nel conteggio 40+40.</span></div></div>
-    <div class="step"><div class="sn">3</div><div class="st"><strong>Riepilogo mensile</strong><span>Una card per ogni mese dell'anno scolastico, con le ore di ciascuna categoria e una barra proporzionale.</span></div></div>
-    <div class="step"><div class="sn">4</div><div class="st"><strong>Caselle delle assenze</strong><span>Quando inserisci permessi, ferie o permessi brevi, in Home compaiono le caselle con i giorni residui e le scadenze in avvicinamento, evidenziate quando manca poco.</span></div></div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Registra qualcosa o vai al calendario</strong><span>I due pulsanti in cima aprono la scelta rapida di inserimento, oppure ti portano dritto al calendario del mese.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Promemoria di oggi e domani</strong><span>Se hai impegni nei prossimi due giorni, compaiono qui con nome, orario e luogo, appena apri l'app.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Totali e barre di avanzamento</strong><span>Ore accumulate per Attività Collegiali e Altre Attività, con quanto rimane al limite delle 40h ciascuna. Ogni casella e ogni barra è cliccabile: ti porta al Registro già filtrato su quella categoria.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Attività Extra</strong><span>Il riquadro arancione mostra le ore di attività extra, che non rientrano nel conteggio 40+40. Anche questo è cliccabile.</span></div></div>
+    <div class="step"><div class="sn">5</div><div class="st"><strong>Riepilogo mensile</strong><span>Una card per ogni mese dell'anno scolastico, con le ore di ciascuna categoria e una barra proporzionale. Tocca un mese per aprire il calendario proprio su quel mese.</span></div></div>
+    <div class="step"><div class="sn">6</div><div class="st"><strong>Caselle delle assenze</strong><span>Quando inserisci permessi, ferie o permessi brevi, in Home compaiono le caselle con i giorni residui e le scadenze in avvicinamento, evidenziate quando manca poco. Toccale per andare alla pagina giusta.</span></div></div>
   </div>
 
   <div class="doc-box">
-    <div class="doc-hdr dh-b">Evento - Inserimento</div>
-    <div class="step"><div class="sn">1</div><div class="st"><strong>Compila i campi</strong><span>Nome, categoria, data, ora inizio e ora fine sono obbligatori. Le note sono facoltative.</span></div></div>
+    <div class="doc-hdr dh-b">Evento, inserimento</div>
+    <div class="step"><div class="sn">1</div><div class="st"><strong>Compila i campi</strong><span>Nome, categoria, data, ora inizio e ora fine sono obbligatori. Luogo e note sono facoltativi.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Scegli la categoria giusta</strong><span>Attività Collegiale, Altre Attività, oppure Extra se non rientra nel conteggio 40+40. La pagina CCNL aiuta a decidere.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Usa gli orari effettivi</strong><span>Come da verbale o dalla durata reale della riunione, non necessariamente quelli della convocazione.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Dal calendario, più veloce</strong><span>Toccando un giorno vuoto nel calendario arrivi qui con la data già scritta. Toccando un giorno che ha già impegni, trovi il pulsante per aggiungerne un altro.</span></div></div>
   </div>
 
   <div class="doc-box">
     <div class="doc-hdr dh-b">Registro</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Ricerca</strong><span>Cerca un evento per nome o nelle note con il campo di ricerca in alto.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Lista - Tutti</strong><span>Mostra tre gruppi separati: Attività Collegiali, Altre Attività ed Extra, ciascuno con il proprio totale ore.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Vista Lista, Tutti</strong><span>Mostra tre gruppi separati: Attività Collegiali, Altre Attività ed Extra, ciascuno con il proprio totale ore.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Filtri singoli</strong><span>I pulsanti Coll. / Altre / Extra mostrano solo quella categoria, raggruppata per mese.</span></div></div>
     <div class="step"><div class="sn">4</div><div class="st"><strong>Modifica ed elimina</strong><span>Premi la matita per modificare un impegno, la X per eliminarlo.</span></div></div>
   </div>
@@ -1183,7 +1195,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="step"><div class="sn">1</div><div class="st"><strong>Dove trovarlo</strong><span>Ha una pagina tutta sua in Impegni, e un collegamento rapido anche in Home, così lo raggiungi in un solo tocco.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Impegni e assenze insieme</strong><span>Ogni giorno mostra le schede degli impegni delle 40+40 ore e, sotto, le etichette colorate di ferie, permessi, permessi brevi, lutto e festività soppresse.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Colori delle assenze</strong><span>Ferie in dorato, personale in viola, matrimonio in rosa, concorso in verde acqua, permesso breve in grigio ardesia, lutto in grigio scuro, festività soppresse in marrone chiaro.</span></div></div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Tocca un giorno</strong><span>Solo i giorni con impegni si aprono al tocco, per vedere i dettagli in un riquadro leggibile. Le assenze si gestiscono dalle loro pagine in Assenze.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Tocca un giorno</strong><span>Ogni giorno è cliccabile. Se è vuoto, apri subito un nuovo impegno con la data già scritta. Se ha già impegni, vedi i dettagli in un riquadro leggibile, con anche il luogo se l'hai inserito, e un pulsante per aggiungerne un altro. Le assenze si gestiscono dalle loro pagine in Assenze.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -1195,9 +1207,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   <div class="doc-box">
     <div class="doc-hdr dh-b">Impegni, il mio orario</div>
     <div class="step"><div class="sn">1</div><div class="st"><strong>Apri la griglia</strong><span>In Impegni trovi Il mio orario, con i giorni da lunedì a sabato in colonna e le ore in riga.</span></div></div>
-    <div class="step"><div class="sn">2</div><div class="st"><strong>Compila una casella</strong><span>Tocca una casella vuota e inserisci classe, materia e sede. Tocca una casella già compilata per modificarla o svuotarla.</span></div></div>
-    <div class="step"><div class="sn">3</div><div class="st"><strong>La mensa</strong><span>Se quell'ora è un turno di sorveglianza mensa e non una lezione, spunta la casella Mensa: classe e materia spariscono, resta solo la sede.</span></div></div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Collegamento con i permessi</strong><span>Nella pagina Permessi, il tasto Calcola dall'orario imposta i giorni liberi guardando la tua griglia. Restano comunque modificabili a mano in ogni momento.</span></div></div>
+    <div class="step"><div class="sn">2</div><div class="st"><strong>Compila una casella</strong><span>Tocca una casella vuota. Scegli il tipo, lezione, mensa o ricevimento genitori, poi inserisci la classe e la sede. La materia si chiede solo per le lezioni vere. Tocca una casella già compilata per modificarla o svuotarla.</span></div></div>
+    <div class="step"><div class="sn">3</div><div class="st"><strong>Mensa e ricevimento genitori</strong><span>Sono due tipi a sé, distinti dalla lezione con un colore diverso nella griglia. Per entrambi puoi indicare la classe, utile per la mensa quando accompagni un gruppo, ma non serve la materia.</span></div></div>
+    <div class="step"><div class="sn">4</div><div class="st"><strong>Un colore per ogni classe</strong><span>Ogni nome di classe che scrivi riceve sempre lo stesso colore in automatico, così la riconosci a colpo d'occhio tra le tue ore.</span></div></div>
+    <div class="step"><div class="sn">5</div><div class="st"><strong>La sede</strong><span>È un campo libero: scrivi il nome della tua sede la prima volta, le volte successive te la ritrovi suggerita mentre scrivi.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Collegamento con i permessi</strong><span>Nella pagina Permessi, il tasto Calcola dall'orario imposta i giorni liberi guardando la tua griglia. Restano comunque modificabili a mano in ogni momento. Anche il tetto delle ore di permesso breve si calcola da solo dalle tue ore di lezione, se le hai inserite.</span></div></div>
   </div>
 
   <div class="doc-box">
@@ -1244,13 +1258,14 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     <div class="step"><div class="sn">1</div><div class="st"><strong>Nuovo anno a settembre</strong><span>Vai in Storico, premi Nuovo anno scolastico, scegli l'anno dai menu e conferma.</span></div></div>
     <div class="step"><div class="sn">2</div><div class="st"><strong>Anni precedenti</strong><span>Premi Apri su un anno passato per consultarlo. I dati di ogni anno restano separati.</span></div></div>
     <div class="step"><div class="sn">3</div><div class="st"><strong>Eliminare un anno</strong><span>Premi l'icona cestino accanto all'anno. Viene chiesta conferma perché l'azione è irreversibile.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Backup completo</strong><span>Il pulsante scarica backup completo salva in un unico file il tuo profilo e, per ogni anno scolastico, tutti gli impegni e tutti i moduli dei permessi, orario compreso. Tienilo da parte come copia di sicurezza tua, indipendente dal cloud.</span></div></div>
   </div>
 
   <div class="doc-box">
     <div class="doc-hdr dh-v">Salvataggio e sincronizzazione</div>
     <div class="step"><div class="sn">!</div><div class="st"><strong>Cloud privato per account</strong><span>I dati sono salvati sia sul dispositivo che nel cloud, legati alla tua email. Account diversi vedono dati diversi.</span></div></div>
     <div class="step"><div class="sn">!</div><div class="st"><strong>Multi-dispositivo</strong><span>Accedi con lo stesso account da telefono e computer per ritrovare sempre gli stessi impegni.</span></div></div>
-    <div class="step"><div class="sn">!</div><div class="st"><strong>Backup manuale</strong><span>L'esportazione Excel è utile anche come backup personale, oltre che per condividere i dati.</span></div></div>
+    <div class="step"><div class="sn">!</div><div class="st"><strong>Backup vero</strong><span>Per un backup davvero completo di tutto, usa il pulsante in Storico, non l'esportazione Excel, che riguarda solo gli impegni.</span></div></div>
   </div>
 </div>
 
@@ -3609,6 +3624,7 @@ function apriGiorno(ds) {
     const orario = (i.ini && i.fine) ? i.ini + ' - ' + i.fine : 'Orario non inserito';
     const durata = i.dur > 0 ? fHM(i.dur) + 'h' : '';
     return '<div class="modal-giorno-ev">' +
+      '<button class="mge-del" onclick="eliminaDaGiorno(' + i.id + ',\'' + ds + '\')" title="Elimina">\u2715</button>' +
       '<div><span class="mge-badge ' + catCls + '">' + catLbl + '</span></div>' +
       '<div class="mge-nome">' + escHtml(i.nome) + '</div>' +
       '<div class="mge-info"><span>' + orario + '</span>' + (durata ? '<span>' + durata + '</span>' : '') + '</div>' +
@@ -3617,6 +3633,12 @@ function apriGiorno(ds) {
       '</div>';
   }).join('') + '<button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="apriNuovoEventoData(\'' + ds + '\')">+ Aggiungi un altro impegno in questo giorno</button>';
   document.getElementById('modal-giorno').classList.add('on');
+}
+function eliminaDaGiorno(id, ds) {
+  elimina(id);
+  const restanti = imp.filter(i => i.data === ds);
+  if (restanti.length) apriGiorno(ds);
+  else chiudiModalGiorno();
 }
 function apriNuovoEventoData(ds) {
   document.getElementById('modal-giorno').classList.remove('on');
@@ -3639,7 +3661,7 @@ const fns = [vai, catStile, aggiungi, elimina, modifica, chiudiModal, salvaModif
   toggleAnzianita, aggiungiFerie, eliminaFerie, aggiungiSoppressa, eliminaSoppressa,
   confermaImport, annullaImport, toggleAccountMenu, apriProfilo, salvaProfiloForm, doLoginGoogle,
   apriCellaOrario, chiudiCellaOrario, salvaCellaOrario, svuotaCellaOrario, toggleOrcMensa, calcolaGiorniLiberiDaOrario,
-  scaricaBackupCompleto, vaiRegistroFiltrato, vaiCalendarioMese];
+  scaricaBackupCompleto, vaiRegistroFiltrato, vaiCalendarioMese, eliminaDaGiorno];
 fns.forEach(f => { window[f.name] = f; });
 
 // ── AVVIO ─────────────────────────────────────────────────────────────
